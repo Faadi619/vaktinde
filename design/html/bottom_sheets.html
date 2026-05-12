@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – Bottom Sheet States</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:#2A9D5C; --green-light:#E8F5EE; --green-mid:#A8D5B5;
+    --amber:#C8852A; --amber-light:#FFF4E0; --amber-border:#F5CCA0;
+    --red:#E05252; --red-light:#FDE8E8;
+    --purple:#7C3AED; --purple-light:#EDE9FE; --purple-border:#C4B5FD;
+    --blue:#3A7BD5; --blue-light:#E6F1FF;
+    --text:#1A1A1A; --text-muted:#888; --border:#EFEFEF;
+    --bg:#F4F4F0; --card:#FFFFFF; --radius:18px;
+  }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:#E8E8E4; padding:24px; }
+  h1 { font-size:16px; font-weight:800; color:#555; margin-bottom:6px; }
+  .desc { font-size:13px; color:#888; margin-bottom:28px; line-height:1.5; }
+
+  .sheets-grid { display:flex; gap:20px; flex-wrap:wrap; }
+  .sheet-wrap { width:375px; }
+  .sheet-label { font-size:11px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+
+  /* Simulated phone bottom showing the sheet */
+  .phone-bottom {
+    background:rgba(0,0,0,.25);
+    border-radius:20px;
+    overflow:hidden;
+    position:relative;
+    height:460px;
+  }
+
+  /* Blurred calendar preview behind the sheet */
+  .bg-preview {
+    position:absolute;
+    inset:0;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding:20px;
+    filter:blur(2px);
+    opacity:.6;
+  }
+  .mini-cal { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; width:100%; }
+  .mini-dot { aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; }
+  .md-full    { background:var(--green); color:#fff; }
+  .md-partial { background:var(--amber-light); color:var(--amber); border:1px solid var(--amber-border); }
+  .md-missed  { background:var(--red-light); color:var(--red); border:1px solid #F5C2C2; }
+  .md-special { background:var(--purple-light); color:var(--purple); border:1px solid var(--purple-border); }
+  .md-future  { background:var(--border); color:#ccc; }
+  .md-empty   { background:transparent; }
+  .md-today   { background:var(--green); color:#fff; box-shadow:0 0 0 2px var(--green-light),0 0 0 4px var(--green); }
+
+  /* The actual bottom sheet */
+  .sheet {
+    position:absolute;
+    bottom:0; left:0; right:0;
+    background:var(--card);
+    border-radius:22px 22px 0 0;
+    padding:16px 20px 28px;
+    box-shadow:0 -6px 30px rgba(0,0,0,.18);
+  }
+  .sheet-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
+  .sheet-top { display:flex; align-items:center; gap:12px; margin-bottom:4px; }
+  .sheet-day-badge { width:44px; height:44px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; gap:1px; }
+  .sdb-full    { background:var(--green); }
+  .sdb-partial { background:var(--amber-light); border:1.5px solid var(--amber-border); }
+  .sdb-missed  { background:var(--red-light); border:1.5px solid #F5C2C2; }
+  .sdb-special { background:var(--purple-light); border:1.5px solid var(--purple-border); }
+  .sdb-today   { background:var(--green); box-shadow:0 0 0 3px var(--green-light); }
+  .sdb-num { font-size:16px; font-weight:800; line-height:1; }
+  .sdb-full .sdb-num, .sdb-today .sdb-num { color:#fff; }
+  .sdb-partial .sdb-num { color:var(--amber); }
+  .sdb-missed .sdb-num  { color:var(--red); }
+  .sdb-special .sdb-num { color:var(--purple); }
+  .sdb-month { font-size:9px; font-weight:600; text-transform:uppercase; }
+  .sdb-full .sdb-month, .sdb-today .sdb-month { color:rgba(255,255,255,.8); }
+  .sdb-partial .sdb-month { color:var(--amber); }
+  .sdb-missed .sdb-month  { color:var(--red); }
+  .sdb-special .sdb-month { color:var(--purple); }
+
+  .sheet-date { font-size:15px; font-weight:800; color:var(--text); }
+  .sheet-summary { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .sheet-prayers { display:flex; flex-direction:column; gap:8px; margin:14px 0; }
+  .sp-row { display:flex; align-items:center; gap:10px; }
+  .sp-icon { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .sp-icon svg { width:14px; height:14px; }
+  .sp-name { flex:1; font-size:13px; font-weight:600; color:var(--text); }
+  .sp-badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .sp-done    { background:var(--green-light); color:var(--green); }
+  .sp-missed  { background:var(--red-light);   color:var(--red); }
+  .sp-pending { background:var(--border);      color:var(--text-muted); }
+  .sp-special { background:var(--purple-light);color:var(--purple); }
+  .sp-kaza    { background:var(--blue-light);  color:var(--blue); }
+
+  .sheet-action { width:100%; padding:13px; border:none; border-radius:13px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .sheet-action svg { width:16px; height:16px; }
+  .sa-kaza    { background:var(--amber);       color:#fff; }
+  .sa-green   { background:var(--green);       color:#fff; }
+  .sa-ok      { background:var(--green-light); color:var(--green); }
+  .sa-special { background:var(--purple-light);color:var(--purple); }
+</style>
+</head>
+<body>
+
+<h1>Bottom Sheet — Tüm Gün Durumları</h1>
+<div class="desc">Aylık takvimde bir güne dokunulduğunda açılan alt sayfa. Her durum için farklı içerik ve aksiyon butonu gösterilir.</div>
+
+<div class="sheets-grid">
+
+<!-- ── STATE 1: TAM GÜN (5/5) ── -->
+<div class="sheet-wrap">
+  <div class="sheet-label">1 — Tam gün (5/5 kılındı)</div>
+  <div class="phone-bottom">
+    <div class="bg-preview"><div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;width:100%;text-align:left;">Mayıs 2025</div><div class="mini-cal" id="cal1"></div></div>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <div class="sheet-day-badge sdb-full"><div class="sdb-num">8</div><div class="sdb-month">Mayıs</div></div>
+        <div><div class="sheet-date">8 Mayıs 2025 · Perşembe</div><div class="sheet-summary">Tüm namazlar kılındı ✓</div></div>
+      </div>
+      <div class="sheet-prayers">
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Sabah</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div><div class="sp-name">Öğle</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">İkindi</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Akşam</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="sp-name">Yatsı</div><div class="sp-badge sp-done">Kılındı</div></div>
+      </div>
+      <button class="sheet-action sa-ok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Mükemmel bir gün! 🎉
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATE 2: EKSİK GÜN (partial) ── -->
+<div class="sheet-wrap">
+  <div class="sheet-label">2 — Eksik gün (kaza var)</div>
+  <div class="phone-bottom">
+    <div class="bg-preview"><div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;width:100%;text-align:left;">Mayıs 2025</div><div class="mini-cal" id="cal2"></div></div>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <div class="sheet-day-badge sdb-partial"><div class="sdb-num">3</div><div class="sdb-month">Mayıs</div></div>
+        <div><div class="sheet-date">3 Mayıs 2025 · Cumartesi</div><div class="sheet-summary">3/5 namaz kılındı · 2 eksik</div></div>
+      </div>
+      <div class="sheet-prayers">
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Sabah</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></div><div class="sp-name">Öğle</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">İkindi</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Akşam</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="sp-name">Yatsı</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+      </div>
+      <button class="sheet-action sa-kaza">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        2 kaza namazını işaretle →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATE 3: HİÇ KILINMADI ── -->
+<div class="sheet-wrap">
+  <div class="sheet-label">3 — Hiç kılınmadı (5/5 eksik)</div>
+  <div class="phone-bottom">
+    <div class="bg-preview"><div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;width:100%;text-align:left;">Mayıs 2025</div><div class="mini-cal" id="cal3"></div></div>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <div class="sheet-day-badge sdb-missed"><div class="sdb-num">14</div><div class="sdb-month">Mayıs</div></div>
+        <div><div class="sheet-date">14 Mayıs 2025 · Çarşamba</div><div class="sheet-summary">Bu gün hiç namaz kılınmadı</div></div>
+      </div>
+      <div class="sheet-prayers">
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Sabah</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></div><div class="sp-name">Öğle</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">İkindi</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Akşam</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="sp-name">Yatsı</div><div class="sp-badge sp-missed">Kılınmadı</div></div>
+      </div>
+      <button class="sheet-action sa-kaza">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        5 kaza namazını işaretle →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATE 4: ÖZEL GÜN ── -->
+<div class="sheet-wrap">
+  <div class="sheet-label">4 — Özel gün (seyahat / hastalık)</div>
+  <div class="phone-bottom">
+    <div class="bg-preview"><div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;width:100%;text-align:left;">Mayıs 2025</div><div class="mini-cal" id="cal4"></div></div>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <div class="sheet-day-badge sdb-special"><div class="sdb-num">10</div><div class="sdb-month">Mayıs</div></div>
+        <div><div class="sheet-date">10 Mayıs 2025 · Cuma</div><div class="sheet-summary">Özel gün — seri korudu 🟣</div></div>
+      </div>
+      <!-- Special day type badge -->
+      <div style="display:flex;gap:8px;margin:10px 0 12px;">
+        <div style="padding:5px 12px;background:var(--purple-light);border:1.5px solid var(--purple-border);border-radius:20px;font-size:12px;font-weight:700;color:var(--purple);">✈️ Seyahat</div>
+      </div>
+      <div class="sheet-prayers">
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Sabah</div><div class="sp-badge sp-special">Özel gün</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></div><div class="sp-name">Öğle</div><div class="sp-badge sp-special">Özel gün</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">İkindi</div><div class="sp-badge sp-special">Özel gün</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Akşam</div><div class="sp-badge sp-special">Özel gün</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="sp-name">Yatsı</div><div class="sp-badge sp-special">Özel gün</div></div>
+      </div>
+      <button class="sheet-action sa-special">
+        Özel gün olarak işaretlendi ✓
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATE 5: BUGÜN (today, partial) ── -->
+<div class="sheet-wrap">
+  <div class="sheet-label">5 — Bugün (henüz tamamlanmadı)</div>
+  <div class="phone-bottom">
+    <div class="bg-preview"><div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;width:100%;text-align:left;">Mayıs 2025</div><div class="mini-cal" id="cal5"></div></div>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-top">
+        <div class="sheet-day-badge sdb-today"><div class="sdb-num">24</div><div class="sdb-month">Bugün</div></div>
+        <div><div class="sheet-date">24 Mayıs 2025 · Cumartesi</div><div class="sheet-summary">Bugün: 2/5 kılındı · 3 henüz kılınmadı</div></div>
+      </div>
+      <div class="sheet-prayers">
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Sabah</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></div><div class="sp-name">Öğle</div><div class="sp-badge sp-done">Kılındı</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">İkindi</div><div class="sp-badge sp-pending">Vakti gelmedi</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div><div class="sp-name">Akşam</div><div class="sp-badge sp-pending">Vakti gelmedi</div></div>
+        <div class="sp-row"><div class="sp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="sp-name">Yatsı</div><div class="sp-badge sp-pending">Vakti gelmedi</div></div>
+      </div>
+      <button class="sheet-action sa-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Ana sayfaya dön →
+      </button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /sheets-grid -->
+
+<script>
+// Build mini calendar previews behind each sheet
+const DATA = [null,null,null,
+  {t:'md-full'},{t:'md-full'},{t:'md-partial'},{t:'md-full'},
+  {t:'md-full'},{t:'md-full'},{t:'md-partial'},{t:'md-full'},{t:'md-full'},
+  {t:'md-special'},{t:'md-full'},{t:'md-full'},{t:'md-full'},
+  {t:'md-missed'},{t:'md-full'},{t:'md-full'},{t:'md-partial'},{t:'md-full'},
+  {t:'md-full'},{t:'md-full'},{t:'md-partial'},{t:'md-full'},{t:'md-full'},
+  {t:'md-today'},{t:'md-future'},{t:'md-future'},{t:'md-future'},
+  {t:'md-future'},{t:'md-future'},{t:'md-future'},{t:'md-future'},
+];
+[1,2,3,4,5].forEach(n => {
+  const g = document.getElementById('cal'+n);
+  if(!g) return;
+  DATA.forEach((d,i) => {
+    const el = document.createElement('div');
+    el.className = 'mini-dot ' + (d ? d.t : 'md-empty');
+    el.textContent = d ? (i - 2) : '';
+    g.appendChild(el);
+  });
+});
+</script>
+</body>
+</html>

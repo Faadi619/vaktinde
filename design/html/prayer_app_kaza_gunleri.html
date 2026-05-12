@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – Kaza Günleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:#2A9D5C; --green-light:#E8F5EE; --green-mid:#A8D5B5;
+    --amber:#C8852A; --amber-light:#FFF4E0; --amber-border:#F5CCA0;
+    --red:#E05252; --red-light:#FDE8E8;
+    --text:#1A1A1A; --text-muted:#888; --border:#EFEFEF;
+    --bg:#F4F4F0; --card:#FFFFFF; --radius:18px;
+  }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); width:375px; margin:0 auto; overflow-x:hidden; }
+
+  /* Status Bar */
+  .status-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 4px; font-size:15px; font-weight:700; color:var(--text); }
+  .status-icons { display:flex; align-items:center; gap:5px; }
+  .signal-bars { display:flex; align-items:flex-end; gap:2px; }
+  .sbar { width:3px; border-radius:1px; background:var(--text); }
+
+  /* Page Header */
+  .page-header { display:flex; align-items:center; justify-content:space-between; padding:12px 20px 16px; }
+  .back-btn { width:38px; height:38px; border-radius:50%; background:var(--card); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .back-btn svg { width:16px; height:16px; }
+  .header-center { flex:1; text-align:center; }
+  .page-title { font-size:18px; font-weight:800; color:var(--text); }
+  .page-subtitle { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .header-right { width:38px; } /* spacer for centering */
+
+  /* Summary banner */
+  .summary-banner {
+    margin:0 16px 14px;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);
+    display:flex; align-items:center; gap:14px;
+  }
+  .summary-left { flex:1; }
+  .summary-label { font-size:12px; color:var(--text-muted); font-weight:500; margin-bottom:4px; }
+  .summary-count { font-size:28px; font-weight:800; color:var(--text); line-height:1; }
+  .summary-sub { font-size:12px; color:var(--text-muted); margin-top:3px; }
+  .summary-prayers { display:flex; flex-direction:column; gap:4px; }
+  .prayer-stat { display:flex; align-items:center; gap:6px; }
+  .prayer-stat-icon { width:20px; height:20px; flex-shrink:0; }
+  .prayer-stat-icon svg { width:20px; height:20px; }
+  .prayer-stat-name { font-size:11px; font-weight:600; color:var(--text-muted); width:42px; }
+  .prayer-stat-bar-wrap { flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .prayer-stat-bar { height:100%; border-radius:3px; background:var(--amber); }
+  .prayer-stat-num { font-size:11px; font-weight:700; color:var(--amber); width:18px; text-align:right; }
+
+  /* Filter row */
+  .filter-row { display:flex; gap:8px; padding:0 16px 14px; overflow-x:auto; }
+  .filter-row::-webkit-scrollbar { display:none; }
+  .filter-pill {
+    display:flex; align-items:center; gap:5px;
+    padding:7px 14px; border-radius:20px;
+    font-size:12px; font-weight:600; font-family:inherit;
+    border:1.5px solid var(--border); background:var(--card);
+    color:var(--text-muted); cursor:pointer; white-space:nowrap;
+    transition:all .15s; flex-shrink:0;
+  }
+  .filter-pill.active { background:var(--amber-light); border-color:var(--amber-border); color:var(--amber); }
+  .filter-pill svg { width:13px; height:13px; }
+
+  /* Section label */
+  .section-label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; padding:0 20px 8px; }
+
+  /* Day cards */
+  .day-card {
+    margin:0 16px 10px;
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .12s, box-shadow .12s;
+  }
+  .day-card:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.10); }
+  .day-card-header { display:flex; align-items:center; gap:12px; padding:14px 16px 12px; }
+  .day-badge {
+    width:44px; height:44px; border-radius:12px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    flex-shrink:0; gap:1px;
+  }
+  .day-badge.partial { background:var(--amber-light); border:1.5px solid var(--amber-border); }
+  .day-badge.full-miss { background:var(--red-light); border:1.5px solid #F5C2C2; }
+  .day-badge-num { font-size:16px; font-weight:800; line-height:1; }
+  .day-badge.partial .day-badge-num { color:var(--amber); }
+  .day-badge.full-miss .day-badge-num { color:var(--red); }
+  .day-badge-month { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+  .day-badge.partial .day-badge-month { color:var(--amber); }
+  .day-badge.full-miss .day-badge-month { color:var(--red); }
+  .day-info { flex:1; }
+  .day-name { font-size:14px; font-weight:700; color:var(--text); line-height:1.2; }
+  .day-meta { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .day-arrow { color:#CCC; }
+  .day-arrow svg { width:16px; height:16px; }
+
+  /* Missed prayers pills row */
+  .missed-pills { display:flex; gap:6px; padding:0 16px 14px; flex-wrap:wrap; }
+  .missed-pill {
+    display:flex; align-items:center; gap:5px;
+    padding:5px 10px; border-radius:20px;
+    font-size:11px; font-weight:600;
+  }
+  .missed-pill.todo { background:var(--red-light); color:var(--red); border:1px solid #F5C2C2; }
+  .missed-pill.kaza-done { background:var(--green-light); color:var(--green); border:1px solid var(--green-mid); }
+  .missed-pill svg { width:11px; height:11px; }
+
+  /* Mark all kaza button inside card */
+  .card-action {
+    margin:0 14px 14px;
+    padding:10px 16px;
+    background:var(--amber-light);
+    border:1.5px solid var(--amber-border);
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-size:13px; font-weight:700; color:var(--amber);
+    font-family:inherit; cursor:pointer;
+    transition:background .15s;
+  }
+  .card-action:hover { background:#F5DDB0; }
+  .card-action svg { width:15px; height:15px; }
+
+  /* Already handled card style */
+  .day-card.handled { opacity:.55; }
+  .day-card.handled .day-card-header { background:var(--bg); }
+
+  /* Empty state */
+  .empty-state {
+    margin:40px 16px;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:40px 24px;
+    text-align:center;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+  .empty-icon { font-size:48px; margin-bottom:16px; }
+  .empty-title { font-size:18px; font-weight:800; color:var(--text); margin-bottom:8px; }
+  .empty-sub { font-size:13px; color:var(--text-muted); line-height:1.5; }
+
+  /* Bottom CTA */
+  .bottom-cta {
+    margin:4px 16px 20px;
+    padding:15px 20px;
+    background:var(--green);
+    border-radius:16px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    font-size:14px; font-weight:800; color:#fff;
+    font-family:inherit; cursor:pointer;
+    box-shadow:0 4px 14px rgba(42,157,92,.3);
+    transition:transform .15s;
+  }
+  .bottom-cta:hover { transform:translateY(-1px); }
+  .bottom-cta svg { width:18px; height:18px; }
+
+  /* Info tip */
+  .info-tip {
+    margin:0 16px 14px;
+    background:var(--green-light);
+    border-radius:14px;
+    padding:12px 16px;
+    display:flex; align-items:flex-start; gap:10px;
+  }
+  .info-tip svg { width:16px; height:16px; flex-shrink:0; margin-top:1px; }
+  .info-tip-text { font-size:12px; color:#2A6640; line-height:1.5; font-weight:500; }
+
+  /* Bottom Nav */
+  .bottom-nav { position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--border); display:flex; align-items:center; padding:10px 0 24px; }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; color:#BBBBBB; font-weight:500; cursor:pointer; }
+  .nav-item.active { color:var(--green); }
+  .nav-item svg { width:24px; height:24px; }
+  .nav-fab-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; }
+  .nav-fab { width:50px; height:50px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(42,157,92,.4); margin-top:-18px; }
+  .nav-fab svg { width:22px; height:22px; }
+  .nav-fab-label { font-size:11px; color:var(--green); font-weight:700; margin-top:2px; }
+</style>
+</head>
+<body>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-icons">
+    <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+    <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+  </div>
+</div>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </div>
+  <div class="header-center">
+    <div class="page-title">Kaza Günleri</div>
+    <div class="page-subtitle">Eksik namazlarını tamamla</div>
+  </div>
+  <div class="header-right"></div>
+</div>
+
+<!-- Summary Banner -->
+<div class="summary-banner">
+  <div class="summary-left">
+    <div class="summary-label">Toplam kaza namazın</div>
+    <div class="summary-count">14</div>
+    <div class="summary-sub">4 günde eksik namaz</div>
+  </div>
+  <div class="summary-prayers">
+    <!-- Sabah -->
+    <div class="prayer-stat">
+      <div class="prayer-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+      <div class="prayer-stat-name">Sabah</div>
+      <div class="prayer-stat-bar-wrap"><div class="prayer-stat-bar" style="width:80%"></div></div>
+      <div class="prayer-stat-num">4</div>
+    </div>
+    <!-- Öğle -->
+    <div class="prayer-stat">
+      <div class="prayer-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+      <div class="prayer-stat-name">Öğle</div>
+      <div class="prayer-stat-bar-wrap"><div class="prayer-stat-bar" style="width:40%"></div></div>
+      <div class="prayer-stat-num">2</div>
+    </div>
+    <!-- İkindi -->
+    <div class="prayer-stat">
+      <div class="prayer-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+      <div class="prayer-stat-name">İkindi</div>
+      <div class="prayer-stat-bar-wrap"><div class="prayer-stat-bar" style="width:60%"></div></div>
+      <div class="prayer-stat-num">3</div>
+    </div>
+    <!-- Akşam -->
+    <div class="prayer-stat">
+      <div class="prayer-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+      <div class="prayer-stat-name">Akşam</div>
+      <div class="prayer-stat-bar-wrap"><div class="prayer-stat-bar" style="width:60%"></div></div>
+      <div class="prayer-stat-num">3</div>
+    </div>
+    <!-- Yatsı -->
+    <div class="prayer-stat">
+      <div class="prayer-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+      <div class="prayer-stat-name">Yatsı</div>
+      <div class="prayer-stat-bar-wrap"><div class="prayer-stat-bar" style="width:40%"></div></div>
+      <div class="prayer-stat-num">2</div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter pills -->
+<div class="filter-row">
+  <button class="filter-pill active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Tümü (4)
+  </button>
+  <button class="filter-pill">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>
+    Sabah
+  </button>
+  <button class="filter-pill">Öğle</button>
+  <button class="filter-pill">İkindi</button>
+  <button class="filter-pill">Akşam</button>
+  <button class="filter-pill">Yatsı</button>
+</div>
+
+<!-- Info tip -->
+<div class="info-tip">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <div class="info-tip-text">Eksik namazların en eskiden başlayarak sıralandı. Bir güne dokun ve kazasını hemen işaretle.</div>
+</div>
+
+<!-- Section label -->
+<div class="section-label">Eksik günler — eskiden yeniye</div>
+
+<!-- DAY 1 — Full miss (5 missed) -->
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-card-header">
+    <div class="day-badge full-miss">
+      <div class="day-badge-num">12</div>
+      <div class="day-badge-month">Oca</div>
+    </div>
+    <div class="day-info">
+      <div class="day-name">12 Ocak 2025 · Pazar</div>
+      <div class="day-meta">5 namaz eksik · Hiç kılınmadı</div>
+    </div>
+    <div class="day-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="missed-pills">
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Sabah
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Öğle
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      İkindi
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Akşam
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Yatsı
+    </div>
+  </div>
+  <button class="card-action">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    Bu günü işaretle
+  </button>
+</div>
+
+<!-- DAY 2 — Partial miss (2 missed) -->
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-card-header">
+    <div class="day-badge partial">
+      <div class="day-badge-num">3</div>
+      <div class="day-badge-month">Mar</div>
+    </div>
+    <div class="day-info">
+      <div class="day-name">3 Mart 2025 · Pazartesi</div>
+      <div class="day-meta">2 namaz eksik · 3 namaz kılındı</div>
+    </div>
+    <div class="day-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="missed-pills">
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Sabah
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Öğle
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      İkindi
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Akşam
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Yatsı
+    </div>
+  </div>
+  <button class="card-action">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    Bu günü işaretle
+  </button>
+</div>
+
+<!-- DAY 3 — Partial (1 missed, Sabah only) -->
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-card-header">
+    <div class="day-badge partial">
+      <div class="day-badge-num">17</div>
+      <div class="day-badge-month">Nis</div>
+    </div>
+    <div class="day-info">
+      <div class="day-name">17 Nisan 2025 · Perşembe</div>
+      <div class="day-meta">1 namaz eksik · 4 namaz kılındı</div>
+    </div>
+    <div class="day-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="missed-pills">
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Sabah
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Öğle
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      İkindi
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Akşam
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Yatsı
+    </div>
+  </div>
+  <button class="card-action">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    Bu günü işaretle
+  </button>
+</div>
+
+<!-- DAY 4 — Most recent partial -->
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-card-header">
+    <div class="day-badge partial">
+      <div class="day-badge-num">2</div>
+      <div class="day-badge-month">May</div>
+    </div>
+    <div class="day-info">
+      <div class="day-name">2 Mayıs 2025 · Cuma</div>
+      <div class="day-meta">2 namaz eksik · 3 namaz kılındı</div>
+    </div>
+    <div class="day-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="missed-pills">
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Sabah
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Öğle
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      İkindi
+    </div>
+    <div class="missed-pill kaza-done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Akşam
+    </div>
+    <div class="missed-pill todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg>
+      Yatsı
+    </div>
+  </div>
+  <button class="card-action">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    Bu günü işaretle
+  </button>
+</div>
+
+<!-- Bottom progress CTA -->
+<div style="margin:8px 16px 6px;display:flex;justify-content:space-between;align-items:center;">
+  <div style="font-size:12px;color:var(--text-muted);font-weight:500;">İlerleme</div>
+  <div style="font-size:12px;font-weight:700;color:var(--green);">7 / 21 kaza tamamlandı</div>
+</div>
+<div style="margin:0 16px 16px;background:var(--border);border-radius:6px;height:8px;overflow:hidden;">
+  <div style="width:33%;height:100%;background:linear-gradient(to right,#4db87a,#2A9D5C);border-radius:6px;"></div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Ana Sayfa</span></div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg><span>Kıble</span></div>
+  <div class="nav-fab-wrap">
+    <div class="nav-fab"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <span class="nav-fab-label">Hızlı İşaretle</span>
+  </div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>İstatistikler</span></div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></div>
+</div>
+
+<script>
+function toggleCard(card) {
+  // In real app this navigates to Hızlı İşaretle for that date
+  // For Figma preview, just shows a subtle press effect
+  card.style.transform = 'scale(0.98)';
+  setTimeout(() => card.style.transform = '', 150);
+}
+</script>
+</body>
+</html>

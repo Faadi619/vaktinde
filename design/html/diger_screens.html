@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – Diğer Sayfalar</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:#2A9D5C; --green-dark:#1F7A45; --green-light:#E8F5EE; --green-mid:#A8D5B5;
+    --amber:#C8852A; --amber-light:#FFF4E0; --amber-border:#F5CCA0;
+    --red:#E05252; --red-light:#FDE8E8;
+    --blue:#3A7BD5; --blue-light:#E6F1FF;
+    --text:#1A1A1A; --text-muted:#888; --border:#EFEFEF;
+    --bg:#F4F4F0; --card:#FFFFFF; --radius:18px;
+  }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:#E8E8E4; padding:24px; }
+  .screens-row { display:flex; gap:24px; flex-wrap:wrap; }
+  .screen-wrap { display:flex; flex-direction:column; gap:8px; }
+  .screen-label { font-size:11px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.08em; text-align:center; }
+  .screen { width:375px; background:var(--bg); border-radius:28px; overflow:hidden; box-shadow:0 8px 40px rgba(0,0,0,.14); flex-shrink:0; }
+
+  /* Status Bar */
+  .status-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 4px; font-size:15px; font-weight:700; color:var(--text); }
+  .status-icons { display:flex; align-items:center; gap:5px; }
+  .signal-bars { display:flex; align-items:flex-end; gap:2px; }
+  .sbar { width:3px; border-radius:1px; background:var(--text); }
+
+  /* Page Header */
+  .page-header { display:flex; align-items:center; gap:12px; padding:12px 20px 16px; }
+  .back-btn { width:38px; height:38px; border-radius:50%; background:var(--card); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .back-btn svg { width:16px; height:16px; }
+  .page-title { font-size:18px; font-weight:800; color:var(--text); flex:1; }
+
+  /* Card */
+  .card { margin:0 16px 12px; background:var(--card); border-radius:var(--radius); box-shadow:0 2px 12px rgba(0,0,0,.06); overflow:hidden; }
+  .card-pad { padding:16px 18px; }
+
+  /* Section label */
+  .sec-lbl { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; padding:4px 20px 8px; }
+
+  /* Setting row */
+  .setting-row { display:flex; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); gap:12px; cursor:pointer; transition:background .1s; }
+  .setting-row:last-child { border-bottom:none; }
+  .setting-row:hover { background:#fafafa; }
+  .setting-icon { width:36px; height:36px; border-radius:10px; background:var(--green-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .setting-icon svg { width:17px; height:17px; }
+  .setting-text { flex:1; }
+  .setting-title { font-size:14px; font-weight:700; color:var(--text); line-height:1.2; }
+  .setting-sub { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .setting-chev { color:#CCC; flex-shrink:0; }
+  .setting-chev svg { width:15px; height:15px; }
+  .setting-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-right:6px; }
+  .sb-green { background:var(--green-light); color:var(--green); }
+  .sb-amber { background:var(--amber-light); color:var(--amber); border:1px solid var(--amber-border); }
+  .sb-gray  { background:var(--border); color:var(--text-muted); }
+
+  /* Info tip */
+  .info-tip { margin:0 16px 12px; background:var(--green-light); border-radius:14px; padding:13px 16px; display:flex; gap:10px; }
+  .info-tip svg { width:16px; height:16px; flex-shrink:0; margin-top:1px; }
+  .info-tip-text { font-size:12px; color:#2A6640; line-height:1.5; font-weight:500; }
+
+  /* Warning tip */
+  .warn-tip { margin:0 16px 12px; background:var(--amber-light); border-radius:14px; padding:13px 16px; display:flex; gap:10px; border:1px solid var(--amber-border); }
+  .warn-tip svg { width:16px; height:16px; flex-shrink:0; margin-top:1px; }
+  .warn-tip-text { font-size:12px; color:#8B5A10; line-height:1.5; font-weight:500; }
+
+  /* Primary btn */
+  .btn-primary { display:flex; align-items:center; justify-content:center; gap:8px; margin:0 16px 10px; padding:14px; background:var(--green); border:none; border-radius:14px; font-family:inherit; font-size:15px; font-weight:800; color:#fff; cursor:pointer; width:calc(100% - 32px); }
+  .btn-primary svg { width:18px; height:18px; }
+  .btn-secondary { display:flex; align-items:center; justify-content:center; gap:8px; margin:0 16px 10px; padding:13px; background:var(--card); border:2px solid var(--green); border-radius:14px; font-family:inherit; font-size:15px; font-weight:700; color:var(--green); cursor:pointer; width:calc(100% - 32px); }
+  .btn-danger { display:flex; align-items:center; justify-content:center; gap:8px; margin:0 16px 20px; padding:13px; background:var(--red-light); border:1.5px solid #F5C2C2; border-radius:14px; font-family:inherit; font-size:15px; font-weight:700; color:var(--red); cursor:pointer; width:calc(100% - 32px); }
+
+  /* Progress bar */
+  .progress-wrap { margin:0 16px 12px; }
+  .progress-label { display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:6px; }
+  .progress-bar { height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+  .progress-fill { height:100%; border-radius:4px; background:linear-gradient(to right, #4db87a, #2A9D5C); }
+
+  /* Backup item */
+  .backup-item { display:flex; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); gap:12px; }
+  .backup-item:last-child { border-bottom:none; }
+  .backup-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .backup-icon.cloud { background:var(--blue-light); }
+  .backup-icon.local { background:var(--green-light); }
+  .backup-icon svg { width:18px; height:18px; }
+  .backup-info { flex:1; }
+  .backup-title { font-size:14px; font-weight:700; color:var(--text); }
+  .backup-sub { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .backup-status { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .bs-ok  { background:var(--green-light); color:var(--green); }
+  .bs-warn { background:var(--amber-light); color:var(--amber); }
+
+  /* FAQ item */
+  .faq-item { padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; }
+  .faq-item:last-child { border-bottom:none; }
+  .faq-q { display:flex; align-items:center; gap:10px; }
+  .faq-q-text { flex:1; font-size:14px; font-weight:700; color:var(--text); line-height:1.4; }
+  .faq-chev { color:#CCC; flex-shrink:0; }
+  .faq-chev svg { width:15px; height:15px; }
+  .faq-a { font-size:13px; color:var(--text-muted); line-height:1.6; margin-top:10px; padding-left:2px; }
+  .faq-item.open .faq-chev svg { transform:rotate(90deg); }
+
+  /* Contact card */
+  .contact-row { display:flex; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); gap:12px; cursor:pointer; }
+  .contact-row:last-child { border-bottom:none; }
+  .contact-icon { width:40px; height:40px; border-radius:12px; background:var(--green-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .contact-icon svg { width:18px; height:18px; }
+  .contact-title { font-size:14px; font-weight:700; color:var(--text); flex:1; }
+  .contact-sub { font-size:12px; color:var(--text-muted); margin-top:1px; }
+
+  /* Policy text */
+  .policy-body { padding:0 20px 24px; }
+  .policy-section-title { font-size:14px; font-weight:800; color:var(--text); margin:16px 0 6px; }
+  .policy-text { font-size:13px; color:var(--text-muted); line-height:1.7; }
+  .policy-updated { font-size:11px; color:var(--text-muted); padding:12px 20px 0; font-style:italic; }
+
+  /* App info card */
+  .app-info-card { margin:0 16px 12px; background:linear-gradient(135deg, #1F7A45, #2A9D5C); border-radius:var(--radius); padding:24px 20px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .app-info-icon { width:72px; height:72px; background:rgba(255,255,255,.15); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+  .app-info-name { font-size:22px; font-weight:800; color:#fff; }
+  .app-info-version { font-size:13px; color:rgba(255,255,255,.7); }
+  .app-info-tagline { font-size:12px; color:rgba(255,255,255,.6); text-align:center; line-height:1.5; }
+
+  /* Divider */
+  .divider { height:1px; background:var(--border); margin:4px 16px 12px; }
+
+  /* Bottom spacer */
+  .bottom-space { height:28px; }
+</style>
+</head>
+<body>
+<div class="screens-row">
+
+<!-- ══════════════════════════════
+     1. VERİ YEDEKLEme
+══════════════════════════════ -->
+<div class="screen-wrap">
+  <div class="screen-label">Veri Yedekleme</div>
+  <div class="screen">
+
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+        <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div class="page-title">Veri Yedekleme</div>
+    </div>
+
+    <!-- Status summary -->
+    <div class="card">
+      <div class="backup-item">
+        <div class="backup-icon cloud">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3A7BD5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 000-10z"/></svg>
+        </div>
+        <div class="backup-info">
+          <div class="backup-title">Firebase Yedek</div>
+          <div class="backup-sub">Son yedek: Bugün 08:34</div>
+        </div>
+        <div class="backup-status bs-ok">Güncel</div>
+      </div>
+      <div class="backup-item">
+        <div class="backup-icon local">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="backup-info">
+          <div class="backup-title">Yerel Depolama</div>
+          <div class="backup-sub">Son senkronizasyon: 2 gün önce</div>
+        </div>
+        <div class="backup-status bs-warn">Eski</div>
+      </div>
+    </div>
+
+    <!-- Storage usage -->
+    <div class="sec-lbl">Depolama Kullanımı</div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span style="color:var(--text-muted);">Kullanılan</span>
+        <span style="color:var(--green);font-weight:700;">2.4 MB / 50 MB</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:5%"></div></div>
+    </div>
+
+    <!-- What gets backed up -->
+    <div class="sec-lbl">Yedeklenen Veriler</div>
+    <div class="card">
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><polyline points="9 16 11 18 15 14"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Namaz kayıtları</div><div class="setting-sub">Tüm geçmiş namaz verileri</div></div>
+        <div class="setting-badge sb-green">✓ Aktif</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.97 0 9-3.58 9-8 0-3-2-5.5-4-7 .5 2-1 4-3 4-1.5 0-2.5-1-2.5-2.5C11.5 7 10 5 8 3c0 3-3 5-3 9 0 4.42 3.13 8 7 8z"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Seri ve rozetler</div><div class="setting-sub">Kazanılmış başarılar</div></div>
+        <div class="setting-badge sb-green">✓ Aktif</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Uygulama ayarları</div><div class="setting-sub">Bildirim ve tercihler</div></div>
+        <div class="setting-badge sb-green">✓ Aktif</div>
+      </div>
+    </div>
+
+    <div class="info-tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="info-tip-text">Verileriniz Firebase'de şifreli olarak saklanır. Başka bir cihazda giriş yaptığınızda otomatik geri yüklenir.</div>
+    </div>
+
+    <button class="btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Şimdi Yedekle
+    </button>
+
+    <div class="sec-lbl">Geri Yükleme</div>
+    <div class="warn-tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="warn-tip-text">Geri yükleme mevcut verilerin üzerine yazar. Bu işlem geri alınamaz.</div>
+    </div>
+    <button class="btn-secondary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 109-9M3 12V7m0 5H8"/></svg>
+      Yedekten Geri Yükle
+    </button>
+
+    <div class="bottom-space"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     2. HAKKIMIZDA
+══════════════════════════════ -->
+<div class="screen-wrap">
+  <div class="screen-label">Hakkımızda</div>
+  <div class="screen">
+
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+        <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div class="page-title">Hakkımızda</div>
+    </div>
+
+    <!-- App hero -->
+    <div class="app-info-card">
+      <div class="app-info-icon">
+        <svg width="40" height="40" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <path d="M210 76 A200 200 0 1 0 210 436 A148 148 0 1 1 210 76 Z" fill="white" opacity=".9"/>
+          <g transform="translate(310, 256)">
+            <line x1="-60" y1="-72" x2="0" y2="0" stroke="white" stroke-width="16" stroke-linecap="round"/>
+            <line x1="55" y1="-96" x2="0" y2="0" stroke="white" stroke-width="13" stroke-linecap="round"/>
+            <rect x="-5" y="-128" width="10" height="22" rx="5" fill="white"/>
+            <rect x="-5" y="96" width="10" height="22" rx="5" fill="white"/>
+            <rect x="96" y="-5" width="22" height="10" rx="5" fill="white"/>
+            <rect x="-118" y="-5" width="22" height="10" rx="5" fill="white"/>
+            <circle cx="0" cy="0" r="10" fill="white"/>
+            <circle cx="0" cy="0" r="5" fill="#2A9D5C"/>
+          </g>
+        </svg>
+      </div>
+      <div class="app-info-name">Vaktinde</div>
+      <div class="app-info-version">Sürüm 1.0.0 · Build 100</div>
+      <div class="app-info-tagline">Namazlarını düzenli kıl,<br>alışkanlıklarını güçlendir.</div>
+    </div>
+
+    <!-- App details -->
+    <div class="card">
+      <div class="setting-row">
+        <div class="setting-text"><div class="setting-title">Uygulama Sürümü</div></div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);">1.0.0</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-text"><div class="setting-title">Build Numarası</div></div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);">100</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-text"><div class="setting-title">Platform</div></div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);">iOS / Android</div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-text"><div class="setting-title">Geliştirici</div></div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);">[Şirket Adı]</div>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="sec-lbl">Bağlantılar</div>
+    <div class="card">
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Web Sitesi</div><div class="setting-sub">vaktinde.app</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Uygulamayı Değerlendir</div><div class="setting-sub">App Store / Play Store</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Arkadaşlarınla Paylaş</div><div class="setting-sub">Uygulamayı tanıt</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- Licenses -->
+    <div class="sec-lbl">Yasal</div>
+    <div class="card">
+      <div class="setting-row">
+        <div class="setting-text"><div class="setting-title">Açık Kaynak Lisansları</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-text"><div class="setting-title">Kullanım Koşulları</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- Made with love note -->
+    <div style="text-align:center;padding:16px 20px 28px;font-size:13px;color:var(--text-muted);">
+      💚 Türkiye'de sevgiyle yapıldı
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     3. YARDIM VE DESTEK
+══════════════════════════════ -->
+<div class="screen-wrap">
+  <div class="screen-label">Yardım ve Destek</div>
+  <div class="screen">
+
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+        <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div class="page-title">Yardım ve Destek</div>
+    </div>
+
+    <!-- Contact options -->
+    <div class="sec-lbl">Bize Ulaşın</div>
+    <div class="card">
+      <div class="contact-row">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div>
+          <div class="contact-title">E-posta ile Yaz</div>
+          <div style="font-size:12px;color:var(--text-muted);">destek@vaktinde.app</div>
+        </div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div>
+          <div class="contact-title">Geri Bildirim Gönder</div>
+          <div style="font-size:12px;color:var(--text-muted);">Öneri veya hata bildirimi</div>
+        </div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="sec-lbl">Sıkça Sorulan Sorular</div>
+    <div class="card">
+
+      <div class="faq-item open">
+        <div class="faq-q">
+          <div class="faq-q-text">Namaz vakitleri neden farklı görünüyor?</div>
+          <div class="faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="faq-a">Namaz vakitleri Diyanet İşleri Başkanlığı'nın verileri kullanılarak konumunuza göre hesaplanır. Konum izinlerini kontrol edin veya Namaz Vakitleri ayarlarından manuel şehir seçin.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <div class="faq-q-text">Serim neden sıfırlandı?</div>
+          <div class="faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <div class="faq-q-text">Kaza namazı nasıl işaretlenir?</div>
+          <div class="faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <div class="faq-q-text">Bildirimler neden gelmiyor?</div>
+          <div class="faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <div class="faq-q-text">Verilerimi yeni telefona nasıl aktarırım?</div>
+          <div class="faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <div class="faq-q-text">Kıble pusulası doğru çalışmıyor</div>
+          <div class="faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="padding:4px 20px 28px;text-align:center;font-size:12px;color:var(--text-muted);">
+      Yanıt bulamadın mı? <span style="color:var(--green);font-weight:700;cursor:pointer;">Bize yaz →</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     4. GİZLİLİK POLİTİKASI
+══════════════════════════════ -->
+<div class="screen-wrap">
+  <div class="screen-label">Gizlilik Politikası</div>
+  <div class="screen">
+
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+        <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div class="page-title">Gizlilik Politikası</div>
+    </div>
+
+    <!-- Key points summary -->
+    <div class="info-tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <div class="info-tip-text">Verileriniz yalnızca uygulamanın çalışması için kullanılır. Hiçbir zaman üçüncü taraflarla paylaşılmaz veya satılmaz.</div>
+    </div>
+
+    <!-- Quick summary cards -->
+    <div class="sec-lbl">Özet</div>
+    <div class="card">
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Toplanan veriler</div><div class="setting-sub">Ad, e-posta, konum, namaz kayıtları</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Veri güvenliği</div><div class="setting-sub">Firebase şifreli depolama</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></div>
+        <div class="setting-text"><div class="setting-title">Veri silme</div><div class="setting-sub">Hesabı silerek tüm verileri kaldır</div></div>
+        <div class="setting-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- Policy text -->
+    <div class="policy-updated">Son güncelleme: 1 Mayıs 2025</div>
+    <div class="policy-body">
+      <div class="policy-section-title">1. Topladığımız Bilgiler</div>
+      <div class="policy-text">Vaktinde uygulaması, hizmet sunabilmek için aşağıdaki bilgileri toplar: hesap oluşturma sırasında ad ve e-posta adresi; namaz vakitlerinin hesaplanması için konum bilgisi; namaz tamamlama kayıtları ve seri verileri; uygulama tercihleri ve bildirim ayarları.</div>
+
+      <div class="policy-section-title">2. Verilerin Kullanımı</div>
+      <div class="policy-text">Toplanan veriler yalnızca uygulamanın temel işlevleri için kullanılır. Namaz vakitlerinin konumunuza göre hesaplanması, kişisel istatistiklerin gösterilmesi ve bildirim gönderimi bu kapsamdadır. Verileriniz hiçbir koşulda üçüncü taraflarla paylaşılmaz veya reklam amaçlı kullanılmaz.</div>
+
+      <div class="policy-section-title">3. Veri Güvenliği</div>
+      <div class="policy-text">Tüm verileriniz Google Firebase altyapısında şifreli olarak saklanır. Yetkisiz erişime karşı endüstri standardı güvenlik önlemleri uygulanmaktadır.</div>
+
+      <div class="policy-section-title">4. Haklarınız</div>
+      <div class="policy-text">Kişisel verilerinize erişme, düzeltme veya silme hakkına sahipsiniz. Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak kaldırılır. Talepleriniz için destek@vaktinde.app adresine yazabilirsiniz.</div>
+
+      <div class="policy-section-title">5. İletişim</div>
+      <div class="policy-text">Gizlilik politikamız hakkında sorularınız için: destek@vaktinde.app</div>
+    </div>
+
+    <div class="bottom-space"></div>
+  </div>
+</div>
+
+</div><!-- /screens-row -->
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – Enhanced Streak Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:#2A9D5C; --green-light:#E8F5EE; --green-mid:#A8D5B5;
+    --amber:#C8852A; --amber-light:#FFF4E0; --amber-border:#F5CCA0;
+    --red:#E05252; --red-light:#FDE8E8;
+    --blue:#3A7BD5; --blue-light:#E6F1FF;
+    --text:#1A1A1A; --text-muted:#888; --border:#EFEFEF;
+    --bg:#F4F4F0; --card:#FFFFFF; --radius:18px;
+  }
+  body {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--bg);
+    width:375px; margin:0 auto;
+    overflow-x:hidden;
+    padding-bottom:40px;
+  }
+
+  /* Status Bar */
+  .status-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 4px; font-size:15px; font-weight:700; color:var(--text); }
+  .status-icons { display:flex; align-items:center; gap:5px; }
+  .signal-bars { display:flex; align-items:flex-end; gap:2px; }
+  .sbar { width:3px; border-radius:1px; background:var(--text); }
+
+  /* Header */
+  .header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px 14px; }
+  .location-row { display:flex; align-items:center; gap:10px; }
+  .loc-bubble { width:40px; height:40px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; }
+  .loc-bubble svg { width:20px; height:20px; }
+  .loc-city { font-size:17px; font-weight:700; color:var(--text); line-height:1.2; }
+  .loc-date { font-size:12px; color:var(--text-muted); margin-top:1px; }
+  .edit-icon svg { width:22px; height:22px; }
+
+  /* ── STREAK CARD ── */
+  .streak-card {
+    margin:0 16px 14px;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:18px 18px 16px;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+
+  /* Top row: icon + count + ring */
+  .streak-top { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .plant-circle {
+    width:52px; height:52px; border-radius:50%;
+    background:var(--green-light);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .plant-circle svg { width:28px; height:28px; }
+  .streak-text { flex:1; }
+  .streak-num { font-size:22px; font-weight:800; color:var(--text); line-height:1.1; }
+  .streak-sub { font-size:13px; color:var(--text-muted); margin-top:2px; }
+
+  /* Progress ring */
+  .ring-wrap { position:relative; width:72px; height:72px; flex-shrink:0; }
+  .ring-wrap svg { transform:rotate(-90deg); }
+  .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring-pct { font-size:16px; font-weight:800; color:var(--text); line-height:1; }
+  .ring-lbl { font-size:8px; color:var(--text-muted); margin-top:2px; text-align:center; line-height:1.3; }
+
+  /* ── Day dots grid ── */
+  .dots-section { }
+  .dots-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .dots-label { font-size:11px; font-weight:600; color:var(--text-muted); }
+  .dots-nav { display:flex; align-items:center; gap:6px; }
+  .dots-nav-btn { width:22px; height:22px; border-radius:50%; background:var(--bg); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .dots-nav-btn svg { width:11px; height:11px; }
+  .dots-month { font-size:11px; font-weight:700; color:var(--text); }
+
+  /* Days of week header */
+  .days-of-week { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:5px; }
+  .dow { text-align:center; font-size:9px; font-weight:700; color:var(--text-muted); }
+  .dow.today-col { color:var(--green); }
+
+  /* The dots grid */
+  .dots-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+
+  .day-dot {
+    aspect-ratio:1;
+    border-radius:50%;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    cursor:pointer;
+    position:relative;
+    transition:transform .12s;
+    gap:1px;
+  }
+  .day-dot:hover { transform:scale(1.15); }
+  .day-dot .dd-num { font-size:10px; font-weight:700; line-height:1; }
+  .day-dot .dd-dots { display:flex; gap:1.5px; margin-top:1px; }
+  .day-dot .dd-dots span { width:3px; height:3px; border-radius:50%; background:currentColor; opacity:.7; }
+
+  /* States */
+  .dd-full     { background:var(--green); color:#fff; }
+  .dd-partial  { background:var(--amber-light); color:var(--amber); border:1.5px solid var(--amber-border); }
+  .dd-missed   { background:var(--red-light); color:var(--red); border:1.5px solid #F5C2C2; }
+  .dd-special  { background:#EDE9FE; color:#7C3AED; border:1.5px solid #C4B5FD; }
+  .dd-today    { background:var(--green); color:#fff; box-shadow:0 0 0 3px var(--green-light), 0 0 0 5px var(--green); }
+  .dd-today-partial { background:var(--amber-light); color:var(--amber); border:2px solid var(--amber); box-shadow:0 0 0 3px var(--amber-light); }
+  .dd-future   { background:var(--border); color:#ccc; cursor:default; }
+  .dd-future:hover { transform:none; }
+  .dd-empty    { background:transparent; cursor:default; }
+  .dd-empty:hover { transform:none; }
+
+  /* Legend */
+  .legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted); font-weight:500; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* Tooltip popup */
+  .tooltip-overlay {
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.3);
+    z-index:100;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:0;
+  }
+  .tooltip-overlay.show { display:flex; }
+  .tooltip-sheet {
+    background:var(--card);
+    width:375px;
+    border-radius:20px 20px 0 0;
+    padding:20px 20px 32px;
+    box-shadow:0 -4px 30px rgba(0,0,0,.15);
+    animation:slideUp .22s ease-out;
+  }
+  @keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .tooltip-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
+  .tooltip-date { font-size:15px; font-weight:800; color:var(--text); margin-bottom:4px; }
+  .tooltip-summary { font-size:12px; color:var(--text-muted); margin-bottom:16px; }
+  .tooltip-prayers { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+  .tp-row { display:flex; align-items:center; gap:10px; }
+  .tp-icon { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .tp-icon svg { width:14px; height:14px; }
+  .tp-name { flex:1; font-size:13px; font-weight:600; color:var(--text); }
+  .tp-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; }
+  .tp-done    { background:var(--green-light); color:var(--green); }
+  .tp-kaza    { background:var(--blue-light);  color:var(--blue); }
+  .tp-missed  { background:var(--red-light);   color:var(--red); }
+  .tp-special { background:#EDE9FE; color:#7C3AED; }
+  .tooltip-action {
+    width:100%; padding:13px;
+    background:var(--amber);
+    border:none; border-radius:12px;
+    font-family:inherit; font-size:14px; font-weight:800; color:#fff;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .tooltip-action svg { width:17px; height:17px; }
+  .tooltip-action.all-done {
+    background:var(--green-light);
+    color:var(--green);
+  }
+
+  /* Divider label */
+  .section-divider { padding:4px 20px 12px; font-size:13px; font-weight:700; color:var(--text-muted); }
+
+  /* Mini prayer list preview */
+  .prayer-preview {
+    margin:0 16px 12px;
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    overflow:hidden;
+    opacity:.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-icons">
+    <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+    <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="location-row">
+    <div class="loc-bubble">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#2A9D5C" stroke="none"/></svg>
+    </div>
+    <div>
+      <div class="loc-city">İstanbul</div>
+      <div class="loc-date">24 Mayıs 2025 · Cumartesi</div>
+    </div>
+  </div>
+  <div class="edit-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ENHANCED STREAK CARD
+═══════════════════════════════════════ -->
+<div class="streak-card">
+
+  <!-- Top: plant icon + streak count + ring -->
+  <div class="streak-top">
+    <div class="plant-circle">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 22V13" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 13C12 13 8 11 8 7C8 4.79 9.79 3 12 3C14.21 3 16 4.79 16 7C16 11 12 13 12 13Z" fill="#2A9D5C" opacity=".25" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 13C12 13 9 15.5 7 15.5C5.34 15.5 4 14.16 4 12.5C4 10.84 5.34 9.5 7 9.5C9 9.5 12 13 12 13Z" fill="#2A9D5C" opacity=".18" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 13C12 13 15 15.5 17 15.5C18.66 15.5 20 14.16 20 12.5C20 10.84 18.66 9.5 17 9.5C15 9.5 12 13 12 13Z" fill="#2A9D5C" opacity=".18" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="streak-text">
+      <div class="streak-num">6. gün</div>
+      <div class="streak-sub">Serin devam ediyor</div>
+    </div>
+    <div class="ring-wrap">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="28" fill="none" stroke="#E8F5EE" stroke-width="7"/>
+        <circle cx="36" cy="36" r="28" fill="none" stroke="#2A9D5C" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="30"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-pct">%83</div>
+        <div class="ring-lbl">bu ay</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Days of week header -->
+  <div class="dots-section">
+    <div class="dots-header">
+      <div class="dots-label">Mayıs 2025</div>
+      <div class="dots-nav">
+        <button class="dots-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="dots-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </div>
+
+    <div class="days-of-week">
+      <div class="dow">Pzt</div>
+      <div class="dow">Sal</div>
+      <div class="dow">Çar</div>
+      <div class="dow">Per</div>
+      <div class="dow">Cum</div>
+      <div class="dow">Cmt</div>
+      <div class="dow today-col">Paz</div>
+    </div>
+
+    <div class="dots-grid" id="dots-grid">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Tam (5/5)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--amber-light);border:1.5px solid var(--amber-border)"></div>Eksik</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red-light);border:1.5px solid #F5C2C2"></div>Hiç kılınmadı</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#EDE9FE;border:1.5px solid #C4B5FD"></div>Özel gün</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--border)"></div>Gelecek</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tooltip / Bottom Sheet ── -->
+<div class="tooltip-overlay" id="tooltip" onclick="closeTooltip(event)">
+  <div class="tooltip-sheet" id="tooltip-sheet">
+    <div class="tooltip-handle"></div>
+    <div class="tooltip-date" id="tt-date"></div>
+    <div class="tooltip-summary" id="tt-summary"></div>
+    <div class="tooltip-prayers" id="tt-prayers"></div>
+    <button class="tooltip-action" id="tt-action" onclick="goToHizliIsaretle()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span id="tt-action-label">Kaza namazlarını işaretle</span>
+    </button>
+  </div>
+</div>
+
+<script>
+// ── Day data for May 2025 ──
+// May 1 = Thursday = index 3 in Mon-first week
+const PRAYERS = ['Sabah','Öğle','İkindi','Akşam','Yatsı'];
+const PRAYER_ICONS = [
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
+];
+
+// type: 'full'|'partial'|'missed'|'special'|'today'|'today-partial'|'future'|'empty'
+// prayers: array of 'done'|'kaza'|'missed' per prayer
+const days = [
+  // Week 1 — May starts Thursday (3 empty cells)
+  {type:'empty'},{type:'empty'},{type:'empty'},
+  {num:1, type:'full',    day:'Per', prayers:['done','done','done','done','done']},
+  {num:2, type:'full',    day:'Cum', prayers:['done','done','done','done','done']},
+  {num:3, type:'partial', day:'Cmt', prayers:['done','done','missed','done','missed']},
+  {num:4, type:'full',    day:'Paz', prayers:['done','done','done','done','done']},
+  // Week 2
+  {num:5,  type:'full',    day:'Pzt', prayers:['done','done','done','done','done']},
+  {num:6,  type:'full',    day:'Sal', prayers:['done','done','done','done','done']},
+  {num:7,  type:'partial', day:'Çar', prayers:['missed','done','done','done','done']},
+  {num:8,  type:'full',    day:'Per', prayers:['done','done','done','done','done']},
+  {num:9,  type:'full',    day:'Cum', prayers:['done','done','done','done','done']},
+  {num:10, type:'special', day:'Cmt', prayers:['special','special','special','special','special']},
+  {num:11, type:'full',    day:'Paz', prayers:['done','done','done','done','done']},
+  // Week 3
+  {num:12, type:'full',    day:'Pzt', prayers:['done','done','done','done','done']},
+  {num:13, type:'full',    day:'Sal', prayers:['done','done','done','done','done']},
+  {num:14, type:'missed',  day:'Çar', prayers:['missed','missed','missed','missed','missed']},
+  {num:15, type:'full',    day:'Per', prayers:['done','done','done','done','done']},
+  {num:16, type:'full',    day:'Cum', prayers:['done','done','done','done','done']},
+  {num:17, type:'partial', day:'Cmt', prayers:['done','done','missed','missed','done']},
+  {num:18, type:'full',    day:'Paz', prayers:['done','done','done','done','done']},
+  // Week 4
+  {num:19, type:'full',    day:'Pzt', prayers:['done','done','done','done','done']},
+  {num:20, type:'full',    day:'Sal', prayers:['done','done','done','done','done']},
+  {num:21, type:'partial', day:'Çar', prayers:['missed','done','done','done','done']},
+  {num:22, type:'full',    day:'Per', prayers:['done','done','done','done','done']},
+  {num:23, type:'full',    day:'Cum', prayers:['done','done','done','done','done']},
+  // TODAY = 24
+  {num:24, type:'today-partial', day:'Cmt', prayers:['done','done','pending','pending','pending']},
+  // Future
+  {num:25, type:'future', day:'Paz'},
+  // Week 5
+  {num:26, type:'future', day:'Pzt'},
+  {num:27, type:'future', day:'Sal'},
+  {num:28, type:'future', day:'Çar'},
+  {num:29, type:'future', day:'Per'},
+  {num:30, type:'future', day:'Cum'},
+  {num:31, type:'future', day:'Cmt'},
+];
+
+const MONTHS = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+const DAYS_TR = ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
+
+function buildGrid() {
+  const grid = document.getElementById('dots-grid');
+  grid.innerHTML = '';
+  days.forEach((d, i) => {
+    const el = document.createElement('div');
+    el.className = 'day-dot';
+    if (d.type === 'empty') {
+      el.className += ' dd-empty';
+      el.style.pointerEvents = 'none';
+      grid.appendChild(el);
+      return;
+    }
+    if (d.type === 'future') {
+      el.className += ' dd-future';
+      el.innerHTML = `<div class="dd-num">${d.num}</div>`;
+      grid.appendChild(el);
+      return;
+    }
+    const stateClass = {
+      'full': 'dd-full',
+      'partial': 'dd-partial',
+      'missed': 'dd-missed',
+      'special': 'dd-special',
+      'today': 'dd-today',
+      'today-partial': 'dd-today-partial',
+    }[d.type] || 'dd-future';
+    el.className += ` ${stateClass}`;
+
+    // Count missed prayers for dot indicators
+    const missedCount = d.prayers ? d.prayers.filter(p => p === 'missed').length : 0;
+    const dotsHtml = missedCount > 0 && d.type !== 'full' && d.type !== 'today'
+      ? `<div class="dd-dots">${Array(Math.min(missedCount,3)).fill('<span></span>').join('')}</div>`
+      : '';
+    el.innerHTML = `<div class="dd-num">${d.num}</div>${dotsHtml}`;
+    el.onclick = () => showTooltip(d);
+    grid.appendChild(el);
+  });
+}
+
+function showTooltip(day) {
+  if (day.type === 'future' || day.type === 'empty') return;
+  const overlay = document.getElementById('tooltip');
+  const ttDate = document.getElementById('tt-date');
+  const ttSummary = document.getElementById('tt-summary');
+  const ttPrayers = document.getElementById('tt-prayers');
+  const ttAction = document.getElementById('tt-action');
+  const ttActionLabel = document.getElementById('tt-action-label');
+
+  const dayNames = {'Pzt':'Pazartesi','Sal':'Salı','Çar':'Çarşamba','Per':'Perşembe','Cum':'Cuma','Cmt':'Cumartesi','Paz':'Pazar'};
+  ttDate.textContent = `${day.num} Mayıs 2025 · ${dayNames[day.day] || day.day}`;
+
+  const missedPrayers = day.prayers ? day.prayers.filter(p => p === 'missed') : [];
+  const donePrayers   = day.prayers ? day.prayers.filter(p => p === 'done') : [];
+  const pendingPrayers = day.prayers ? day.prayers.filter(p => p === 'pending') : [];
+
+  if (day.type === 'full') {
+    ttSummary.textContent = 'Tüm namazlar kılındı ✓';
+  } else if (day.type === 'special') {
+    ttSummary.textContent = 'Özel gün — seri korudu';
+  } else if (day.type === 'today' || day.type === 'today-partial') {
+    ttSummary.textContent = `Bugün: ${donePrayers.length}/5 namaz kılındı`;
+  } else if (day.type === 'missed') {
+    ttSummary.textContent = 'Bu gün hiç namaz kılınmadı';
+  } else {
+    ttSummary.textContent = `${donePrayers.length}/5 namaz kılındı · ${missedPrayers.length} eksik`;
+  }
+
+  // Build prayer rows
+  if (day.prayers) {
+    ttPrayers.innerHTML = PRAYERS.map((name, i) => {
+      const state = day.prayers[i];
+      let badgeClass, badgeLabel;
+      if (state === 'done')    { badgeClass = 'tp-done';    badgeLabel = 'Kılındı'; }
+      else if (state === 'kaza')    { badgeClass = 'tp-kaza';    badgeLabel = 'Kaza kılındı'; }
+      else if (state === 'special') { badgeClass = 'tp-special'; badgeLabel = 'Özel gün'; }
+      else if (state === 'pending') { badgeClass = 'tp-missed';  badgeLabel = 'Henüz kılınmadı'; }
+      else                          { badgeClass = 'tp-missed';  badgeLabel = 'Kılınmadı'; }
+      return `<div class="tp-row">
+        <div class="tp-icon">${PRAYER_ICONS[i]}</div>
+        <div class="tp-name">${name}</div>
+        <div class="tp-badge ${badgeClass}">${badgeLabel}</div>
+      </div>`;
+    }).join('');
+  } else {
+    ttPrayers.innerHTML = '';
+  }
+
+  // Action button
+  const hasMissed = day.prayers && day.prayers.some(p => p === 'missed');
+  const hasPending = day.prayers && day.prayers.some(p => p === 'pending');
+  if (day.type === 'full') {
+    ttAction.className = 'tooltip-action all-done';
+    ttActionLabel.textContent = 'Mükemmel bir gün!';
+  } else if (day.type === 'special') {
+    ttAction.className = 'tooltip-action all-done';
+    ttActionLabel.textContent = 'Özel gün olarak işaretlendi';
+  } else if (hasPending) {
+    ttAction.className = 'tooltip-action';
+    ttAction.style.background = 'var(--green)';
+    ttActionLabel.textContent = 'Bugünü işaretle';
+  } else if (hasMissed) {
+    ttAction.className = 'tooltip-action';
+    ttAction.style.background = 'var(--amber)';
+    ttActionLabel.textContent = 'Kaza namazlarını işaretle →';
+  } else {
+    ttAction.className = 'tooltip-action all-done';
+    ttActionLabel.textContent = 'Tamamlandı';
+  }
+
+  overlay.classList.add('show');
+}
+
+function closeTooltip(e) {
+  if (e.target === document.getElementById('tooltip')) {
+    document.getElementById('tooltip').classList.remove('show');
+  }
+}
+
+function goToHizliIsaretle() {
+  document.getElementById('tooltip').classList.remove('show');
+  // In real app: navigate to Hızlı İşaretle pre-loaded with selected date
+}
+
+buildGrid();
+</script>
+</body>
+</html>

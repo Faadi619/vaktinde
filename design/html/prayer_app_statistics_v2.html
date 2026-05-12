@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – İstatistikler</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:#2A9D5C; --green-light:#E8F5EE; --green-mid:#A8D5B5;
+    --amber:#C8852A; --amber-light:#FFF4E0; --amber-border:#F5CCA0;
+    --blue:#3A7BD5; --blue-light:#E6F1FF;
+    --purple:#8B5CF6; --purple-light:#EDE9FE;
+    --text:#1A1A1A; --text-muted:#888; --border:#EFEFEF;
+    --bg:#F4F4F0; --card:#FFFFFF; --radius:18px;
+  }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); width:375px; margin:0 auto; overflow-x:hidden; }
+
+  /* ─── Status Bar ─── */
+  .status-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 4px; font-size:15px; font-weight:700; color:var(--text); }
+  .status-icons { display:flex; align-items:center; gap:5px; }
+  .signal-bars { display:flex; align-items:flex-end; gap:2px; }
+  .sbar { width:3px; border-radius:1px; background:var(--text); }
+
+  /* ─── Page Header ─── */
+  .page-header { padding:10px 20px 14px; display:flex; justify-content:space-between; align-items:flex-start; }
+  .page-title    { font-size:26px; font-weight:800; color:var(--text); }
+  .page-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; }
+  .cal-btn { width:42px; height:42px; border-radius:12px; background:var(--card); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .cal-btn svg { width:20px; height:20px; }
+
+  /* ─── Tab Bar ─── */
+  .tab-bar { margin:0 16px 16px; background:var(--card); border-radius:14px; display:flex; padding:4px; box-shadow:0 1px 6px rgba(0,0,0,.07); }
+  .tab-btn { flex:1; padding:9px 4px; font-size:12.5px; font-weight:600; font-family:inherit; border:none; background:transparent; color:var(--text-muted); border-radius:10px; cursor:pointer; transition:all .2s; position:relative; }
+  .tab-btn.active { color:var(--green); }
+  .tab-btn.active::after { content:''; position:absolute; bottom:2px; left:20%; right:20%; height:2px; background:var(--green); border-radius:2px; }
+
+  /* ─── Date Navigator ─── */
+  .date-nav { display:flex; align-items:center; justify-content:space-between; padding:0 16px 16px; gap:8px; }
+  .date-arrow { width:34px; height:34px; border-radius:50%; background:var(--card); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .date-arrow svg { width:14px; height:14px; }
+  .date-pill { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; padding:9px 12px; cursor:pointer; }
+  .date-pill svg { width:15px; height:15px; }
+  .date-pill span { font-size:14px; font-weight:700; color:var(--text); }
+  .date-pill .chev { color:var(--text-muted); }
+
+  /* ─── Hero Summary Card ─── */
+  .hero-card { margin:0 16px 14px; background:var(--card); border-radius:var(--radius); padding:18px 18px 16px; box-shadow:0 2px 12px rgba(0,0,0,.06); display:flex; justify-content:space-between; align-items:center; gap:16px; }
+  .hero-left {}
+  .hero-badge { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .hero-icon { width:46px; height:46px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; }
+  .hero-icon svg { width:22px; height:22px; }
+  .hero-period { font-size:13px; color:var(--text-muted); font-weight:500; }
+  .hero-days { font-size:28px; font-weight:800; color:var(--text); line-height:1.1; }
+  .hero-sub { font-size:12px; color:var(--text-muted); margin-top:2px; margin-bottom:10px; }
+  .hero-dots { display:flex; gap:6px; }
+  .hero-dot { width:22px; height:22px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; }
+  .hero-dot.empty { background:var(--border); }
+  .hero-dot svg { width:11px; height:11px; }
+
+  /* Progress ring */
+  .ring-wrap { position:relative; width:96px; height:96px; flex-shrink:0; }
+  .ring-wrap svg { transform:rotate(-90deg); }
+  .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring-label-sm { font-size:10px; color:var(--text-muted); font-weight:500; }
+  .ring-pct { font-size:20px; font-weight:800; color:var(--text); line-height:1.1; }
+  .ring-sub { font-size:10px; color:var(--text-muted); }
+
+  /* ─── Section title ─── */
+  .sec-title { font-size:15px; font-weight:800; color:var(--text); margin-bottom:12px; }
+  .sec-title-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .sec-link { font-size:13px; font-weight:600; color:var(--green); }
+  .sec-pill { display:flex; align-items:center; gap:5px; background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:5px 10px; font-size:12px; font-weight:600; color:var(--text-muted); cursor:pointer; }
+  .sec-pill svg { width:13px; height:13px; }
+
+  /* ─── Card ─── */
+  .card { margin:0 16px 12px; background:var(--card); border-radius:var(--radius); box-shadow:0 2px 12px rgba(0,0,0,.06); overflow:hidden; }
+  .card-pad { padding:16px 18px; }
+
+  /* ─── Prayer stats grid (5 cols) ─── */
+  .prayer-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
+  .pg-col { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 2px; }
+  .pg-name { font-size:11px; font-weight:600; color:var(--text-muted); }
+  .pg-icon { width:28px; height:28px; }
+  .pg-icon svg { width:28px; height:28px; }
+  .pg-val { font-size:14px; font-weight:800; color:var(--text); }
+  .pg-pct { font-size:11px; font-weight:600; }
+  .pg-pct.hi  { color:var(--green); }
+  .pg-pct.mid { color:var(--text-muted); }
+  .pg-divider { width:80%; height:2.5px; border-radius:2px; background:var(--green-light); margin-top:2px; }
+  .pg-divider.hi { background:var(--green); }
+
+  /* ─── Bar chart ─── */
+  .bar-chart-wrap { position:relative; padding-top:8px; }
+  .bar-y-labels { position:absolute; left:0; top:8px; display:flex; flex-direction:column; justify-content:space-between; height:120px; }
+  .bar-y-lbl { font-size:9px; color:var(--text-muted); font-weight:500; line-height:1; }
+  .bars-area { display:flex; align-items:flex-end; gap:4px; height:120px; margin-left:28px; margin-bottom:6px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:3px; height:100%; }
+  .bar-pct-lbl { font-size:9px; font-weight:700; color:var(--text-muted); min-height:12px; }
+  .bar-pct-lbl.hi { color:var(--green); }
+  .bar-fill { width:100%; border-radius:5px 5px 0 0; background:linear-gradient(to top, #4db87a, #2A9D5C); min-height:4px; }
+  .bar-fill.today { background:linear-gradient(to top,#1F7A45,#2A9D5C); outline:2px solid var(--green-light); outline-offset:1px; }
+  .bar-fill.lite { background:linear-gradient(to top,#a8d5b5,#7dc49a); }
+  .bar-x-lbl { font-size:10px; font-weight:600; color:var(--text-muted); }
+  .bar-x-lbl.today { color:var(--green); font-weight:800; }
+
+  /* ─── Stat rows (summary list) ─── */
+  .stat-row { display:flex; align-items:center; padding:11px 18px; border-bottom:1px solid var(--border); gap:12px; }
+  .stat-row:last-child { border-bottom:none; }
+  .stat-icon { width:32px; height:32px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .stat-icon svg { width:15px; height:15px; }
+  .stat-label { flex:1; font-size:13px; color:var(--text-muted); font-weight:500; }
+  .stat-val { font-size:14px; font-weight:800; color:var(--text); }
+  .stat-val.green { color:var(--green); }
+
+  /* ─── Total stats 4-grid ─── */
+  .total-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; padding:0 18px 18px; }
+  .total-cell { display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center; }
+  .total-icon { width:36px; height:36px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; }
+  .total-icon svg { width:17px; height:17px; }
+  .total-val  { font-size:18px; font-weight:800; color:var(--text); line-height:1; }
+  .total-lbl  { font-size:10px; color:var(--text-muted); line-height:1.3; text-align:center; }
+
+  /* ─── Calendar grid ─── */
+  .cal-hdr-row { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:5px; }
+  .cal-hdr { text-align:center; font-size:10px; font-weight:700; color:var(--text-muted); }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .cc { aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; position:relative; }
+  .cc.done    { background:var(--green); color:#fff; }
+  .cc.partial { background:var(--amber-light); color:var(--amber); border:1.5px solid var(--amber-border); }
+  .cc.missed  { background:transparent; color:var(--text-muted); }
+  .cc.future  { color:#ccc; }
+  .cc.empty   { color:transparent; }
+  .cc svg     { width:13px; height:13px; }
+  .cc.done svg    { stroke:#fff; }
+  .cc.partial svg { stroke:var(--amber); }
+  .cc.missed svg  { stroke:#ccc; stroke-width:1.5; }
+  .cal-legend { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
+  .cl-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted); }
+  .cl-dot  { width:12px; height:12px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+  /* ─── Monthly 2-col split ─── */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 16px 12px; }
+  .mini-card { background:var(--card); border-radius:14px; padding:14px 14px; box-shadow:0 2px 10px rgba(0,0,0,.06); }
+  .mini-title { font-size:13px; font-weight:800; color:var(--text); margin-bottom:10px; }
+  .rank-row { display:flex; align-items:center; gap:8px; padding:5px 0; }
+  .rank-medal { font-size:16px; width:22px; text-align:center; }
+  .rank-name  { flex:1; font-size:12px; font-weight:600; color:var(--text); }
+  .rank-pct   { font-size:12px; font-weight:700; color:var(--text-muted); }
+  .badge-row  { display:flex; align-items:flex-start; gap:8px; padding:5px 0; }
+  .badge-icon { font-size:18px; width:26px; flex-shrink:0; }
+  .badge-info { flex:1; }
+  .badge-name { font-size:11px; font-weight:700; color:var(--text); }
+  .badge-sub  { font-size:10px; color:var(--text-muted); margin-top:1px; }
+  .badge-date { font-size:10px; color:var(--text-muted); text-align:right; flex-shrink:0; }
+  .see-more { font-size:12px; font-weight:600; color:var(--green); margin-top:8px; display:flex; align-items:center; gap:3px; cursor:pointer; }
+
+  /* ─── Insight cards (Bu Ayki) ─── */
+  .insight-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .ic3 { background:var(--card); border-radius:12px; padding:12px 10px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+  .ic3-icon { width:30px; height:30px; border-radius:9px; background:var(--green-light); display:flex; align-items:center; justify-content:center; margin-bottom:7px; }
+  .ic3-icon svg { width:15px; height:15px; }
+  .ic3-val  { font-size:16px; font-weight:800; color:var(--text); line-height:1.1; }
+  .ic3-lbl  { font-size:10px; color:var(--text-muted); margin-top:3px; line-height:1.3; }
+
+  /* ─── Motivational card ─── */
+  .motiv-card { background:var(--green-light); border-radius:14px; padding:14px; position:relative; overflow:hidden; }
+  .motiv-title { font-size:13px; font-weight:800; color:var(--text); line-height:1.4; margin-bottom:6px; }
+  .motiv-sub   { font-size:11px; color:#2A6640; line-height:1.5; margin-bottom:10px; }
+  .motiv-heart { font-size:16px; }
+  .motiv-plant { position:absolute; bottom:8px; right:10px; font-size:40px; opacity:.55; }
+
+  /* ─── Yıllık 5-col prayer row ─── */
+  .yearly-prayer-row { display:flex; }
+  .yp-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; padding:10px 2px; }
+  .yp-name { font-size:11px; font-weight:600; color:var(--text-muted); }
+  .yp-icon svg { width:24px; height:24px; }
+  .yp-pct  { font-size:16px; font-weight:800; color:var(--text); }
+  .yp-bar  { width:70%; height:3px; border-radius:2px; background:var(--green); }
+
+  /* ─── Note card ─── */
+  .note-card { margin:0 16px 14px; background:var(--green-light); border-radius:var(--radius); padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .note-icon { width:36px; height:36px; border-radius:10px; background:white; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .note-icon svg { width:18px; height:18px; }
+  .note-title { font-size:14px; font-weight:700; color:var(--text); }
+  .note-sub   { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .note-arrow { color:var(--green); font-size:22px; }
+
+  /* ─── Bottom Nav ─── */
+  .bottom-nav { position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--border); display:flex; align-items:center; padding:10px 0 24px; }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; color:#BBBBBB; font-weight:500; cursor:pointer; }
+  .nav-item.active { color:var(--green); }
+  .nav-item svg { width:24px; height:24px; }
+  .nav-fab-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; }
+  .nav-fab { width:50px; height:50px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(42,157,92,.4); margin-top:-18px; }
+  .nav-fab svg { width:22px; height:22px; }
+  .nav-fab-label { font-size:11px; color:#BBBBBB; font-weight:500; margin-top:2px; }
+
+  /* Tab sections */
+  .tab-section { display:none; }
+  .tab-section.active { display:block; }
+</style>
+</head>
+<body>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-icons">
+    <div class="signal-bars">
+      <div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div>
+      <div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div>
+    </div>
+    <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12">
+      <path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/>
+      <path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/>
+      <circle cx="8" cy="10.5" r="1.5"/>
+    </svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor">
+      <rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/>
+      <rect x="2" y="2.5" width="18" height="7" rx="2"/>
+      <rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <div class="page-title">İstatistikler</div>
+    <div class="page-subtitle">İbadet yolculuğundaki ilerlemeni görüntüle.</div>
+  </div>
+  <div class="cal-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="3"/>
+      <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('genel',this)">Genel Bakış</button>
+  <button class="tab-btn" onclick="switchTab('haftalik',this)">Haftalık</button>
+  <button class="tab-btn" onclick="switchTab('aylik',this)">Aylık</button>
+  <button class="tab-btn" onclick="switchTab('yillik',this)">Yıllık</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 1: GENEL BAKIŞ
+══════════════════════════════════════════ -->
+<div id="tab-genel" class="tab-section active">
+
+  <!-- Hero -->
+  <div class="hero-card">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div style="font-size:12px;color:var(--text-muted);font-weight:500;">Bu Hafta</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div>
+          <div class="hero-days">6 gün</div>
+          <div class="hero-sub">Serin devam ediyor!</div>
+        </div>
+      </div>
+      <div class="hero-dots">
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+    </div>
+    <div class="ring-wrap">
+      <svg width="96" height="96" viewBox="0 0 96 96">
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#E8F5EE" stroke-width="8"/>
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#2A9D5C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="35"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-label-sm">Bu Hafta</div>
+        <div class="ring-pct">%86</div>
+        <div class="ring-sub">Tamamlandı</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Namaz İstatistikleri -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:0;">
+      <div class="sec-title-row">
+        <div class="sec-title">Namaz İstatistikleri</div>
+        <div class="sec-pill">Bu Hafta <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+    <div class="card-pad" style="padding-top:0;">
+      <div class="prayer-grid" id="genel-prayer-grid"></div>
+    </div>
+  </div>
+
+  <!-- Haftalık Tamamlama Oranı bar chart -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:0;">
+      <div class="sec-title-row">
+        <div class="sec-title">Haftalık Tamamlama Oranı</div>
+        <div class="sec-pill">Son 7 Gün <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+    <div class="card-pad" style="padding-top:4px;">
+      <div class="bar-chart-wrap" id="genel-bar-chart"></div>
+    </div>
+  </div>
+
+  <!-- Toplam İstatistikler -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:8px;"><div class="sec-title">Toplam İstatistikler</div></div>
+    <div class="total-grid">
+      <div class="total-cell">
+        <div class="total-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="total-val">42</div>
+        <div class="total-lbl">Toplam Gün Namaz kıldın</div>
+      </div>
+      <div class="total-cell">
+        <div class="total-icon" style="background:#FFF4E0;"><svg viewBox="0 0 24 24" fill="none" stroke="#C8852A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.97 0 9-3.58 9-8 0-3-2-5.5-4-7 .5 2-1 4-3 4-1.5 0-2.5-1-2.5-2.5C11.5 7 10 5 8 3c0 3-3 5-3 9 0 4.42 3.13 8 7 8z"/></svg></div>
+        <div class="total-val">6</div>
+        <div class="total-lbl">En Uzun Seri Gün</div>
+      </div>
+      <div class="total-cell">
+        <div class="total-icon" style="background:#E6F1FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#3A7BD5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="total-val">%82</div>
+        <div class="total-lbl">Ortalama Başarı Oranı</div>
+      </div>
+      <div class="total-cell">
+        <div class="total-icon" style="background:#EDE9FE;"><svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-4 4 4M3 7l9 9 9-9"/></svg></div>
+        <div class="total-val">215</div>
+        <div class="total-lbl">Toplam Tamamlama</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-genel -->
+
+
+<!-- ══════════════════════════════════════════
+     TAB 2: HAFTALIK
+══════════════════════════════════════════ -->
+<div id="tab-haftalik" class="tab-section">
+
+  <!-- Back header style -->
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 14px;">
+    <div style="width:36px;height:36px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:16px;font-weight:800;color:var(--text);">Haftalık İstatistikler</div>
+      <div style="font-size:12px;color:var(--text-muted);">12 – 18 Mayıs 2025</div>
+    </div>
+    <div class="cal-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-card">
+    <div class="hero-left">
+      <div style="font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:6px;">Bu Hafta</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.97 0 9-3.58 9-8 0-3-2-5.5-4-7 .5 2-1 4-3 4-1.5 0-2.5-1-2.5-2.5C11.5 7 10 5 8 3c0 3-3 5-3 9 0 4.42 3.13 8 7 8z"/></svg></div>
+        <div>
+          <div class="hero-days">6 gün</div>
+          <div class="hero-sub">Serin devam ediyor!</div>
+        </div>
+      </div>
+      <div class="hero-dots">
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot empty"></div>
+      </div>
+    </div>
+    <div class="ring-wrap">
+      <svg width="96" height="96" viewBox="0 0 96 96">
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#E8F5EE" stroke-width="8"/>
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#2A9D5C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="35"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-label-sm">Tamamlama Oranı</div>
+        <div class="ring-pct">%86</div>
+        <div class="ring-sub">42 / 49</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date nav -->
+  <div class="date-nav">
+    <div class="date-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+    <div class="date-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>12 – 18 Mayıs 2025</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="date-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+
+  <!-- Günlere Göre Bar Chart -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:0;">
+      <div class="sec-title-row">
+        <div class="sec-title">Günlere Göre Namaz Tamamlama Oranı</div>
+        <div class="sec-pill" style="font-size:11px;">Detay Görüntüle <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+    <div class="card-pad" style="padding-top:4px;"><div id="haftalik-bar-chart"></div></div>
+  </div>
+
+  <!-- Namaz İstatistikleri haftalık -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:0;"><div class="sec-title">Namaz İstatistikleri <span style="font-size:12px;font-weight:500;color:var(--text-muted);">(Haftalık Ortalama)</span></div></div>
+    <div class="card-pad" style="padding-top:4px;"><div class="prayer-grid" id="haftalik-prayer-grid"></div></div>
+  </div>
+
+  <!-- Haftalık Özeti -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:6px;"><div class="sec-title">Haftalık Özeti</div></div>
+    <div class="stat-row">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg></div>
+      <div class="stat-label">Toplam kıldığın namaz</div>
+      <div class="stat-val">42</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="stat-label">Kaza olarak kıldığın namaz</div>
+      <div class="stat-val">6</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="stat-label">En istikrarlı olduğun vakit</div>
+      <div class="stat-val green">Sabah</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon" style="background:#FDE8E8;"><svg viewBox="0 0 24 24" fill="none" stroke="#C97B7B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="stat-label">En çok zorlandığın vakit</div>
+      <div class="stat-val" style="color:#C97B7B;">Akşam</div>
+    </div>
+  </div>
+
+</div><!-- /tab-haftalik -->
+
+
+<!-- ══════════════════════════════════════════
+     TAB 3: AYLIK
+══════════════════════════════════════════ -->
+<div id="tab-aylik" class="tab-section">
+
+  <!-- Hero -->
+  <div class="hero-card">
+    <div class="hero-left">
+      <div style="font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:6px;">Bu Ay</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div>
+          <div class="hero-days">27 gün</div>
+          <div class="hero-sub">Çok güzel bir istikrar!</div>
+        </div>
+      </div>
+      <div class="hero-dots">
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot empty"></div>
+      </div>
+    </div>
+    <div class="ring-wrap">
+      <svg width="96" height="96" viewBox="0 0 96 96">
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#E8F5EE" stroke-width="8"/>
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#2A9D5C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="33"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-pct">%87</div>
+        <div class="ring-sub">Tamamlandı</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Nav -->
+  <div class="date-nav">
+    <div class="date-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+    <div class="date-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Mayıs 2025</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="date-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+
+  <!-- Calendar + Stats side by side -->
+  <div class="card">
+    <div class="card-pad">
+      <div style="display:flex;gap:14px;">
+        <!-- Calendar -->
+        <div style="flex:1.2;">
+          <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px;">Aylık Namaz Takvimi</div>
+          <div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted);">
+              <div style="width:12px;height:12px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;"><svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div> Kıldım
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted);">
+              <div style="width:12px;height:12px;border-radius:50%;background:var(--amber-light);border:1.5px solid var(--amber-border);display:flex;align-items:center;justify-content:center;"><svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div> Kısmen
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted);">
+              <div style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--border);"></div> Kılmadım
+            </div>
+          </div>
+          <div id="aylik-calendar"></div>
+        </div>
+        <!-- Right stats -->
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px;">Aylık İstatistikler</div>
+          <div id="aylik-stats-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Namazlara Göre bar -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:0;"><div class="sec-title">Namazlara Göre Tamamlama Oranı</div></div>
+    <div class="card-pad" style="padding-top:4px;"><div id="aylik-bar-chart"></div></div>
+  </div>
+
+  <!-- Bu Ayki İçgörüler -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:10px;"><div class="sec-title">Bu Ayki İçgörüler</div></div>
+    <div class="card-pad" style="padding-top:0;">
+      <div class="insight-3">
+        <div class="ic3">
+          <div class="ic3-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M12 14v8"/></svg></div>
+          <div class="ic3-val">12 gün</div>
+          <div class="ic3-lbl">En uzun serin. Tebrikler!</div>
+        </div>
+        <div class="ic3">
+          <div class="ic3-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+          <div class="ic3-val" style="color:var(--green);">Sabah</div>
+          <div class="ic3-lbl">%93 ile en istikrarlı vakit</div>
+        </div>
+        <div class="ic3">
+          <div class="ic3-icon" style="background:#E6F1FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#3A7BD5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div class="ic3-val" style="color:#3A7BD5;">%8 ↑</div>
+          <div class="ic3-lbl">Geçen aya göre daha fazla</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-aylik -->
+
+
+<!-- ══════════════════════════════════════════
+     TAB 4: YILLIK
+══════════════════════════════════════════ -->
+<div id="tab-yillik" class="tab-section">
+
+  <!-- Hero -->
+  <div class="hero-card">
+    <div class="hero-left">
+      <div style="font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:6px;">Bu Yıl</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div>
+          <div class="hero-days">318 gün</div>
+          <div class="hero-sub">Harika bir yıl geçiriyorsun!</div>
+        </div>
+      </div>
+      <div class="hero-dots">
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+    </div>
+    <div class="ring-wrap">
+      <svg width="96" height="96" viewBox="0 0 96 96">
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#E8F5EE" stroke-width="8"/>
+        <circle cx="48" cy="48" r="40" fill="none" stroke="#2A9D5C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="33"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-pct">%87</div>
+        <div class="ring-sub">Tamamlandı</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date nav -->
+  <div class="date-nav">
+    <div class="date-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+    <div class="date-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>2025</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="date-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+
+  <!-- Yıllık İstatistikler 5-col scroll -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:6px;"><div class="sec-title">Yıllık İstatistikler</div></div>
+    <div style="overflow-x:auto;padding:0 18px 16px;">
+      <div style="display:flex;gap:14px;min-width:460px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+          <div class="total-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);">2.219</div>
+          <div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.3;">Toplam kıldığın namaz</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+          <div class="total-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);">213</div>
+          <div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.3;">Kaza olarak kılınan</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+          <div class="total-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);">%87</div>
+          <div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.3;">Ort. günlük tamamlama</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+          <div class="total-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M12 22c4.97 0 9-3.58 9-8 0-3-2-5.5-4-7 .5 2-1 4-3 4-1.5 0-2.5-1-2.5-2.5C11.5 7 10 5 8 3c0 3-3 5-3 9 0 4.42 3.13 8 7 8z"/></svg></div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);">29 gün</div>
+          <div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.3;">En uzun seri</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+          <div class="total-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);">318 gün</div>
+          <div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.3;">İstikrarlı günler</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aylara Göre bar chart -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:0;"><div class="sec-title">Aylara Göre Tamamlama Oranı</div></div>
+    <div class="card-pad" style="padding-top:4px;"><div id="yillik-bar-chart"></div></div>
+  </div>
+
+  <!-- Vakitlere Göre Tamamlama -->
+  <div class="card">
+    <div class="card-pad" style="padding-bottom:6px;"><div class="sec-title">Vakitlere Göre Tamamlama Oranı <span style="font-size:11px;font-weight:500;color:var(--text-muted);">(Yıllık Ortalama)</span></div></div>
+    <div class="card-pad" style="padding-top:0;">
+      <div class="prayer-grid" id="yillik-prayer-grid"></div>
+    </div>
+  </div>
+
+  <!-- 2-col: En İstikrarlı + Yıllık Başarılar + Motivasyon -->
+  <div style="margin:0 16px 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <div class="mini-card">
+      <div class="mini-title">En İstikrarlı Aylar</div>
+      <div class="rank-row"><div class="rank-medal">🥇</div><div class="rank-name">Haziran</div><div class="rank-pct">%93</div></div>
+      <div class="rank-row"><div class="rank-medal">🥈</div><div class="rank-name">Ocak</div><div class="rank-pct">%92</div></div>
+      <div class="rank-row"><div class="rank-medal">🥉</div><div class="rank-name">Aralık</div><div class="rank-pct">%91</div></div>
+      <div class="see-more">Tüm ayları gör <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">Yıllık Başarılar</div>
+      <div class="badge-row">
+        <div class="badge-icon">🏅</div>
+        <div class="badge-info"><div class="badge-name">İstikrar Ustası</div><div class="badge-sub">30 gün seri</div></div>
+        <div class="badge-date">15 Nis</div>
+      </div>
+      <div class="badge-row">
+        <div class="badge-icon">🎖️</div>
+        <div class="badge-info"><div class="badge-name">Disiplinli</div><div class="badge-sub">%80+ ortalama</div></div>
+        <div class="badge-date">30 Eyl</div>
+      </div>
+      <div class="badge-row">
+        <div class="badge-icon">⭐</div>
+        <div class="badge-info"><div class="badge-name">Adanmış</div><div class="badge-sub">300+ gün</div></div>
+        <div class="badge-date">31 Ara</div>
+      </div>
+      <div class="see-more">Tüm başarıları gör <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+
+  <!-- Motivational -->
+  <div style="margin:0 16px 12px;">
+    <div class="motiv-card">
+      <div class="motiv-title">Küçük adımlar,<br>büyük değişimler yaratır.</div>
+      <div class="motiv-sub">İstikrarın ve çaban senin en büyük kazancın.</div>
+      <div class="motiv-heart">💚</div>
+      <div class="motiv-plant">🌱</div>
+    </div>
+  </div>
+
+</div><!-- /tab-yillik -->
+
+
+<!-- Note card (shared) -->
+<div class="note-card" id="note-card">
+  <div class="note-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="3"/>
+      <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+      <polyline points="9 16 11 18 15 14"/>
+    </svg>
+  </div>
+  <div class="note-text">
+    <div class="note-title">Not eklemek ister misin?</div>
+    <div class="note-sub" id="note-sub-text">Bu güne dair bir not ekleyebilirsin (isteğe bağlı).</div>
+  </div>
+  <div class="note-arrow">›</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span>Ana Sayfa</span>
+  </div>
+  <div class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/>
+    </svg>
+    <span>Kıble</span>
+  </div>
+  <div class="nav-fab-wrap">
+    <div class="nav-fab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </div>
+    <span class="nav-fab-label">Hızlı İşaretle</span>
+  </div>
+  <div class="nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    <span>İstatistikler</span>
+  </div>
+  <div class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Profil</span>
+  </div>
+</div>
+
+<script>
+/* ── Shared SVG snippets ── */
+const ICONS = {
+  sabah: `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  ogle:  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  ikindi:`<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  aksam: `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  yatsi: `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+};
+const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+/* ── Prayer grid builder ── */
+function buildPrayerGrid(containerId, data) {
+  const prayers = ['Sabah','Öğle','İkindi','Akşam','Yatsı'];
+  const icons = [ICONS.sabah, ICONS.ogle, ICONS.ikindi, ICONS.aksam, ICONS.yatsi];
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.innerHTML = prayers.map((p,i) => {
+    const {val, pct, hi} = data[i];
+    return `<div class="pg-col">
+      <div class="pg-name">${p}</div>
+      <div class="pg-icon">${icons[i]}</div>
+      <div class="pg-val">${val}</div>
+      <div class="pg-pct ${hi?'hi':'mid'}">${pct}</div>
+      <div class="pg-divider ${hi?'hi':''}"></div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Bar chart builder ── */
+function buildBarChart(containerId, bars, maxH=120) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  const yLabels = ['%100','%75','%50','%25','%0'];
+  const max = Math.max(...bars.map(b=>b.v));
+  c.innerHTML = `
+    <div class="bar-chart-wrap">
+      <div class="bar-y-labels">${yLabels.map(l=>`<div class="bar-y-lbl">${l}</div>`).join('')}</div>
+      <div class="bars-area">
+        ${bars.map(b => {
+          const h = Math.max((b.v/100)*maxH, b.v>0?6:3);
+          const cls = b.today ? 'today' : b.lite ? 'lite' : '';
+          return `<div class="bar-col">
+            <div class="bar-pct-lbl ${b.today||b.v>=90?'hi':''}">${b.v>0?'%'+b.v:''}</div>
+            <div class="bar-fill ${cls}" style="height:${h}px"></div>
+            <div class="bar-x-lbl ${b.today?'today':''}">${b.lbl}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+/* ── Populate Genel Bakış ── */
+buildPrayerGrid('genel-prayer-grid',[
+  {val:'7/7',pct:'%100',hi:true},
+  {val:'6/7',pct:'%86',hi:false},
+  {val:'6/7',pct:'%86',hi:false},
+  {val:'5/7',pct:'%71',hi:false},
+  {val:'7/7',pct:'%100',hi:true},
+]);
+buildBarChart('genel-bar-chart',[
+  {lbl:'Pzt',v:100},{lbl:'Sal',v:86},{lbl:'Çar',v:71},
+  {lbl:'Per',v:100},{lbl:'Cum',v:86},{lbl:'Cmt',v:71},
+  {lbl:'Bugün',v:100,today:true},
+]);
+
+/* ── Populate Haftalık ── */
+buildBarChart('haftalik-bar-chart',[
+  {lbl:'Pzt',v:100},{lbl:'Sal',v:86},{lbl:'Çar',v:71},
+  {lbl:'Per',v:100},{lbl:'Cum',v:86},{lbl:'Cmt',v:71},
+  {lbl:'Bugün',v:100,today:true},
+]);
+buildPrayerGrid('haftalik-prayer-grid',[
+  {val:'6.7/7',pct:'%96',hi:true},
+  {val:'6.0/7',pct:'%86',hi:false},
+  {val:'6.1/7',pct:'%87',hi:false},
+  {val:'5.3/7',pct:'%76',hi:false},
+  {val:'6.7/7',pct:'%96',hi:true},
+]);
+
+/* ── Populate Aylık calendar ── */
+(function(){
+  const types = [
+    'emp','emp','emp','done','done','done','done',
+    'done','done','partial','done','done','done','done',
+    'done','done','done','done','done','done','done',
+    'done','done','done','done','done','done','partial',
+    'done','done','missed',
+  ];
+  const days = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  const cal = document.getElementById('aylik-calendar');
+  if (!cal) return;
+  let html = `<div class="cal-hdr-row">${days.map(d=>`<div class="cal-hdr">${d}</div>`).join('')}</div><div class="cal-grid">`;
+  const CHECK_S = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const PART_S  = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  types.forEach((t,i) => {
+    const n = t==='emp'?'':i+1-(types.indexOf(types.find(x=>x!=='emp')));
+    const num = t==='emp' ? '' : (i - types.findIndex(x=>x!=='emp') + 1);
+    if (t==='emp') { html += `<div class="cc empty"></div>`; return; }
+    const day = i - 2; // offset
+    const label = day <= 0 ? '' : day;
+    if (t==='done')    html += `<div class="cc done">${CHECK_S}</div>`;
+    else if (t==='partial') html += `<div class="cc partial">${PART_S}</div>`;
+    else if (t==='missed')  html += `<div class="cc missed"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/></svg></div>`;
+    else html += `<div class="cc future">${label}</div>`;
+  });
+  html += '</div>';
+  cal.innerHTML = html;
+})();
+
+/* Aylık stats list */
+(function(){
+  const el = document.getElementById('aylik-stats-list');
+  if (!el) return;
+  const rows = [
+    {lbl:'Toplam kıldığın namaz',val:'186'},
+    {lbl:'Kaza olarak kılınan',val:'18'},
+    {lbl:'Ort. günlük tamamlama',val:'%87'},
+    {lbl:'En uzun seri',val:'12 gün',hi:true},
+    {lbl:'İstikrarlı günler',val:'27 gün',hi:true},
+    {lbl:'Kılmadığın günler',val:'4 gün'},
+  ];
+  el.innerHTML = rows.map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <div style="font-size:11px;color:var(--text-muted);flex:1;line-height:1.3;">${r.lbl}</div>
+      <div style="font-size:12px;font-weight:800;color:${r.hi?'var(--green)':'var(--text)'};">${r.val}</div>
+    </div>`).join('');
+})();
+
+/* Aylık bar chart (by prayer) */
+buildBarChart('aylik-bar-chart',[
+  {lbl:'Sabah',v:93},{lbl:'Öğle',v:89},{lbl:'İkindi',v:84},
+  {lbl:'Akşam',v:81},{lbl:'Yatsı',v:88},
+]);
+
+/* ── Yıllık bar chart ── */
+buildBarChart('yillik-bar-chart',[
+  {lbl:'Oca',v:92},{lbl:'Şub',v:85},{lbl:'Mar',v:88},{lbl:'Nis',v:90},
+  {lbl:'May',v:87},{lbl:'Haz',v:93},{lbl:'Tem',v:89},{lbl:'Ağu',v:86},
+  {lbl:'Eyl',v:90},{lbl:'Eki',v:84},{lbl:'Kas',v:82},{lbl:'Ara',v:91,today:true},
+], 100);
+
+buildPrayerGrid('yillik-prayer-grid',[
+  {val:'%93',pct:'',hi:true},
+  {val:'%90',pct:'',hi:false},
+  {val:'%87',pct:'',hi:false},
+  {val:'%85',pct:'',hi:false},
+  {val:'%88',pct:'',hi:false},
+]);
+
+/* ── Tab switching ── */
+const noteTexts = {
+  genel:    'Bu güne dair bir not ekleyebilirsin (isteğe bağlı).',
+  haftalik: 'Bu haftaya dair bir not ekleyebilirsin (isteğe bağlı).',
+  aylik:    'Bu aya dair bir not ekleyebilirsin (isteğe bağlı).',
+  yillik:   'Bu yıla dair bir not ekleyebilirsin (isteğe bağlı).',
+};
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('note-sub-text').textContent = noteTexts[id];
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

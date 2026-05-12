@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – İstatistikler Yıllık</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--green:#2A9D5C;--green-light:#E8F5EE;--green-mid:#A8D5B5;--text:#1A1A1A;--text-muted:#888;--border:#EFEFEF;--bg:#F4F4F0;--card:#FFFFFF;--radius:18px;}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);width:375px;margin:0 auto;overflow-x:hidden;}
+  .status-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 4px;font-size:15px;font-weight:700;color:var(--text);}
+  .status-icons{display:flex;align-items:center;gap:5px;}
+  .signal-bars{display:flex;align-items:flex-end;gap:2px;}
+  .sbar{width:3px;border-radius:1px;background:var(--text);}
+  .page-header{padding:10px 20px 14px;display:flex;justify-content:space-between;align-items:flex-start;}
+  .page-title{font-size:26px;font-weight:800;color:var(--text);}
+  .page-subtitle{font-size:13px;color:var(--text-muted);margin-top:4px;}
+  .cal-btn{width:42px;height:42px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;}
+  .tab-bar{margin:0 16px 16px;background:var(--card);border-radius:14px;display:flex;padding:4px;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+  .tab-btn{flex:1;padding:9px 4px;font-size:12.5px;font-weight:600;border:none;background:transparent;color:var(--text-muted);border-radius:10px;position:relative;}
+  .tab-btn.active{color:var(--green);}
+  .tab-btn.active::after{content:'';position:absolute;bottom:2px;left:20%;right:20%;height:2px;background:var(--green);border-radius:2px;}
+  .hero-card{margin:0 16px 14px;background:var(--card);border-radius:var(--radius);padding:18px 18px 16px;box-shadow:0 2px 12px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;gap:16px;}
+  .hero-period{font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:6px;}
+  .hero-main{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+  .hero-icon{width:46px;height:46px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .hero-icon svg{width:22px;height:22px;}
+  .hero-days{font-size:28px;font-weight:800;color:var(--text);line-height:1.1;}
+  .hero-sub{font-size:12px;color:var(--text-muted);margin-top:2px;margin-bottom:10px;}
+  .hero-dots{display:flex;gap:6px;}
+  .hero-dot{width:22px;height:22px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;}
+  .hero-dot svg{width:11px;height:11px;}
+  .ring-wrap{position:relative;width:96px;height:96px;flex-shrink:0;}
+  .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-pct{font-size:20px;font-weight:800;color:var(--text);line-height:1.1;}
+  .ring-sub{font-size:10px;color:var(--text-muted);}
+  .date-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 14px;gap:8px;}
+  .date-arrow{width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .date-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:9px 12px;}
+  .date-pill span{font-size:14px;font-weight:700;color:var(--text);}
+  .card{margin:0 16px 12px;background:var(--card);border-radius:var(--radius);box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden;}
+  .card-pad{padding:16px 18px;}
+  .sec-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;}
+  /* 5-col yearly stats */
+  .yearly-stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 18px 16px;}
+  .ys-cell{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;}
+  .ys-icon{width:34px;height:34px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;}
+  .ys-icon svg{width:15px;height:15px;}
+  .ys-val{font-size:12px;font-weight:800;color:var(--text);line-height:1.1;}
+  .ys-lbl{font-size:9px;color:var(--text-muted);line-height:1.3;text-align:center;}
+  /* Monthly bar chart (12 bars) */
+  .bar-chart-wrap{position:relative;padding-top:8px;}
+  .bar-y-labels{position:absolute;left:0;top:8px;display:flex;flex-direction:column;justify-content:space-between;height:100px;}
+  .bar-y-lbl{font-size:9px;color:var(--text-muted);font-weight:500;line-height:1;}
+  .bars-area{display:flex;align-items:flex-end;gap:3px;height:100px;margin-left:26px;margin-bottom:6px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;height:100%;}
+  .bar-pct-lbl{font-size:8px;font-weight:700;color:var(--text-muted);min-height:11px;line-height:1;}
+  .bar-pct-lbl.hi{color:var(--green);}
+  .bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(to top,#4db87a,#2A9D5C);}
+  .bar-fill.active{background:linear-gradient(to top,#1F7A45,#2A9D5C);outline:2px solid var(--green-light);outline-offset:1px;}
+  .bar-x-lbl{font-size:9px;font-weight:600;color:var(--text-muted);}
+  .bar-x-lbl.active{color:var(--green);font-weight:800;}
+  /* Prayer grid yearly */
+  .prayer-yearly{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+  .py-col{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 2px;}
+  .py-name{font-size:11px;font-weight:600;color:var(--text-muted);}
+  .py-icon svg{width:24px;height:24px;}
+  .py-pct{font-size:17px;font-weight:800;color:var(--text);}
+  .py-bar{width:70%;height:3px;border-radius:2px;background:var(--green);}
+  /* 2-col grid */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 12px;}
+  .mini-card{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+  .mini-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px;}
+  .rank-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
+  .rank-medal{font-size:16px;width:22px;text-align:center;}
+  .rank-name{flex:1;font-size:12px;font-weight:600;color:var(--text);}
+  .rank-pct{font-size:12px;font-weight:700;color:var(--text-muted);}
+  .badge-row{display:flex;align-items:flex-start;gap:6px;padding:5px 0;}
+  .badge-icon{font-size:16px;width:22px;flex-shrink:0;}
+  .badge-info{flex:1;}
+  .badge-name{font-size:11px;font-weight:700;color:var(--text);}
+  .badge-sub{font-size:10px;color:var(--text-muted);margin-top:1px;}
+  .badge-date{font-size:10px;color:var(--text-muted);flex-shrink:0;}
+  .see-more{font-size:12px;font-weight:600;color:var(--green);margin-top:8px;display:flex;align-items:center;gap:3px;}
+  /* Motivational */
+  .motiv-card{background:var(--green-light);border-radius:14px;padding:16px 14px;position:relative;overflow:hidden;}
+  .motiv-title{font-size:14px;font-weight:800;color:var(--text);line-height:1.4;margin-bottom:6px;}
+  .motiv-sub{font-size:12px;color:#2A6640;line-height:1.5;margin-bottom:10px;}
+  .motiv-heart{font-size:16px;}
+  .motiv-plant{position:absolute;bottom:8px;right:10px;font-size:42px;opacity:.5;}
+  /* Note card */
+  .note-card{margin:0 16px 14px;background:var(--green-light);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;}
+  .note-icon{width:36px;height:36px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .note-icon svg{width:18px;height:18px;}
+  .note-title{font-size:14px;font-weight:700;color:var(--text);}
+  .note-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+  .note-arrow{color:var(--green);font-size:22px;}
+  /* Bottom Nav */
+  .bottom-nav{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;padding:10px 0 24px;}
+  .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:#BBBBBB;font-weight:500;}
+  .nav-item.active{color:var(--green);}
+  .nav-item svg{width:24px;height:24px;}
+  .nav-fab-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .nav-fab{width:50px;height:50px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(42,157,92,.4);margin-top:-18px;}
+  .nav-fab svg{width:22px;height:22px;}
+  .nav-fab-label{font-size:11px;color:#BBBBBB;font-weight:500;margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-icons">
+    <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+    <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+  </div>
+</div>
+
+<div class="page-header">
+  <div><div class="page-title">İstatistikler</div><div class="page-subtitle">İbadet yolculuğundaki ilerlemeni görüntüle.</div></div>
+  <div class="cal-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn">Genel Bakış</button>
+  <button class="tab-btn">Haftalık</button>
+  <button class="tab-btn">Aylık</button>
+  <button class="tab-btn active">Yıllık</button>
+</div>
+
+<!-- Hero -->
+<div class="hero-card">
+  <div>
+    <div class="hero-period">Bu Yıl</div>
+    <div class="hero-main">
+      <div class="hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div><div class="hero-days">318 gün</div><div class="hero-sub">Harika bir yıl geçiriyorsun!</div></div>
+    </div>
+    <div class="hero-dots">
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+  </div>
+  <div class="ring-wrap">
+    <svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="#E8F5EE" stroke-width="8"/><circle cx="48" cy="48" r="40" fill="none" stroke="#2A9D5C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="33"/></svg>
+    <div class="ring-center"><div class="ring-pct">%87</div><div class="ring-sub">Tamamlandı</div></div>
+  </div>
+</div>
+
+<!-- Date Nav -->
+<div class="date-nav">
+  <div class="date-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+  <div class="date-pill">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span>2025</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="date-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+</div>
+
+<!-- Yıllık İstatistikler 5-col -->
+<div class="card">
+  <div class="card-pad" style="padding-bottom:8px;"><div class="sec-title">Yıllık İstatistikler</div></div>
+  <div class="yearly-stats-row">
+    <div class="ys-cell">
+      <div class="ys-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="ys-val">2.219</div>
+      <div class="ys-lbl">Toplam kıldığın namaz</div>
+    </div>
+    <div class="ys-cell">
+      <div class="ys-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="ys-val">213</div>
+      <div class="ys-lbl">Kaza olarak kılınan</div>
+    </div>
+    <div class="ys-cell">
+      <div class="ys-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="ys-val">%87</div>
+      <div class="ys-lbl">Ort. günlük tamamlama</div>
+    </div>
+    <div class="ys-cell">
+      <div class="ys-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M12 22c4.97 0 9-3.58 9-8 0-3-2-5.5-4-7 .5 2-1 4-3 4-1.5 0-2.5-1-2.5-2.5C11.5 7 10 5 8 3c0 3-3 5-3 9 0 4.42 3.13 8 7 8z"/></svg></div>
+      <div class="ys-val">29 gün</div>
+      <div class="ys-lbl">En uzun seri</div>
+    </div>
+    <div class="ys-cell">
+      <div class="ys-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="ys-val">318 gün</div>
+      <div class="ys-lbl">İstikrarlı günler</div>
+    </div>
+  </div>
+</div>
+
+<!-- Aylara Göre Bar Chart (12 months) -->
+<div class="card">
+  <div class="card-pad" style="padding-bottom:0;"><div class="sec-title">Aylara Göre Tamamlama Oranı</div></div>
+  <div class="card-pad" style="padding-top:4px;">
+    <div class="bar-chart-wrap">
+      <div class="bar-y-labels">
+        <div class="bar-y-lbl">%100</div><div class="bar-y-lbl">%75</div>
+        <div class="bar-y-lbl">%50</div><div class="bar-y-lbl">%25</div><div class="bar-y-lbl">%0</div>
+      </div>
+      <div class="bars-area">
+        <div class="bar-col"><div class="bar-pct-lbl hi">%92</div><div class="bar-fill" style="height:92px"></div><div class="bar-x-lbl">Oca</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%85</div><div class="bar-fill" style="height:85px"></div><div class="bar-x-lbl">Şub</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%88</div><div class="bar-fill" style="height:88px"></div><div class="bar-x-lbl">Mar</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%90</div><div class="bar-fill" style="height:90px"></div><div class="bar-x-lbl">Nis</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%87</div><div class="bar-fill" style="height:87px"></div><div class="bar-x-lbl">May</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl hi">%93</div><div class="bar-fill" style="height:93px"></div><div class="bar-x-lbl">Haz</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%89</div><div class="bar-fill" style="height:89px"></div><div class="bar-x-lbl">Tem</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%86</div><div class="bar-fill" style="height:86px"></div><div class="bar-x-lbl">Ağu</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%90</div><div class="bar-fill" style="height:90px"></div><div class="bar-x-lbl">Eyl</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%84</div><div class="bar-fill" style="height:84px"></div><div class="bar-x-lbl">Eki</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%82</div><div class="bar-fill" style="height:82px"></div><div class="bar-x-lbl">Kas</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl hi">%91</div><div class="bar-fill active" style="height:91px"></div><div class="bar-x-lbl active">Ara</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vakitlere Göre Yıllık Ortalama -->
+<div class="card">
+  <div class="card-pad" style="padding-bottom:6px;"><div class="sec-title">Vakitlere Göre Tamamlama Oranı <span style="font-size:11px;font-weight:500;color:var(--text-muted);">(Yıllık Ortalama)</span></div></div>
+  <div class="card-pad" style="padding-top:0;">
+    <div class="prayer-yearly">
+      <div class="py-col">
+        <div class="py-name">Sabah</div>
+        <div class="py-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+        <div class="py-pct">%93</div><div class="py-bar"></div>
+      </div>
+      <div class="py-col">
+        <div class="py-name">Öğle</div>
+        <div class="py-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+        <div class="py-pct">%90</div><div class="py-bar" style="background:var(--green-mid)"></div>
+      </div>
+      <div class="py-col">
+        <div class="py-name">İkindi</div>
+        <div class="py-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+        <div class="py-pct">%87</div><div class="py-bar" style="background:var(--green-mid)"></div>
+      </div>
+      <div class="py-col">
+        <div class="py-name">Akşam</div>
+        <div class="py-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+        <div class="py-pct">%85</div><div class="py-bar" style="background:var(--green-mid)"></div>
+      </div>
+      <div class="py-col">
+        <div class="py-name">Yatsı</div>
+        <div class="py-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+        <div class="py-pct">%88</div><div class="py-bar" style="background:var(--green-mid)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2-col: Best months + Badges -->
+<div class="two-col">
+  <div class="mini-card">
+    <div class="mini-title">En İstikrarlı Aylar</div>
+    <div class="rank-row"><div class="rank-medal">🥇</div><div class="rank-name">Haziran</div><div class="rank-pct">%93</div></div>
+    <div class="rank-row"><div class="rank-medal">🥈</div><div class="rank-name">Ocak</div><div class="rank-pct">%92</div></div>
+    <div class="rank-row"><div class="rank-medal">🥉</div><div class="rank-name">Aralık</div><div class="rank-pct">%91</div></div>
+    <div class="see-more">Tüm ayları gör <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+  <div class="mini-card">
+    <div class="mini-title">Yıllık Başarılar</div>
+    <div class="badge-row">
+      <div class="badge-icon">🏅</div>
+      <div class="badge-info"><div class="badge-name">İstikrar Ustası</div><div class="badge-sub">30 gün seri</div></div>
+      <div class="badge-date">15 Nis</div>
+    </div>
+    <div class="badge-row">
+      <div class="badge-icon">🎖️</div>
+      <div class="badge-info"><div class="badge-name">Disiplinli</div><div class="badge-sub">%80+ ortalama</div></div>
+      <div class="badge-date">30 Eyl</div>
+    </div>
+    <div class="badge-row">
+      <div class="badge-icon">⭐</div>
+      <div class="badge-info"><div class="badge-name">Adanmış</div><div class="badge-sub">300+ gün</div></div>
+      <div class="badge-date">31 Ara</div>
+    </div>
+    <div class="see-more">Tüm başarıları gör <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </div>
+</div>
+
+<!-- Motivational Card -->
+<div style="margin:0 16px 12px;">
+  <div class="motiv-card">
+    <div class="motiv-title">Küçük adımlar,<br>büyük değişimler yaratır.</div>
+    <div class="motiv-sub">İstikrarın ve çaban senin en büyük kazancın.</div>
+    <div class="motiv-heart">💚</div>
+    <div class="motiv-plant">🌱</div>
+  </div>
+</div>
+
+<!-- Note Card -->
+<div class="note-card">
+  <div class="note-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg></div>
+  <div><div class="note-title">Not eklemek ister misin?</div><div class="note-sub">Bu yıla dair bir not ekleyebilirsin (isteğe bağlı).</div></div>
+  <div class="note-arrow">›</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Ana Sayfa</span></div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg><span>Kıble</span></div>
+  <div class="nav-fab-wrap"><div class="nav-fab"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><span class="nav-fab-label">Hızlı İşaretle</span></div>
+  <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>İstatistikler</span></div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>Prayer App – İstatistikler Aylık v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:#2A9D5C; --green-light:#E8F5EE; --green-mid:#A8D5B5;
+    --amber:#C8852A; --amber-light:#FFF4E0; --amber-border:#F5CCA0;
+    --red:#E05252; --red-light:#FDE8E8;
+    --blue:#3A7BD5; --blue-light:#E6F1FF;
+    --purple:#7C3AED; --purple-light:#EDE9FE; --purple-border:#C4B5FD;
+    --text:#1A1A1A; --text-muted:#888; --border:#EFEFEF;
+    --bg:#F4F4F0; --card:#FFFFFF; --radius:18px;
+  }
+  body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); width:375px; margin:0 auto; overflow-x:hidden; }
+
+  /* Status Bar */
+  .status-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 4px; font-size:15px; font-weight:700; color:var(--text); }
+  .status-icons { display:flex; align-items:center; gap:5px; }
+  .signal-bars { display:flex; align-items:flex-end; gap:2px; }
+  .sbar { width:3px; border-radius:1px; background:var(--text); }
+
+  /* Page Header */
+  .page-header { padding:10px 20px 14px; display:flex; justify-content:space-between; align-items:flex-start; }
+  .page-title { font-size:26px; font-weight:800; color:var(--text); }
+  .page-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; }
+  .cal-btn { width:42px; height:42px; border-radius:12px; background:var(--card); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; }
+  .cal-btn svg { width:20px; height:20px; }
+
+  /* Tab Bar */
+  .tab-bar { margin:0 16px 16px; background:var(--card); border-radius:14px; display:flex; padding:4px; box-shadow:0 1px 6px rgba(0,0,0,.07); }
+  .tab-btn { flex:1; padding:9px 4px; font-size:12.5px; font-weight:600; border:none; background:transparent; color:var(--text-muted); border-radius:10px; position:relative; font-family:inherit; cursor:pointer; }
+  .tab-btn.active { color:var(--green); }
+  .tab-btn.active::after { content:''; position:absolute; bottom:2px; left:20%; right:20%; height:2px; background:var(--green); border-radius:2px; }
+
+  /* Hero card */
+  .hero-card { margin:0 16px 14px; background:var(--card); border-radius:var(--radius); padding:18px 18px 16px; box-shadow:0 2px 12px rgba(0,0,0,.06); display:flex; justify-content:space-between; align-items:center; gap:16px; }
+  .hero-period { font-size:12px; color:var(--text-muted); font-weight:500; margin-bottom:6px; }
+  .hero-main { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
+  .hero-icon { width:46px; height:46px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .hero-icon svg { width:22px; height:22px; }
+  .hero-days { font-size:28px; font-weight:800; color:var(--text); line-height:1.1; }
+  .hero-sub { font-size:12px; color:var(--text-muted); margin-top:2px; margin-bottom:10px; }
+  .hero-dots { display:flex; gap:6px; }
+  .hero-dot { width:22px; height:22px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; }
+  .hero-dot.empty { background:var(--border); }
+  .hero-dot svg { width:11px; height:11px; }
+  .ring-wrap { position:relative; width:96px; height:96px; flex-shrink:0; }
+  .ring-wrap svg { transform:rotate(-90deg); }
+  .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring-pct { font-size:20px; font-weight:800; color:var(--text); line-height:1.1; }
+  .ring-sub { font-size:10px; color:var(--text-muted); }
+
+  /* Date nav */
+  .date-nav { display:flex; align-items:center; justify-content:space-between; padding:0 16px 14px; gap:8px; }
+  .date-arrow { width:34px; height:34px; border-radius:50%; background:var(--card); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; }
+  .date-pill { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; padding:9px 12px; cursor:pointer; }
+  .date-pill span { font-size:14px; font-weight:700; color:var(--text); }
+
+  /* Card */
+  .card { margin:0 16px 12px; background:var(--card); border-radius:var(--radius); box-shadow:0 2px 12px rgba(0,0,0,.06); overflow:hidden; }
+  .card-pad { padding:16px 18px; }
+  .sec-title { font-size:15px; font-weight:800; color:var(--text); margin-bottom:12px; }
+
+  /* ── Calendar ── */
+  .cal-card { margin:0 16px 12px; background:var(--card); border-radius:var(--radius); box-shadow:0 2px 12px rgba(0,0,0,.06); padding:18px 16px 14px; }
+  .cal-top-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .cal-title { font-size:15px; font-weight:800; color:var(--text); }
+  .cal-kaza-btn {
+    display:flex; align-items:center; gap:5px;
+    background:var(--amber-light); border:1.5px solid var(--amber-border);
+    border-radius:20px; padding:5px 12px;
+    font-size:11px; font-weight:700; color:var(--amber);
+    font-family:inherit; cursor:pointer;
+  }
+  .cal-kaza-btn svg { width:12px; height:12px; }
+
+  /* Legend row */
+  .cal-legend { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .cl { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted); font-weight:500; }
+  .cl-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+
+  /* Days of week */
+  .dow-row { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px; }
+  .dow { text-align:center; font-size:10px; font-weight:700; color:var(--text-muted); }
+
+  /* Calendar grid */
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+  .cd {
+    aspect-ratio:1; border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; position:relative; transition:transform .12s; gap:1px;
+    font-size:11px; font-weight:700;
+  }
+  .cd:hover { transform:scale(1.12); }
+  .cd .cd-n { font-size:11px; font-weight:700; line-height:1; }
+  .cd .cd-pips { display:flex; gap:1.5px; margin-top:1px; }
+  .cd .cd-pips span { width:3px; height:3px; border-radius:50%; }
+
+  /* States */
+  .cd-full    { background:var(--green); color:#fff; }
+  .cd-full .cd-pips span { background:#fff; opacity:.6; }
+  .cd-partial { background:var(--amber-light); color:var(--amber); border:1.5px solid var(--amber-border); }
+  .cd-partial .cd-pips span { background:var(--amber); }
+  .cd-missed  { background:var(--red-light); color:var(--red); border:1.5px solid #F5C2C2; }
+  .cd-missed .cd-pips span { background:var(--red); }
+  .cd-special { background:var(--purple-light); color:var(--purple); border:1.5px solid var(--purple-border); }
+  .cd-today   { background:var(--green); color:#fff; box-shadow:0 0 0 3px var(--green-light), 0 0 0 5px var(--green); }
+  .cd-today-p { background:var(--amber-light); color:var(--amber); border:2px solid var(--amber); box-shadow:0 0 0 3px #FFF4E0; }
+  .cd-future  { background:var(--border); color:#ccc; cursor:default; }
+  .cd-future:hover { transform:none; }
+  .cd-empty   { background:transparent; cursor:default; pointer-events:none; }
+  .cd-empty:hover { transform:none; }
+
+  /* Monthly stats list */
+  .mstat-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); }
+  .mstat-row:last-child { border-bottom:none; }
+  .mstat-label { font-size:12px; color:var(--text-muted); font-weight:500; flex:1; }
+  .mstat-val { font-size:13px; font-weight:800; color:var(--text); }
+  .mstat-val.green { color:var(--green); }
+  .mstat-val.amber { color:var(--amber); }
+  .mstat-val.red   { color:var(--red); }
+
+  /* Bar chart */
+  .bar-chart-wrap { position:relative; padding-top:8px; }
+  .bar-y-labels { position:absolute; left:0; top:8px; display:flex; flex-direction:column; justify-content:space-between; height:120px; }
+  .bar-y-lbl { font-size:9px; color:var(--text-muted); font-weight:500; line-height:1; }
+  .bars-area { display:flex; align-items:flex-end; gap:4px; height:120px; margin-left:28px; margin-bottom:6px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:3px; height:100%; }
+  .bar-pct-lbl { font-size:9px; font-weight:700; color:var(--text-muted); min-height:12px; }
+  .bar-pct-lbl.hi { color:var(--green); }
+  .bar-fill { width:100%; border-radius:5px 5px 0 0; background:linear-gradient(to top,#4db87a,#2A9D5C); }
+  .bar-x-lbl { font-size:10px; font-weight:600; color:var(--text-muted); }
+
+  /* Insight 3 cols */
+  .insight-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .ic3 { background:var(--card); border-radius:12px; padding:12px 10px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+  .ic3-icon { width:30px; height:30px; border-radius:9px; background:var(--green-light); display:flex; align-items:center; justify-content:center; margin-bottom:7px; }
+  .ic3-icon svg { width:15px; height:15px; }
+  .ic3-val { font-size:16px; font-weight:800; color:var(--text); line-height:1.1; }
+  .ic3-lbl { font-size:10px; color:var(--text-muted); margin-top:3px; line-height:1.3; }
+
+  /* Note card */
+  .note-card { margin:0 16px 14px; background:var(--green-light); border-radius:var(--radius); padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .note-icon { width:36px; height:36px; border-radius:10px; background:white; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .note-icon svg { width:18px; height:18px; }
+  .note-title { font-size:14px; font-weight:700; color:var(--text); }
+  .note-sub { font-size:12px; color:var(--text-muted); margin-top:2px; }
+  .note-arrow { color:var(--green); font-size:22px; }
+
+  /* Bottom Nav */
+  .bottom-nav { position:sticky; bottom:0; background:var(--card); border-top:1px solid var(--border); display:flex; align-items:center; padding:10px 0 24px; }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; color:#BBBBBB; font-weight:500; cursor:pointer; }
+  .nav-item.active { color:var(--green); }
+  .nav-item svg { width:24px; height:24px; }
+  .nav-fab-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; }
+  .nav-fab { width:50px; height:50px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(42,157,92,.4); margin-top:-18px; }
+  .nav-fab svg { width:22px; height:22px; }
+  .nav-fab-label { font-size:11px; color:#BBBBBB; font-weight:500; margin-top:2px; }
+
+  /* ── Bottom Sheet ── */
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:200; align-items:flex-end; justify-content:center; }
+  .overlay.show { display:flex; }
+  .sheet { background:var(--card); width:375px; border-radius:22px 22px 0 0; padding:18px 20px 32px; box-shadow:0 -6px 30px rgba(0,0,0,.15); animation:up .22s ease-out; }
+  @keyframes up { from{transform:translateY(50px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .sheet-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
+  .sheet-date { font-size:16px; font-weight:800; color:var(--text); margin-bottom:3px; }
+  .sheet-summary { font-size:12px; color:var(--text-muted); margin-bottom:16px; }
+  .sheet-prayers { display:flex; flex-direction:column; gap:9px; margin-bottom:20px; }
+  .sp-row { display:flex; align-items:center; gap:10px; }
+  .sp-icon { width:32px; height:32px; border-radius:50%; border:1.5px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .sp-icon svg { width:15px; height:15px; }
+  .sp-name { flex:1; font-size:13px; font-weight:600; color:var(--text); }
+  .sp-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; }
+  .sp-done    { background:var(--green-light); color:var(--green); }
+  .sp-kaza    { background:var(--blue-light);  color:var(--blue); }
+  .sp-missed  { background:var(--red-light);   color:var(--red); }
+  .sp-pending { background:var(--border);      color:var(--text-muted); }
+  .sp-special { background:var(--purple-light);color:var(--purple); }
+  .sheet-action {
+    width:100%; padding:14px; border:none; border-radius:14px;
+    font-family:inherit; font-size:14px; font-weight:800; color:#fff;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:transform .12s;
+  }
+  .sheet-action:hover { transform:translateY(-1px); }
+  .sheet-action.kaza { background:var(--amber); }
+  .sheet-action.green { background:var(--green); }
+  .sheet-action.muted { background:var(--green-light); color:var(--green); }
+  .sheet-action svg { width:17px; height:17px; }
+</style>
+</head>
+<body>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-icons">
+    <div class="signal-bars"><div class="sbar" style="height:4px"></div><div class="sbar" style="height:7px"></div><div class="sbar" style="height:10px"></div><div class="sbar" style="height:13px"></div></div>
+    <svg width="16" height="12" fill="currentColor" viewBox="0 0 16 12"><path d="M8 3C10.4 3 12.6 4 14.1 5.7L15.5 4.3C13.6 2.2 11 1 8 1S2.4 2.2.5 4.3L1.9 5.7C3.4 4 5.6 3 8 3Z" opacity=".4"/><path d="M8 6c1.5 0 2.8.6 3.8 1.6L13.2 6.2C11.8 4.8 10 4 8 4S4.2 4.8 2.8 6.2L4.2 7.6C5.2 6.6 6.5 6 8 6Z" opacity=".7"/><circle cx="8" cy="10.5" r="1.5"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x=".6" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="2" y="2.5" width="18" height="7" rx="2"/><rect x="22.5" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+  </div>
+</div>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div><div class="page-title">İstatistikler</div><div class="page-subtitle">İbadet yolculuğundaki ilerlemeni görüntüle.</div></div>
+  <div class="cal-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-btn">Genel Bakış</button>
+  <button class="tab-btn">Haftalık</button>
+  <button class="tab-btn active">Aylık</button>
+  <button class="tab-btn">Yıllık</button>
+</div>
+
+<!-- Hero -->
+<div class="hero-card">
+  <div>
+    <div class="hero-period">Bu Ay</div>
+    <div class="hero-main">
+      <div class="hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div><div class="hero-days">21 gün</div><div class="hero-sub">Çok güzel bir istikrar!</div></div>
+    </div>
+    <div class="hero-dots">
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="hero-dot empty"></div>
+    </div>
+  </div>
+  <div class="ring-wrap">
+    <svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="#E8F5EE" stroke-width="8"/><circle cx="48" cy="48" r="40" fill="none" stroke="#2A9D5C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="33"/></svg>
+    <div class="ring-center"><div class="ring-pct">%87</div><div class="ring-sub">Tamamlandı</div></div>
+  </div>
+</div>
+
+<!-- Date Nav -->
+<div class="date-nav">
+  <div class="date-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
+  <div class="date-pill">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span>Mayıs 2025</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="date-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+</div>
+
+<!-- ── FULL CALENDAR CARD ── -->
+<div class="cal-card">
+  <div class="cal-top-row">
+    <div class="cal-title">Aylık Namaz Takvimi</div>
+    <button class="cal-kaza-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      4 kaza gün
+    </button>
+  </div>
+
+  <!-- Legend -->
+  <div class="cal-legend">
+    <div class="cl"><div class="cl-dot" style="background:var(--green)"></div>Tam (5/5)</div>
+    <div class="cl"><div class="cl-dot" style="background:var(--amber-light);border:1.5px solid var(--amber-border)"></div>Eksik</div>
+    <div class="cl"><div class="cl-dot" style="background:var(--red-light);border:1.5px solid #F5C2C2"></div>Hiç kılınmadı</div>
+    <div class="cl"><div class="cl-dot" style="background:var(--purple-light);border:1.5px solid var(--purple-border)"></div>Özel gün</div>
+    <div class="cl"><div class="cl-dot" style="background:var(--border)"></div>Gelecek</div>
+  </div>
+
+  <!-- Days of week -->
+  <div class="dow-row">
+    <div class="dow">Pzt</div><div class="dow">Sal</div><div class="dow">Çar</div>
+    <div class="dow">Per</div><div class="dow">Cum</div><div class="dow">Cmt</div>
+    <div class="dow">Paz</div>
+  </div>
+
+  <!-- Calendar grid -->
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- Monthly Stats list -->
+<div class="card">
+  <div class="card-pad" style="padding-bottom:6px;"><div class="sec-title">Aylık İstatistikler</div></div>
+  <div class="card-pad" style="padding-top:0;">
+    <div class="mstat-row"><div class="mstat-label">Toplam kıldığın namaz</div><div class="mstat-val">186</div></div>
+    <div class="mstat-row"><div class="mstat-label">Kaza olarak kıldığın namaz</div><div class="mstat-val amber">18</div></div>
+    <div class="mstat-row"><div class="mstat-label">Ortalama günlük tamamlama</div><div class="mstat-val">%87</div></div>
+    <div class="mstat-row"><div class="mstat-label">En uzun seri</div><div class="mstat-val green">12 gün</div></div>
+    <div class="mstat-row"><div class="mstat-label">İstikrarlı günler</div><div class="mstat-val green">21 gün</div></div>
+    <div class="mstat-row"><div class="mstat-label">Kaza gerektiren günler</div><div class="mstat-val red">4 gün</div></div>
+    <div class="mstat-row"><div class="mstat-label">Hiç kılınmayan günler</div><div class="mstat-val red">1 gün</div></div>
+  </div>
+</div>
+
+<!-- Namazlara Göre Bar Chart -->
+<div class="card">
+  <div class="card-pad" style="padding-bottom:0;"><div class="sec-title">Namazlara Göre Tamamlama Oranı</div></div>
+  <div class="card-pad" style="padding-top:4px;">
+    <div class="bar-chart-wrap">
+      <div class="bar-y-labels">
+        <div class="bar-y-lbl">%100</div><div class="bar-y-lbl">%75</div>
+        <div class="bar-y-lbl">%50</div><div class="bar-y-lbl">%25</div><div class="bar-y-lbl">%0</div>
+      </div>
+      <div class="bars-area">
+        <div class="bar-col"><div class="bar-pct-lbl hi">%93</div><div class="bar-fill" style="height:112px"></div><div class="bar-x-lbl">Sabah</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl hi">%89</div><div class="bar-fill" style="height:107px"></div><div class="bar-x-lbl">Öğle</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%84</div><div class="bar-fill" style="height:101px"></div><div class="bar-x-lbl">İkindi</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl">%81</div><div class="bar-fill" style="height:97px"></div><div class="bar-x-lbl">Akşam</div></div>
+        <div class="bar-col"><div class="bar-pct-lbl hi">%88</div><div class="bar-fill" style="height:106px"></div><div class="bar-x-lbl">Yatsı</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Insights -->
+<div class="card">
+  <div class="card-pad" style="padding-bottom:10px;"><div class="sec-title">Bu Ayki İçgörüler</div></div>
+  <div class="card-pad" style="padding-top:0;">
+    <div class="insight-3">
+      <div class="ic3">
+        <div class="ic3-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M12 22c4.97 0 9-3.58 9-8 0-3-2-5.5-4-7 .5 2-1 4-3 4-1.5 0-2.5-1-2.5-2.5C11.5 7 10 5 8 3c0 3-3 5-3 9 0 4.42 3.13 8 7 8z"/></svg></div>
+        <div class="ic3-val">12 gün</div>
+        <div class="ic3-lbl">En uzun serin</div>
+      </div>
+      <div class="ic3">
+        <div class="ic3-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg></div>
+        <div class="ic3-val" style="color:var(--green);">Sabah</div>
+        <div class="ic3-lbl">En istikrarlı vakit</div>
+      </div>
+      <div class="ic3">
+        <div class="ic3-icon" style="background:#E6F1FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#3A7BD5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <div class="ic3-val" style="color:#3A7BD5;">%8 ↑</div>
+        <div class="ic3-lbl">Geçen aya göre</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Note card -->
+<div class="note-card">
+  <div class="note-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg></div>
+  <div><div class="note-title">Not eklemek ister misin?</div><div class="note-sub">Bu aya dair bir not ekleyebilirsin.</div></div>
+  <div class="note-arrow">›</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Ana Sayfa</span></div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg><span>Kıble</span></div>
+  <div class="nav-fab-wrap"><div class="nav-fab"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><span class="nav-fab-label">Hızlı İşaretle</span></div>
+  <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>İstatistikler</span></div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></div>
+</div>
+
+<!-- ── Bottom Sheet ── -->
+<div class="overlay" id="overlay" onclick="closeSheet(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-date" id="sh-date"></div>
+    <div class="sheet-summary" id="sh-summary"></div>
+    <div class="sheet-prayers" id="sh-prayers"></div>
+    <button class="sheet-action" id="sh-action">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span id="sh-action-label"></span>
+    </button>
+  </div>
+</div>
+
+<script>
+const P_NAMES = ['Sabah','Öğle','İkindi','Akşam','Yatsı'];
+const P_ICONS = [
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round"><path d="M17 18a5 5 0 00-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="3" y1="22" x2="21" y2="22"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="#2A9D5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
+];
+
+const DAY_NAMES = {1:'Perşembe',2:'Cuma',3:'Cumartesi',4:'Pazar',5:'Pazartesi',6:'Salı',7:'Çarşamba',8:'Perşembe',9:'Cuma',10:'Cumartesi',11:'Pazar',12:'Pazartesi',13:'Salı',14:'Çarşamba',15:'Perşembe',16:'Cuma',17:'Cumartesi',18:'Pazar',19:'Pazartesi',20:'Salı',21:'Çarşamba',22:'Perşembe',23:'Cuma',24:'Cumartesi',25:'Pazar',26:'Pazartesi',27:'Salı',28:'Çarşamba',29:'Perşembe',30:'Cuma',31:'Cumartesi'};
+
+// May 2025: starts Thursday = offset 3 (Mon-first)
+// type: full|partial|missed|special|today|today-partial|future
+const MAY = [
+  null,null,null, // offset — Thu is index 3
+  {n:1,  t:'full',        p:['done','done','done','done','done']},
+  {n:2,  t:'full',        p:['done','done','done','done','done']},
+  {n:3,  t:'partial',     p:['done','done','missed','done','missed']},
+  {n:4,  t:'full',        p:['done','done','done','done','done']},
+  {n:5,  t:'full',        p:['done','done','done','done','done']},
+  {n:6,  t:'full',        p:['done','done','done','done','done']},
+  {n:7,  t:'partial',     p:['missed','done','done','done','done']},
+  {n:8,  t:'full',        p:['done','done','done','done','done']},
+  {n:9,  t:'full',        p:['done','done','done','done','done']},
+  {n:10, t:'special',     p:['special','special','special','special','special']},
+  {n:11, t:'full',        p:['done','done','done','done','done']},
+  {n:12, t:'full',        p:['done','done','done','done','done']},
+  {n:13, t:'full',        p:['done','done','done','done','done']},
+  {n:14, t:'missed',      p:['missed','missed','missed','missed','missed']},
+  {n:15, t:'full',        p:['done','done','done','done','done']},
+  {n:16, t:'full',        p:['done','done','done','done','done']},
+  {n:17, t:'partial',     p:['done','done','missed','missed','done']},
+  {n:18, t:'full',        p:['done','done','done','done','done']},
+  {n:19, t:'full',        p:['done','done','done','done','done']},
+  {n:20, t:'full',        p:['done','done','done','done','done']},
+  {n:21, t:'partial',     p:['missed','done','done','done','done']},
+  {n:22, t:'full',        p:['done','done','done','done','done']},
+  {n:23, t:'full',        p:['done','done','done','done','done']},
+  {n:24, t:'today-partial', p:['done','done','pending','pending','pending']},
+  {n:25, t:'future'},
+  {n:26, t:'future'},
+  {n:27, t:'future'},
+  {n:28, t:'future'},
+  {n:29, t:'future'},
+  {n:30, t:'future'},
+  {n:31, t:'future'},
+];
+
+const STATE_CLASS = {
+  full:'cd-full', partial:'cd-partial', missed:'cd-missed',
+  special:'cd-special', today:'cd-today', 'today-partial':'cd-today-p',
+  future:'cd-future',
+};
+
+function buildCalendar() {
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  MAY.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cd';
+    if (!d) { el.className += ' cd-empty'; grid.appendChild(el); return; }
+    if (d.t === 'future') {
+      el.className += ' cd-future';
+      el.innerHTML = `<div class="cd-n">${d.n}</div>`;
+      grid.appendChild(el); return;
+    }
+    el.className += ` ${STATE_CLASS[d.t] || 'cd-future'}`;
+    const missedCount = d.p ? d.p.filter(x => x==='missed').length : 0;
+    const pipsHtml = missedCount > 0 && d.t !== 'full' && d.t !== 'today'
+      ? `<div class="cd-pips">${Array(Math.min(missedCount,3)).fill('<span></span>').join('')}</div>`
+      : '';
+    el.innerHTML = `<div class="cd-n">${d.n}</div>${pipsHtml}`;
+    el.onclick = () => openSheet(d);
+    grid.appendChild(el);
+  });
+}
+
+function openSheet(d) {
+  const dayName = DAY_NAMES[d.n] || '';
+  document.getElementById('sh-date').textContent = `${d.n} Mayıs 2025 · ${dayName}`;
+  const done    = d.p ? d.p.filter(x=>x==='done').length    : 0;
+  const missed  = d.p ? d.p.filter(x=>x==='missed').length  : 0;
+  const pending = d.p ? d.p.filter(x=>x==='pending').length : 0;
+  const summaries = {
+    full:           'Tüm namazlar kılındı ✓',
+    special:        'Özel gün — seri korudu 🟣',
+    missed:         'Bu gün hiç namaz kılınmadı',
+    partial:        `${done}/5 namaz kılındı · ${missed} eksik namaz var`,
+    'today-partial':`Bugün: ${done}/5 namaz kılındı · ${pending} henüz kılınmadı`,
+    today:          'Bugün tüm namazlar kılındı ✓',
+  };
+  document.getElementById('sh-summary').textContent = summaries[d.t] || '';
+
+  if (d.p) {
+    document.getElementById('sh-prayers').innerHTML = P_NAMES.map((name,i)=>{
+      const s = d.p[i];
+      const [cls,lbl] = s==='done'?['sp-done','Kılındı']:s==='kaza'?['sp-kaza','Kaza kılındı']:s==='special'?['sp-special','Özel gün']:s==='pending'?['sp-pending','Henüz kılınmadı']:['sp-missed','Kılınmadı'];
+      return `<div class="sp-row"><div class="sp-icon">${P_ICONS[i]}</div><div class="sp-name">${name}</div><div class="sp-badge ${cls}">${lbl}</div></div>`;
+    }).join('');
+  }
+
+  const btn = document.getElementById('sh-action');
+  const lbl = document.getElementById('sh-action-label');
+  if (d.t === 'full' || d.t === 'today') {
+    btn.className='sheet-action muted'; lbl.textContent='Mükemmel bir gün! 🎉';
+  } else if (d.t === 'special') {
+    btn.className='sheet-action muted'; lbl.textContent='Özel gün olarak işaretlendi';
+  } else if (d.t === 'today-partial') {
+    btn.className='sheet-action green'; lbl.textContent='Bugünü işaretle →';
+  } else if (missed > 0) {
+    btn.className='sheet-action kaza'; lbl.textContent=`${missed} kaza namazını işaretle →`;
+  } else {
+    btn.className='sheet-action muted'; lbl.textContent='Tamamlandı';
+  }
+
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeSheet(e) {
+  if (e.target === document.getElementById('overlay'))
+    document.getElementById('overlay').classList.remove('show');
+}
+
+buildCalendar();
+</script>
+</body>
+</html>

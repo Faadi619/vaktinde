@@ -1,0 +1,351 @@
+{
+  "@@locale": "tr",
+
+  "appName": "Vaktinde",
+  "@appName": { "description": "Application name" },
+
+  "loading": "Yükleniyor...",
+  "@loading": { "description": "Generic loading text" },
+
+  "save": "Kaydet",
+  "@save": { "description": "Generic save button" },
+
+  "cancel": "İptal",
+  "@cancel": { "description": "Generic cancel button" },
+
+  "close": "Kapat",
+  "@close": { "description": "Generic close button" },
+
+  "confirm": "Onayla",
+  "@confirm": { "description": "Generic confirm button" },
+
+  "retry": "Tekrar Dene",
+  "@retry": { "description": "Retry button" },
+
+  "errorGeneric": "Bir hata oluştu. Lütfen tekrar deneyin.",
+  "@errorGeneric": { "description": "Generic error message" },
+
+  "errorNoInternet": "İnternet bağlantısı yok. Kaydedilen veriler gösteriliyor.",
+  "@errorNoInternet": { "description": "No internet error" },
+
+  "errorLocationDenied": "Konum izni reddedildi. Lütfen ayarlardan izin verin.",
+  "@errorLocationDenied": { "description": "Location permission denied" },
+
+  "signInWithGoogle": "Google ile Giriş Yap",
+  "@signInWithGoogle": { "description": "Google sign-in button" },
+
+  "signOut": "Çıkış Yap",
+  "@signOut": { "description": "Sign out button" },
+
+  "welcomeTitle": "Hoş Geldin",
+  "@welcomeTitle": { "description": "Welcome screen title" },
+
+  "welcomeSubtitle": "Namaz alışkanlığını takip et, gücünü hisset.",
+  "@welcomeSubtitle": { "description": "Welcome screen subtitle" },
+
+  "locationPermissionTitle": "Konum İzni",
+  "@locationPermissionTitle": { "description": "Location permission dialog title" },
+
+  "locationPermissionMessage": "Namaz vakitlerini ve kıble yönünü doğru hesaplayabilmek için konumunuza ihtiyacımız var.",
+  "@locationPermissionMessage": { "description": "Location permission dialog message" },
+
+  "allowLocation": "Konuma İzin Ver",
+  "@allowLocation": { "description": "Allow location button" },
+
+  "selectCityManually": "Şehri Manuel Seç",
+  "@selectCityManually": { "description": "Manual city selection button" },
+
+  "navHome": "Ana Sayfa",
+  "@navHome": { "description": "Home tab label" },
+
+  "navStats": "İstatistikler",
+  "@navStats": { "description": "Statistics tab label" },
+
+  "navQuickMark": "Hızlı İşaretle",
+  "@navQuickMark": { "description": "Quick mark tab label" },
+
+  "navQibla": "Kıble",
+  "@navQibla": { "description": "Qibla tab label" },
+
+  "navProfile": "Profil",
+  "@navProfile": { "description": "Profile tab label" },
+
+  "prayerFajr": "Sabah",
+  "@prayerFajr": { "description": "Fajr prayer name" },
+
+  "prayerDhuhr": "Öğle",
+  "@prayerDhuhr": { "description": "Dhuhr prayer name" },
+
+  "prayerAsr": "İkindi",
+  "@prayerAsr": { "description": "Asr prayer name" },
+
+  "prayerMaghrib": "Akşam",
+  "@prayerMaghrib": { "description": "Maghrib prayer name" },
+
+  "prayerIsha": "Yatsı",
+  "@prayerIsha": { "description": "Isha prayer name" },
+
+  "prayerImsak": "İmsak",
+  "@prayerImsak": { "description": "Imsak time name" },
+
+  "prayerSunrise": "Güneş",
+  "@prayerSunrise": { "description": "Sunrise time name" },
+
+  "prayerOnTime": "Vaktinde",
+  "@prayerOnTime": { "description": "On-time prayer label" },
+
+  "prayerKaza": "Kaza",
+  "@prayerKaza": { "description": "Makeup prayer label" },
+
+  "markAsOnTime": "Vaktinde Kıldım",
+  "@markAsOnTime": { "description": "Mark prayer as on time button" },
+
+  "markAsKaza": "Kaza Olarak Kıldım",
+  "@markAsKaza": { "description": "Mark prayer as kaza button" },
+
+  "todayPrayers": "Bugünün Namazları",
+  "@todayPrayers": { "description": "Today's prayers section header" },
+
+  "nextPrayer": "Sonraki Namaz",
+  "@nextPrayer": { "description": "Next prayer label" },
+
+  "remainingTime": "{time} kaldı",
+  "@remainingTime": {
+    "description": "Time remaining until next prayer",
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "specialDayMode": "Özel Gün Modu",
+  "@specialDayMode": { "description": "Special day mode toggle label" },
+
+  "specialDayTravel": "Seyahat",
+  "@specialDayTravel": { "description": "Travel special day type" },
+
+  "specialDayIllness": "Hastalık",
+  "@specialDayIllness": { "description": "Illness special day type" },
+
+  "specialDayOther": "Diğer",
+  "@specialDayOther": { "description": "Other special day type" },
+
+  "specialDayActive": "Özel gün aktif: {type}",
+  "@specialDayActive": {
+    "description": "Special day active banner",
+    "placeholders": { "type": { "type": "String" } }
+  },
+
+  "streakDays": "{count} Gün Seri",
+  "@streakDays": {
+    "description": "Streak day count",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "streakFrozenMessage": "Dünkü seriniz bir mühlet günüyle korundu.",
+  "@streakFrozenMessage": { "description": "Message shown after a streak freeze was auto-applied" },
+
+  "streakBrokenMessage": "Her gün yeni bir başlangıç. Geçmişin kayıtlarda, bugünden itibaren devam et.",
+  "@streakBrokenMessage": { "description": "Compassionate broken streak message" },
+
+  "streakReengagementMessage": "3 günlük yeni seri! Devam ediyorsun.",
+  "@streakReengagementMessage": { "description": "Re-engagement celebration after 3 days back" },
+
+  "streakFreezesRemaining": "{count} mühlet gününüz kaldı",
+  "@streakFreezesRemaining": {
+    "description": "Streak freezes remaining label",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "bestStreak": "En İyi Seri",
+  "@bestStreak": { "description": "Best streak label" },
+
+  "totalEngagementDays": "Toplam Aktif Gün",
+  "@totalEngagementDays": { "description": "Total engagement days label" },
+
+  "quickMarkTitle": "Hızlı İşaretle",
+  "@quickMarkTitle": { "description": "Quick mark screen title" },
+
+  "quickMarkSaveButton": "Seçimleri Kaydet",
+  "@quickMarkSaveButton": { "description": "Quick mark save button" },
+
+  "quickMarkNote": "Gün notu (isteğe bağlı)",
+  "@quickMarkNote": { "description": "Day note placeholder" },
+
+  "quickMarkRecentHistory": "Son İşaretlemeler",
+  "@quickMarkRecentHistory": { "description": "Recent history section label" },
+
+  "quickMarkSavedSuccess": "Kaydedildi.",
+  "@quickMarkSavedSuccess": { "description": "Quick mark save success message" },
+
+  "statsTitle": "İstatistikler",
+  "@statsTitle": { "description": "Statistics screen title" },
+
+  "statsTabOverview": "Genel Bakış",
+  "@statsTabOverview": { "description": "Overview stats tab" },
+
+  "statsTabWeekly": "Haftalık",
+  "@statsTabWeekly": { "description": "Weekly stats tab" },
+
+  "statsTabMonthly": "Aylık",
+  "@statsTabMonthly": { "description": "Monthly stats tab" },
+
+  "statsTabYearly": "Yıllık",
+  "@statsTabYearly": { "description": "Yearly stats tab" },
+
+  "statsTotalPrayers": "Toplam Namaz",
+  "@statsTotalPrayers": { "description": "Total prayers stat label" },
+
+  "statsTotalDays": "Toplam Gün",
+  "@statsTotalDays": { "description": "Total days stat label" },
+
+  "statsCompletionRate": "Tamamlanma Oranı",
+  "@statsCompletionRate": { "description": "Completion rate stat label" },
+
+  "statsThisWeek": "Bu Hafta",
+  "@statsThisWeek": { "description": "This week label" },
+
+  "statsThisMonth": "Bu Ay",
+  "@statsThisMonth": { "description": "This month label" },
+
+  "statsThisYear": "Bu Yıl",
+  "@statsThisYear": { "description": "This year label" },
+
+  "statsBestMonth": "En İyi Ay",
+  "@statsBestMonth": { "description": "Best month label" },
+
+  "qiblaTitle": "Kıble",
+  "@qiblaTitle": { "description": "Qibla screen title" },
+
+  "qiblaSubtitle": "Kıble yönünü bul",
+  "@qiblaSubtitle": { "description": "Qibla screen subtitle" },
+
+  "qiblaMapButton": "Harita",
+  "@qiblaMapButton": { "description": "Qibla map button" },
+
+  "qiblaDegrees": "{degrees}°",
+  "@qiblaDegrees": {
+    "description": "Degree value display",
+    "placeholders": { "degrees": { "type": "String" } }
+  },
+
+  "qiblaAccuracyHigh": "Yüksek",
+  "@qiblaAccuracyHigh": { "description": "High accuracy label" },
+
+  "qiblaAccuracyMedium": "Orta",
+  "@qiblaAccuracyMedium": { "description": "Medium accuracy label" },
+
+  "qiblaAccuracyLow": "Düşük",
+  "@qiblaAccuracyLow": { "description": "Low accuracy label" },
+
+  "qiblaInstructionsTitle": "Nasıl Kullanılır?",
+  "@qiblaInstructionsTitle": { "description": "Qibla instructions card title" },
+
+  "qiblaInstruction1": "Telefonu yatay tutun ve çevrenizden uzak durun.",
+  "@qiblaInstruction1": { "description": "Qibla instruction step 1" },
+
+  "qiblaInstruction2": "Kırmızı ibre kıble yönünü gösterir.",
+  "@qiblaInstruction2": { "description": "Qibla instruction step 2" },
+
+  "qiblaInstruction3": "Metal yüzeylerden ve elektronik cihazlardan uzak durun.",
+  "@qiblaInstruction3": { "description": "Qibla instruction step 3" },
+
+  "profileTitle": "Profil",
+  "@profileTitle": { "description": "Profile screen title" },
+
+  "profileSettings": "Ayarlar",
+  "@profileSettings": { "description": "Settings section header" },
+
+  "profileNotifications": "Bildirimler",
+  "@profileNotifications": { "description": "Notifications settings label" },
+
+  "profileEveningReminderTime": "Akşam Hatırlatıcısı",
+  "@profileEveningReminderTime": { "description": "Evening reminder time setting" },
+
+  "profileUpdateLocation": "Konumu Güncelle",
+  "@profileUpdateLocation": { "description": "Update location setting" },
+
+  "profileBadges": "Rozetlerim",
+  "@profileBadges": { "description": "Badges section header" },
+
+  "profileSignOut": "Çıkış Yap",
+  "@profileSignOut": { "description": "Sign out option" },
+
+  "profileEditName": "İsmi Düzenle",
+  "@profileEditName": { "description": "Edit display name option" },
+
+  "notifPrayerTime": "{prayer} vakti geldi.",
+  "@notifPrayerTime": {
+    "description": "Prayer time notification body",
+    "placeholders": { "prayer": { "type": "String" } }
+  },
+
+  "notifEveningReminder": "Bugün namazlarını kaydetmeyi unuttun mu?",
+  "@notifEveningReminder": { "description": "Evening reminder notification body" },
+
+  "notifBadgeEarned": "Tebrikler! {badgeName} rozetini kazandın!",
+  "@notifBadgeEarned": {
+    "description": "Badge earned notification body",
+    "placeholders": { "badgeName": { "type": "String" } }
+  },
+
+  "badgeCategoryOnboarding": "Başlangıç",
+  "@badgeCategoryOnboarding": { "description": "Onboarding badge category" },
+
+  "badgeCategoryStreak": "Seri",
+  "@badgeCategoryStreak": { "description": "Streak badge category" },
+
+  "badgeCategoryCompletion": "Tamamlama",
+  "@badgeCategoryCompletion": { "description": "Completion badge category" },
+
+  "badgeCategoryTotalCount": "Toplam",
+  "@badgeCategoryTotalCount": { "description": "Total count badge category" },
+
+  "badgeCategoryPrayerSpecific": "Namaz",
+  "@badgeCategoryPrayerSpecific": { "description": "Prayer-specific badge category" },
+
+  "badgeCategoryHonesty": "Dürüstlük",
+  "@badgeCategoryHonesty": { "description": "Honesty badge category" },
+
+  "badgeCategorySpecial": "Özel",
+  "@badgeCategorySpecial": { "description": "Special badge category" },
+
+  "badgeCategoryMilestone": "Kilometre Taşı",
+  "@badgeCategoryMilestone": { "description": "Milestone badge category" },
+
+  "badgeIlkAdim": "İlk Adım",
+  "badgeHosGeldin": "Hoş Geldin",
+  "badge3GunSeri": "3 Gün Seri",
+  "badge7GunSeri": "7 Gün Seri",
+  "badge30GunSeri": "30 Gün Seri",
+  "badgeIstikrarUstasi": "İstikrar Ustası",
+  "badgeEfsane": "Efsane",
+  "badgeTamGun": "Tam Gün",
+  "badgeMukemmelHafta": "Mükemmel Hafta",
+  "badgeMukemmelAy": "Mükemmel Ay",
+  "badge100Namaz": "100 Namaz",
+  "badge500Namaz": "500 Namaz",
+  "badge1000Namaz": "1000 Namaz",
+  "badge2000Namaz": "2000 Namaz",
+  "badgeSabahYildizi": "Sabah Yıldızı",
+  "badgeGeceYolcusu": "Gece Yolcusu",
+  "badgeOgleSavascisi": "Öğle Savaşçısı",
+  "badgeKazaSavascisi": "Kaza Savaşçısı",
+  "badgeTelafUstasi": "Telafi Ustası",
+  "badgeRamazanRuhu": "Ramazan Ruhu",
+  "badgeRamazanTamamladi": "Ramazan Tamamladı",
+  "badgeCumaKrali": "Cuma Kralı",
+  "badgeBirAy": "Bir Ay",
+  "badgeUcAy": "Üç Ay",
+  "badgeAltiAy": "Altı Ay",
+  "badgeBirYil": "Bir Yıl",
+
+  "badgeEarnedOn": "{date} tarihinde kazanıldı",
+  "@badgeEarnedOn": {
+    "description": "Badge earned date label",
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "badgeLocked": "Kilitli",
+  "@badgeLocked": { "description": "Locked badge label" },
+
+  "badgeCelebrationSubtitle": "Yeni bir rozet kazandın!",
+  "@badgeCelebrationSubtitle": { "description": "Badge celebration sheet subtitle" }
+}

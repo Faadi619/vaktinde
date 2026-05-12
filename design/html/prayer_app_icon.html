@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>Prayer App – Icon</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+  .icon-wrap {
+    width: 512px;
+    height: 512px;
+    border-radius: 116px; /* ~22.6% of 512 — iOS standard */
+    background: #2EAD57;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.22),
+      0 8px 24px rgba(0,0,0,.14),
+      inset 0 1px 0 rgba(255,255,255,.12);
+  }
+</style>
+</head>
+<body>
+
+<div class="icon-wrap">
+  <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+      <!-- Subtle radial highlight on green bg -->
+      <radialGradient id="bgGlow" cx="38%" cy="30%" r="65%">
+        <stop offset="0%" stop-color="#3EBD67" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#239B4A" stop-opacity="1"/>
+      </radialGradient>
+
+      <!-- Soft shadow filter for the moon -->
+      <filter id="moonShadow" x="-10%" y="-10%" width="130%" height="130%">
+        <feDropShadow dx="6" dy="10" stdDeviation="14" flood-color="rgba(0,0,0,0.20)"/>
+      </filter>
+
+      <!-- Soft shadow for clock hands -->
+      <filter id="handShadow" x="-30%" y="-30%" width="200%" height="200%">
+        <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
+      </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="512" height="512" fill="url(#bgGlow)"/>
+
+    <!-- ── Crescent moon ── -->
+    <!-- The crescent is built as: large filled circle MINUS a smaller offset circle -->
+    <g filter="url(#moonShadow)">
+      <path d="
+        M 210 76
+        A 200 200 0 1 0 210 436
+        A 148 148 0 1 1 210 76
+        Z
+      " fill="white"/>
+    </g>
+
+    <!-- ── Clock face (no circle border — just ticks and hands overlaid on moon opening) ── -->
+    <g transform="translate(310, 256)">
+
+      <!-- 4 tick marks at 12, 3, 6, 9 o'clock positions -->
+      <!-- 12 o'clock -->
+      <rect x="-5" y="-128" width="10" height="28" rx="5" fill="white" filter="url(#handShadow)"/>
+      <!-- 6 o'clock -->
+      <rect x="-5" y="100" width="10" height="28" rx="5" fill="white" filter="url(#handShadow)"/>
+      <!-- 3 o'clock -->
+      <rect x="100" y="-5" width="28" height="10" rx="5" fill="white" filter="url(#handShadow)"/>
+      <!-- 9 o'clock -->
+      <rect x="-128" y="-5" width="28" height="10" rx="5" fill="white" filter="url(#handShadow)"/>
+
+      <!-- Hour hand — pointing to ~10 o'clock (300°) -->
+      <line
+        x1="0" y1="0"
+        x2="-60" y2="-72"
+        stroke="white" stroke-width="16" stroke-linecap="round"
+        filter="url(#handShadow)"
+      />
+
+      <!-- Minute hand — pointing to ~1 o'clock (30°) -->
+      <line
+        x1="0" y1="0"
+        x2="55" y2="-96"
+        stroke="white" stroke-width="13" stroke-linecap="round"
+        filter="url(#handShadow)"
+      />
+
+      <!-- Center pivot circle -->
+      <circle cx="0" cy="0" r="14" fill="white" filter="url(#handShadow)"/>
+      <circle cx="0" cy="0" r="6" fill="#2EAD57"/>
+
+    </g>
+
+  </svg>
+</div>
+
+</body>
+</html>
