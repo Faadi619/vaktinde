@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:provider/provider.dart';
+
+import 'package:hive_flutter/hive_flutter.dart';
+import 'features/qibla/data/qibla_location_cache_model.dart';
+import 'firebase_options.dart';
 
 import 'core/constants/themes.dart';
 import 'features/auth/data/auth_service.dart';
 import 'features/auth/data/user_repository.dart';
-import 'features/auth/presentation/auth_provider.dart';
+import 'features/auth/providers/auth_provider.dart';
+import 'features/qibla/providers/qibla_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // TODO Phase 0: await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Hive.initFlutter();
+  Hive.registerAdapter(QiblaLocationCacheModelAdapter());
   runApp(const VaktindeApp());
 }
 
@@ -34,6 +42,7 @@ class VaktindeApp extends StatelessWidget {
           create: (context) => context.read<AuthService>().authStateChanges(),
           initialData: null,
         ),
+        ChangeNotifierProvider(create: (_) => QiblaProvider()),
         // TODO Phase 1: add UserProvider, LocationProvider
         // TODO Phase 2: add PrayerTimesProvider, DayRecordProvider
         // TODO Phase 4: add StreakProvider

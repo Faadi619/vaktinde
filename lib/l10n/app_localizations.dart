@@ -160,6 +160,300 @@ abstract class AppLocalizations {
   /// **'Google ile Giriş Yap'**
   String get signInWithGoogle;
 
+  /// Login screen title
+  ///
+  /// In tr, this message translates to:
+  /// **'Hoş geldin'**
+  String get loginTitle;
+
+  /// Login screen subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabına giriş yap'**
+  String get loginSubtitle;
+
+  /// Login social button text
+  ///
+  /// In tr, this message translates to:
+  /// **'Google ile devam et'**
+  String get continueWithGoogle;
+
+  /// Login divider text
+  ///
+  /// In tr, this message translates to:
+  /// **'veya e-posta ile'**
+  String get orEmailDivider;
+
+  /// Email field label
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta'**
+  String get emailLabel;
+
+  /// Email field placeholder
+  ///
+  /// In tr, this message translates to:
+  /// **'ornek@email.com'**
+  String get emailHint;
+
+  /// Password field label
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifre'**
+  String get passwordLabel;
+
+  /// Password field placeholder
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifrenizi girin'**
+  String get passwordHint;
+
+  /// Forgot password link
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifremi unuttum'**
+  String get forgotPassword;
+
+  /// Sign in button
+  ///
+  /// In tr, this message translates to:
+  /// **'Giriş Yap'**
+  String get signIn;
+
+  /// Login bottom prompt
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabın yok mu? Kayıt ol'**
+  String get noAccountRegister;
+
+  /// Invalid email login error
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçerli bir e-posta adresi girin.'**
+  String get errorInvalidEmail;
+
+  /// Invalid credentials login error
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta veya şifre hatalı.'**
+  String get errorInvalidCredentials;
+
+  /// Generic sign in failed error
+  ///
+  /// In tr, this message translates to:
+  /// **'Giriş yapılamadı. Lütfen tekrar deneyin.'**
+  String get errorSignInFailed;
+
+  /// Email already in use register error
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu e-posta adresi zaten kullanılıyor.'**
+  String get errorEmailAlreadyInUse;
+
+  /// Weak password register error
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifre en az 6 karakter olmalıdır.'**
+  String get errorWeakPassword;
+
+  /// Onboarding hero tagline
+  ///
+  /// In tr, this message translates to:
+  /// **'Namazlarını düzenli kıl,\nalışkanlıklarını güçlendir.'**
+  String get onboardingAppTagline;
+
+  /// Onboarding feature 1 title
+  ///
+  /// In tr, this message translates to:
+  /// **'Doğru namaz vakitleri'**
+  String get onboardingFeature1Title;
+
+  /// Onboarding feature 1 subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Diyanet verileriyle, bulunduğun yere göre'**
+  String get onboardingFeature1Sub;
+
+  /// Onboarding feature 2 title
+  ///
+  /// In tr, this message translates to:
+  /// **'Seri ve rozetler'**
+  String get onboardingFeature2Title;
+
+  /// Onboarding feature 2 subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'İstikrarını takip et, başarılarını kutla'**
+  String get onboardingFeature2Sub;
+
+  /// Onboarding feature 3 title
+  ///
+  /// In tr, this message translates to:
+  /// **'Kıble pusulası'**
+  String get onboardingFeature3Title;
+
+  /// Onboarding feature 3 subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Her yerde doğru yönü bul'**
+  String get onboardingFeature3Sub;
+
+  /// Onboarding create account CTA
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap Oluştur'**
+  String get onboardingCreateAccount;
+
+  /// Onboarding sign in CTA
+  ///
+  /// In tr, this message translates to:
+  /// **'Giriş Yap'**
+  String get onboardingSignIn;
+
+  /// Onboarding terms note
+  ///
+  /// In tr, this message translates to:
+  /// **'Devam ederek {terms} ve {privacy}\'nı kabul etmiş olursunuz.'**
+  String onboardingTermsNote(String terms, String privacy);
+
+  /// Terms of service label
+  ///
+  /// In tr, this message translates to:
+  /// **'Kullanım Koşulları'**
+  String get termsOfService;
+
+  /// Privacy policy label
+  ///
+  /// In tr, this message translates to:
+  /// **'Gizlilik Politikası'**
+  String get privacyPolicy;
+
+  /// Register screen title
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap oluştur'**
+  String get registerTitle;
+
+  /// Register screen subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Yolculuğuna başla'**
+  String get registerSubtitle;
+
+  /// Register Google button
+  ///
+  /// In tr, this message translates to:
+  /// **'Google ile kayıt ol'**
+  String get registerWithGoogle;
+
+  /// Full name field label
+  ///
+  /// In tr, this message translates to:
+  /// **'Ad Soyad'**
+  String get fullNameLabel;
+
+  /// Full name field placeholder
+  ///
+  /// In tr, this message translates to:
+  /// **'Adınız ve soyadınız'**
+  String get fullNameHint;
+
+  /// Create account button
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap Oluştur'**
+  String get createAccount;
+
+  /// Register bottom prompt
+  ///
+  /// In tr, this message translates to:
+  /// **'Zaten hesabın var mı? Giriş yap'**
+  String get alreadyHaveAccount;
+
+  /// Terms checkbox suffix text
+  ///
+  /// In tr, this message translates to:
+  /// **'\'nı okudum ve kabul ediyorum.'**
+  String get termsCheckboxText;
+
+  /// Weak password strength label
+  ///
+  /// In tr, this message translates to:
+  /// **'Zayıf şifre'**
+  String get passwordStrengthWeak;
+
+  /// Medium password strength label
+  ///
+  /// In tr, this message translates to:
+  /// **'Orta şifre'**
+  String get passwordStrengthMedium;
+
+  /// Strong password strength label
+  ///
+  /// In tr, this message translates to:
+  /// **'Güçlü şifre'**
+  String get passwordStrengthStrong;
+
+  /// Forgot password screen title
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifremi unuttum'**
+  String get forgotPasswordTitle;
+
+  /// Forgot password screen subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Sıfırlama bağlantısı gönderelim'**
+  String get forgotPasswordSubtitle;
+
+  /// Forgot password hint text
+  ///
+  /// In tr, this message translates to:
+  /// **'Kayıtlı e-posta adresinizi girin. Şifre sıfırlama bağlantısı göndereceğiz.'**
+  String get forgotPasswordHint;
+
+  /// Email address field label (forgot password)
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta Adresi'**
+  String get emailAddressLabel;
+
+  /// Send reset link button
+  ///
+  /// In tr, this message translates to:
+  /// **'Sıfırlama Bağlantısı Gönder'**
+  String get sendResetLink;
+
+  /// Forgot password success title
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta gönderildi!'**
+  String get forgotPasswordSuccessTitle;
+
+  /// Forgot password success body
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifre sıfırlama bağlantısı {email} adresine gönderildi. Gelen kutunuzu kontrol edin.'**
+  String forgotPasswordSuccessBody(String email);
+
+  /// Back to sign in button
+  ///
+  /// In tr, this message translates to:
+  /// **'Giriş sayfasına dön'**
+  String get backToSignIn;
+
+  /// Email not received prefix
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta gelmedi mi?'**
+  String get emailNotReceived;
+
+  /// Resend email link
+  ///
+  /// In tr, this message translates to:
+  /// **'Tekrar gönder'**
+  String get resendEmail;
+
   /// Sign out button
   ///
   /// In tr, this message translates to:
@@ -493,13 +787,13 @@ abstract class AppLocalizations {
   /// Qibla screen title
   ///
   /// In tr, this message translates to:
-  /// **'Kıble'**
+  /// **'Kıble Bul'**
   String get qiblaTitle;
 
   /// Qibla screen subtitle
   ///
   /// In tr, this message translates to:
-  /// **'Kıble yönünü bul'**
+  /// **'Kıble yönünü bulun ve yönünüzü kontrol edin.'**
   String get qiblaSubtitle;
 
   /// Qibla map button
@@ -507,6 +801,24 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Harita'**
   String get qiblaMapButton;
+
+  /// Qibla location mode label
+  ///
+  /// In tr, this message translates to:
+  /// **'Otomatik konum'**
+  String get qiblaLocationAuto;
+
+  /// Qibla direction value label
+  ///
+  /// In tr, this message translates to:
+  /// **'Kıble Yönü'**
+  String get qiblaDirectionLabel;
+
+  /// Qibla location accuracy label
+  ///
+  /// In tr, this message translates to:
+  /// **'Konum Doğruluğu'**
+  String get qiblaAccuracyLabel;
 
   /// Degree value display
   ///
@@ -535,13 +847,13 @@ abstract class AppLocalizations {
   /// Qibla instructions card title
   ///
   /// In tr, this message translates to:
-  /// **'Nasıl Kullanılır?'**
+  /// **'Nasıl kullanılır?'**
   String get qiblaInstructionsTitle;
 
   /// Qibla instruction step 1
   ///
   /// In tr, this message translates to:
-  /// **'Telefonu yatay tutun ve çevrenizden uzak durun.'**
+  /// **'Telefonu düz bir zemine parallel tutun ve okun yeşil işaretle aynı hizaya gelmesini sağlayın.'**
   String get qiblaInstruction1;
 
   /// Qibla instruction step 2

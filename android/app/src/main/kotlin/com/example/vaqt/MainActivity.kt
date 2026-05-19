@@ -1,4 +1,4 @@
-package com.example.vaktinde
+package com.example.vaqt
 
 import io.flutter.embedding.android.FlutterActivity
 

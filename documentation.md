@@ -1,5 +1,25 @@
 # Vaktinde Project Documentation
 
+## Quick Start (Developer)
+- Requirements: Flutter SDK (stable), Dart SDK, Android Studio/Xcode, and a connected simulator or device.
+- Install packages:
+  - `flutter pub get`
+- Run the app:
+  - `flutter run`
+- Check code quality:
+  - `flutter analyze`
+- Run tests:
+  - `flutter test`
+
+## Project Layout (At a Glance)
+- `lib/main.dart`: app entry, providers, router wiring.
+- `lib/core/`: shared constants, utilities, and extensions.
+- `lib/features/`: feature-first modules (auth, home, prayers, stats, qibla, etc.).
+- `lib/l10n/`: localization files (`app_tr.arb` and generated localization classes).
+- `lib/widgets/`: shared reusable UI components.
+- `assets/`: fonts, images, icons, and animations.
+- `test/`: widget and unit tests.
+
 ## Purpose
 Vaktinde is a mobile application for Turkish-speaking users to support daily prayer consistency.
 

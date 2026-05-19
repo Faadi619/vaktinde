@@ -34,6 +34,164 @@
   "signInWithGoogle": "Google ile Giriş Yap",
   "@signInWithGoogle": { "description": "Google sign-in button" },
 
+  "loginTitle": "Hoş geldin",
+  "@loginTitle": { "description": "Login screen title" },
+
+  "loginSubtitle": "Hesabına giriş yap",
+  "@loginSubtitle": { "description": "Login screen subtitle" },
+
+  "continueWithGoogle": "Google ile devam et",
+  "@continueWithGoogle": { "description": "Login social button text" },
+
+  "orEmailDivider": "veya e-posta ile",
+  "@orEmailDivider": { "description": "Login divider text" },
+
+  "emailLabel": "E-posta",
+  "@emailLabel": { "description": "Email field label" },
+
+  "emailHint": "ornek@email.com",
+  "@emailHint": { "description": "Email field placeholder" },
+
+  "passwordLabel": "Şifre",
+  "@passwordLabel": { "description": "Password field label" },
+
+  "passwordHint": "Şifrenizi girin",
+  "@passwordHint": { "description": "Password field placeholder" },
+
+  "forgotPassword": "Şifremi unuttum",
+  "@forgotPassword": { "description": "Forgot password link" },
+
+  "signIn": "Giriş Yap",
+  "@signIn": { "description": "Sign in button" },
+
+  "noAccountRegister": "Hesabın yok mu? Kayıt ol",
+  "@noAccountRegister": { "description": "Login bottom prompt" },
+
+  "errorInvalidEmail": "Geçerli bir e-posta adresi girin.",
+  "@errorInvalidEmail": { "description": "Invalid email login error" },
+
+  "errorInvalidCredentials": "E-posta veya şifre hatalı.",
+  "@errorInvalidCredentials": { "description": "Invalid credentials login error" },
+
+  "errorSignInFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
+  "@errorSignInFailed": { "description": "Generic sign in failed error" },
+
+  "errorEmailAlreadyInUse": "Bu e-posta adresi zaten kullanılıyor.",
+  "@errorEmailAlreadyInUse": { "description": "Email already in use register error" },
+
+  "errorWeakPassword": "Şifre en az 6 karakter olmalıdır.",
+  "@errorWeakPassword": { "description": "Weak password register error" },
+
+  "onboardingAppTagline": "Namazlarını düzenli kıl,\nalışkanlıklarını güçlendir.",
+  "@onboardingAppTagline": { "description": "Onboarding hero tagline" },
+
+  "onboardingFeature1Title": "Doğru namaz vakitleri",
+  "@onboardingFeature1Title": { "description": "Onboarding feature 1 title" },
+
+  "onboardingFeature1Sub": "Diyanet verileriyle, bulunduğun yere göre",
+  "@onboardingFeature1Sub": { "description": "Onboarding feature 1 subtitle" },
+
+  "onboardingFeature2Title": "Seri ve rozetler",
+  "@onboardingFeature2Title": { "description": "Onboarding feature 2 title" },
+
+  "onboardingFeature2Sub": "İstikrarını takip et, başarılarını kutla",
+  "@onboardingFeature2Sub": { "description": "Onboarding feature 2 subtitle" },
+
+  "onboardingFeature3Title": "Kıble pusulası",
+  "@onboardingFeature3Title": { "description": "Onboarding feature 3 title" },
+
+  "onboardingFeature3Sub": "Her yerde doğru yönü bul",
+  "@onboardingFeature3Sub": { "description": "Onboarding feature 3 subtitle" },
+
+  "onboardingCreateAccount": "Hesap Oluştur",
+  "@onboardingCreateAccount": { "description": "Onboarding create account CTA" },
+
+  "onboardingSignIn": "Giriş Yap",
+  "@onboardingSignIn": { "description": "Onboarding sign in CTA" },
+
+  "onboardingTermsNote": "Devam ederek {terms} ve {privacy}'nı kabul etmiş olursunuz.",
+  "@onboardingTermsNote": {
+    "description": "Onboarding terms note",
+    "placeholders": {
+      "terms": { "type": "String" },
+      "privacy": { "type": "String" }
+    }
+  },
+
+  "termsOfService": "Kullanım Koşulları",
+  "@termsOfService": { "description": "Terms of service label" },
+
+  "privacyPolicy": "Gizlilik Politikası",
+  "@privacyPolicy": { "description": "Privacy policy label" },
+
+  "registerTitle": "Hesap oluştur",
+  "@registerTitle": { "description": "Register screen title" },
+
+  "registerSubtitle": "Yolculuğuna başla",
+  "@registerSubtitle": { "description": "Register screen subtitle" },
+
+  "registerWithGoogle": "Google ile kayıt ol",
+  "@registerWithGoogle": { "description": "Register Google button" },
+
+  "fullNameLabel": "Ad Soyad",
+  "@fullNameLabel": { "description": "Full name field label" },
+
+  "fullNameHint": "Adınız ve soyadınız",
+  "@fullNameHint": { "description": "Full name field placeholder" },
+
+  "createAccount": "Hesap Oluştur",
+  "@createAccount": { "description": "Create account button" },
+
+  "alreadyHaveAccount": "Zaten hesabın var mı? Giriş yap",
+  "@alreadyHaveAccount": { "description": "Register bottom prompt" },
+
+  "termsCheckboxText": "'nı okudum ve kabul ediyorum.",
+  "@termsCheckboxText": { "description": "Terms checkbox suffix text" },
+
+  "passwordStrengthWeak": "Zayıf şifre",
+  "@passwordStrengthWeak": { "description": "Weak password strength label" },
+
+  "passwordStrengthMedium": "Orta şifre",
+  "@passwordStrengthMedium": { "description": "Medium password strength label" },
+
+  "passwordStrengthStrong": "Güçlü şifre",
+  "@passwordStrengthStrong": { "description": "Strong password strength label" },
+
+  "forgotPasswordTitle": "Şifremi unuttum",
+  "@forgotPasswordTitle": { "description": "Forgot password screen title" },
+
+  "forgotPasswordSubtitle": "Sıfırlama bağlantısı gönderelim",
+  "@forgotPasswordSubtitle": { "description": "Forgot password screen subtitle" },
+
+  "forgotPasswordHint": "Kayıtlı e-posta adresinizi girin. Şifre sıfırlama bağlantısı göndereceğiz.",
+  "@forgotPasswordHint": { "description": "Forgot password hint text" },
+
+  "emailAddressLabel": "E-posta Adresi",
+  "@emailAddressLabel": { "description": "Email address field label (forgot password)" },
+
+  "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+  "@sendResetLink": { "description": "Send reset link button" },
+
+  "forgotPasswordSuccessTitle": "E-posta gönderildi!",
+  "@forgotPasswordSuccessTitle": { "description": "Forgot password success title" },
+
+  "forgotPasswordSuccessBody": "Şifre sıfırlama bağlantısı {email} adresine gönderildi. Gelen kutunuzu kontrol edin.",
+  "@forgotPasswordSuccessBody": {
+    "description": "Forgot password success body",
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+
+  "backToSignIn": "Giriş sayfasına dön",
+  "@backToSignIn": { "description": "Back to sign in button" },
+
+  "emailNotReceived": "E-posta gelmedi mi?",
+  "@emailNotReceived": { "description": "Email not received prefix" },
+
+  "resendEmail": "Tekrar gönder",
+  "@resendEmail": { "description": "Resend email link" },
+
   "signOut": "Çıkış Yap",
   "@signOut": { "description": "Sign out button" },
 
@@ -211,14 +369,23 @@
   "statsBestMonth": "En İyi Ay",
   "@statsBestMonth": { "description": "Best month label" },
 
-  "qiblaTitle": "Kıble",
+  "qiblaTitle": "Kıble Bul",
   "@qiblaTitle": { "description": "Qibla screen title" },
 
-  "qiblaSubtitle": "Kıble yönünü bul",
+  "qiblaSubtitle": "Kıble yönünü bulun ve yönünüzü kontrol edin.",
   "@qiblaSubtitle": { "description": "Qibla screen subtitle" },
 
   "qiblaMapButton": "Harita",
   "@qiblaMapButton": { "description": "Qibla map button" },
+
+  "qiblaLocationAuto": "Otomatik konum",
+  "@qiblaLocationAuto": { "description": "Qibla location mode label" },
+
+  "qiblaDirectionLabel": "Kıble Yönü",
+  "@qiblaDirectionLabel": { "description": "Qibla direction value label" },
+
+  "qiblaAccuracyLabel": "Konum Doğruluğu",
+  "@qiblaAccuracyLabel": { "description": "Qibla location accuracy label" },
 
   "qiblaDegrees": "{degrees}°",
   "@qiblaDegrees": {
@@ -235,10 +402,10 @@
   "qiblaAccuracyLow": "Düşük",
   "@qiblaAccuracyLow": { "description": "Low accuracy label" },
 
-  "qiblaInstructionsTitle": "Nasıl Kullanılır?",
+  "qiblaInstructionsTitle": "Nasıl kullanılır?",
   "@qiblaInstructionsTitle": { "description": "Qibla instructions card title" },
 
-  "qiblaInstruction1": "Telefonu yatay tutun ve çevrenizden uzak durun.",
+  "qiblaInstruction1": "Telefonu düz bir zemine parallel tutun ve okun yeşil işaretle aynı hizaya gelmesini sağlayın.",
   "@qiblaInstruction1": { "description": "Qibla instruction step 1" },
 
   "qiblaInstruction2": "Kırmızı ibre kıble yönünü gösterir.",

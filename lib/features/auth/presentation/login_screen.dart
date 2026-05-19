@@ -1,13 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../l10n/app_localizations.dart';
-import '../widgets/google_sign_in_button.dart';
-import 'auth_provider.dart';
+import '../../../widgets/app_back_button.dart';
+import '../providers/auth_provider.dart';
+import 'widgets/auth_field_label.dart';
+import 'widgets/auth_text_field.dart';
+import 'widgets/google_sign_in_button.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String _errorMessage(AppLocalizations localizations, String? code) {
+    switch (code) {
+      case 'invalid_email':
+        return localizations.errorInvalidEmail;
+      case 'invalid_credentials':
+        return localizations.errorInvalidCredentials;
+      case 'sign_in_failed':
+        return localizations.errorSignInFailed;
+      default:
+        return localizations.errorGeneric;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,48 +49,202 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.background, AppColors.lightGreen],
-          ),
-        ),
+        color: AppColors.background,
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Spacer(),
-                Text(
-                  localizations.welcomeTitle,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  localizations.welcomeSubtitle,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 32),
-                GoogleSignInButton(
-                  isLoading: authProvider.isLoading,
-                  onPressed: authProvider.isLoading
-                      ? null
-                      : authProvider.signInWithGoogle,
-                ),
-                if (authProvider.errorCode != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    localizations.errorGeneric,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.error,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+                child: Row(
+                  children: [
+                    const AppBackButton(),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localizations.loginTitle,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.bodyText,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            localizations.loginSubtitle,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.mutedText,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 36),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      GoogleSignInButton(
+                        text: localizations.continueWithGoogle,
+                        onPressed: authProvider.isLoading
+                            ? null
+                            : authProvider.signInWithGoogle,
+                        isLoading: authProvider.isLoading,
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Divider(
+                              color: AppColors.divider,
+                              thickness: 1,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text(
+                              localizations.orEmailDivider,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.mutedText,
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            child: Divider(
+                              color: AppColors.divider,
+                              thickness: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      AuthFieldLabel(localizations.emailLabel),
+                      const SizedBox(height: 7),
+                      AuthTextField(
+                        controller: _emailController,
+                        hint: localizations.emailHint,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 16),
+                      AuthFieldLabel(localizations.passwordLabel),
+                      const SizedBox(height: 7),
+                      AuthTextField(
+                        controller: _passwordController,
+                        hint: localizations.passwordHint,
+                        obscureText: _obscurePassword,
+                        suffix: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: AppColors.mutedText,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () => context.push('/forgot-password'),
+                          child: Text(
+                            localizations.forgotPassword,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryGreen,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 52,
+                        child: FilledButton(
+                          onPressed: authProvider.isLoading
+                              ? null
+                              : () => authProvider.signInWithEmailPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.primaryGreen,
+                            foregroundColor: AppColors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: authProvider.isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.white,
+                                  ),
+                                )
+                              : Text(
+                                  localizations.signIn,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      if (authProvider.errorCode != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          _errorMessage(localizations, authProvider.errorCode),
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () => context.push('/register'),
+                          child: Text.rich(
+                            TextSpan(
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.mutedText,
+                              ),
+                              children: [
+                                const TextSpan(text: 'Hesabın yok mu? '),
+                                TextSpan(
+                                  text: 'Kayıt ol',
+                                  style: const TextStyle(
+                                    color: AppColors.primaryGreen,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-                const Spacer(flex: 2),
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

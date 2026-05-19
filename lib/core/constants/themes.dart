@@ -103,6 +103,7 @@ abstract class AppTheme {
 
   static ThemeData get light => ThemeData(
     useMaterial3: true,
+    fontFamily: fontFamily,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primaryGreen,
       brightness: Brightness.light,
@@ -184,22 +185,23 @@ abstract class AppTheme {
 
   static ThemeData get dark => ThemeData(
     useMaterial3: true,
+    fontFamily: fontFamily,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primaryGreen,
       brightness: Brightness.dark,
       primary: AppColors.primaryGreen,
       onPrimary: AppColors.white,
-      surface: const Color(0xFF1E1E1E),
-      onSurface: const Color(0xFFE8E8E8),
+      surface: AppColors.darkSurface,
+      onSurface: AppColors.darkOnSurface,
       error: AppColors.error,
     ),
     textTheme: _textTheme.apply(
-      bodyColor: const Color(0xFFE8E8E8),
-      displayColor: const Color(0xFFE8E8E8),
+      bodyColor: AppColors.darkOnSurface,
+      displayColor: AppColors.darkOnSurface,
     ),
-    scaffoldBackgroundColor: const Color(0xFF121212),
+    scaffoldBackgroundColor: AppColors.darkBackground,
     cardTheme: CardThemeData(
-      color: const Color(0xFF1E1E1E),
+      color: AppColors.darkSurface,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(cardBorderRadius),
@@ -213,20 +215,20 @@ abstract class AppTheme {
       ),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: const Color(0xFF121212),
-      foregroundColor: const Color(0xFFE8E8E8),
+      backgroundColor: AppColors.darkBackground,
+      foregroundColor: AppColors.darkOnSurface,
       elevation: 0,
       titleTextStyle: const TextStyle(
         fontFamily: fontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w700,
-        color: Color(0xFFE8E8E8),
+        color: AppColors.darkOnSurface,
       ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Color(0xFF1E1E1E),
+      backgroundColor: AppColors.darkSurface,
       selectedItemColor: AppColors.primaryGreen,
-      unselectedItemColor: Color(0xFF888888),
+      unselectedItemColor: AppColors.mutedText,
     ),
   );
 }

@@ -3,40 +3,43 @@ import 'package:go_router/go_router.dart';
 
 import '../core/constants/colors.dart';
 import '../core/constants/themes.dart';
+import '../core/constants/assets.dart';
 
 class MainShell extends StatelessWidget {
   const MainShell({super.key, required this.child});
 
   final Widget child;
 
-  static const List<NavItem> _items = [
-    NavItem(
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home,
+  // Order must match Figma: Ana Sayfa | Kıble | FAB | İstatistikler | Profil
+  static final List<_NavItem> _items = [
+    _NavItem(
+      assetIcon: AppAssets.anaSafyaIcon,
+      activeAssetIcon: AppAssets.anaSafyaIcon,
       label: 'Ana Sayfa',
       path: '/home',
     ),
-    NavItem(
-      icon: Icons.bar_chart_outlined,
-      activeIcon: Icons.bar_chart,
-      label: 'İstatistikler',
-      path: '/stats',
-    ),
-    NavItem(
-      icon: Icons.add_circle_outline,
-      activeIcon: Icons.add_circle,
-      label: 'İşaretle',
-      path: '/quick-mark',
-    ),
-    NavItem(
-      icon: Icons.explore_outlined,
-      activeIcon: Icons.explore,
+    _NavItem(
+      assetIcon: AppAssets.kible,
+      activeAssetIcon: AppAssets.kible,
       label: 'Kıble',
       path: '/qibla',
     ),
-    NavItem(
-      icon: Icons.person_outline,
-      activeIcon: Icons.person,
+    _NavItem(
+      icon: Icons.add,
+      activeIcon: Icons.add,
+      label: 'Hızlı İşaretle',
+      path: '/quick_mark',
+      isFab: true,
+    ),
+    _NavItem(
+      assetIcon: AppAssets.istatistikler,
+      activeAssetIcon: AppAssets.istatistikler,
+      label: 'İstatistikler',
+      path: '/stats',
+    ),
+    _NavItem(
+      assetIcon: AppAssets.profil,
+      activeAssetIcon: AppAssets.profil,
       label: 'Profil',
       path: '/profile',
     ),
@@ -56,126 +59,144 @@ class MainShell extends StatelessWidget {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: _BottomNav(
         currentIndex: currentIndex,
-        onTap: (index) => context.go(_items[index].path),
         items: _items,
+        onTap: (index) => context.go(_items[index].path),
       ),
     );
   }
 }
 
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({
-    super.key,
+// ─────────────────────────────────────────────────────────────────────────────
+// Bottom navigation bar
+// ─────────────────────────────────────────────────────────────────────────────
+class _BottomNav extends StatelessWidget {
+  const _BottomNav({
     required this.currentIndex,
-    required this.onTap,
     required this.items,
+    required this.onTap,
   });
 
   final int currentIndex;
+  final List<_NavItem> items;
   final ValueChanged<int> onTap;
-  final List<NavItem> items;
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    // AppTheme.bottomNavHeight (83) is the total including safe area.
+    final navHeight = AppTheme.bottomNavHeight;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.cardBackground,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 12,
-            offset: Offset(0, -4),
+      color: AppColors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: navHeight,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Top border
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(height: 1, color: AppColors.divider),
+                ),
+                // Nav item row
+                Row(
+                  children: List.generate(items.length, (index) {
+                    final item = items[index];
+                    final isActive = index == currentIndex;
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () => onTap(index),
+                        behavior: HitTestBehavior.opaque,
+                        child: item.isFab
+                            ? _FabSlot(label: item.label)
+                            : _RegularNavItem(item: item, isActive: isActive),
+                      ),
+                    );
+                  }),
+                ),
+                // Center FAB — floats 8px above nav top edge
+                Positioned(
+                  top: -8,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () => onTap(2),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryGreen,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primaryGreen.withValues(
+                                alpha: 0.4,
+                              ),
+                              blurRadius: 14,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: AppColors.white,
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
+          SizedBox(height: bottomPadding),
         ],
       ),
-      child: SafeArea(
-        child: SizedBox(
-          height:
-              AppTheme.bottomNavHeight - MediaQuery.of(context).padding.bottom,
-          child: Row(
-            children: List.generate(items.length, (index) {
-              final item = items[index];
-              final isActive = index == currentIndex;
-              final isFab = index == 2;
-
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () => onTap(index),
-                  behavior: HitTestBehavior.opaque,
-                  child: isFab
-                      ? FabNavItem(isActive: isActive, item: item)
-                      : RegularNavItem(isActive: isActive, item: item),
-                ),
-              );
-            }),
-          ),
-        ),
-      ),
     );
   }
 }
 
-class FabNavItem extends StatelessWidget {
-  const FabNavItem({super.key, required this.isActive, required this.item});
+// ─────────────────────────────────────────────────────────────────────────────
+// Regular nav item (icon + label)
+// ─────────────────────────────────────────────────────────────────────────────
+class _RegularNavItem extends StatelessWidget {
+  const _RegularNavItem({required this.item, required this.isActive});
 
+  final _NavItem item;
   final bool isActive;
-  final NavItem item;
 
   @override
   Widget build(BuildContext context) {
+    final color = isActive ? AppColors.primaryGreen : AppColors.inactiveNav;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 52,
-          height: 52,
-          decoration: BoxDecoration(
-            color: AppColors.primaryGreen,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primaryGreen.withAlpha(77),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Icon(
-            isActive ? item.activeIcon : item.icon,
-            color: AppColors.white,
-            size: 26,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class RegularNavItem extends StatelessWidget {
-  const RegularNavItem({super.key, required this.isActive, required this.item});
-
-  final bool isActive;
-  final NavItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          isActive ? item.activeIcon : item.icon,
-          color: isActive ? AppColors.primaryGreen : AppColors.mutedText,
-          size: 24,
-        ),
+        if (item.assetIcon != null)
+          Image.asset(
+            isActive
+                ? (item.activeAssetIcon ?? item.assetIcon!)
+                : item.assetIcon!,
+            width: 26,
+            height: 26,
+            color: color,
+          )
+        else if (item.icon != null)
+          Icon(isActive ? item.activeIcon : item.icon, color: color, size: 24),
         const SizedBox(height: 4),
         Text(
           item.label,
           style: TextStyle(
-            fontSize: 10,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-            color: isActive ? AppColors.primaryGreen : AppColors.mutedText,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: color,
           ),
         ),
       ],
@@ -183,16 +204,53 @@ class RegularNavItem extends StatelessWidget {
   }
 }
 
-class NavItem {
-  const NavItem({
-    required this.icon,
-    required this.activeIcon,
+// ─────────────────────────────────────────────────────────────────────────────
+// Center FAB slot — transparent placeholder in row; actual FAB is in Stack
+// ─────────────────────────────────────────────────────────────────────────────
+class _FabSlot extends StatelessWidget {
+  const _FabSlot({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: AppColors.inactiveNav,
+          ),
+        ),
+        const SizedBox(height: 18),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Nav item data model
+// ─────────────────────────────────────────────────────────────────────────────
+class _NavItem {
+  _NavItem({
+    this.icon,
+    this.activeIcon,
+    this.assetIcon,
+    this.activeAssetIcon,
     required this.label,
     required this.path,
+    this.isFab = false,
   });
 
-  final IconData icon;
-  final IconData activeIcon;
+  final IconData? icon;
+  final IconData? activeIcon;
+  final String? assetIcon;
+  final String? activeAssetIcon;
   final String label;
   final String path;
+  final bool isFab;
 }

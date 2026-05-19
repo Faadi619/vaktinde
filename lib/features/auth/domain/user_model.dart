@@ -33,8 +33,8 @@ class UserModel {
           ? createdAtRaw.toDate()
           : DateTime.now(),
       isPro: (map['isPro'] ?? false) as bool,
-      notifSettings: (map['notifSettings'] ?? <String, dynamic>{})
-          as Map<String, dynamic>,
+      notifSettings:
+          (map['notifSettings'] ?? <String, dynamic>{}) as Map<String, dynamic>,
       streakMode: (map['streakMode'] ?? 'any') as String,
       location: map['location'] as Map<String, dynamic>?,
     );

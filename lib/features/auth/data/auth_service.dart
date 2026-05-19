@@ -13,11 +13,11 @@ class AuthService {
     return _firebaseAuth.authStateChanges();
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     final googleUser = await _googleSignIn.signIn();
 
     if (googleUser == null) {
-      throw Exception('google_sign_in_cancelled');
+      return null;
     }
 
     final googleAuth = await googleUser.authentication;
@@ -29,10 +29,34 @@ class AuthService {
     return _firebaseAuth.signInWithCredential(credential);
   }
 
+  Future<UserCredential> signInWithEmailPassword({
+    required String email,
+    required String password,
+  }) {
+    return _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  Future<UserCredential> registerWithEmailPassword({
+    required String email,
+    required String password,
+    required String displayName,
+  }) async {
+    final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    await credential.user?.updateDisplayName(displayName);
+    return credential;
+  }
+
+  Future<void> sendPasswordResetEmail(String email) {
+    return _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
   Future<void> signOut() async {
-    await Future.wait<void>([
-      _firebaseAuth.signOut(),
-      _googleSignIn.signOut(),
-    ]);
+    await Future.wait<void>([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
   }
 }

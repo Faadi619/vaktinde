@@ -44,6 +44,161 @@ class AppLocalizationsTr extends AppLocalizations {
   String get signInWithGoogle => 'Google ile Giriş Yap';
 
   @override
+  String get loginTitle => 'Hoş geldin';
+
+  @override
+  String get loginSubtitle => 'Hesabına giriş yap';
+
+  @override
+  String get continueWithGoogle => 'Google ile devam et';
+
+  @override
+  String get orEmailDivider => 'veya e-posta ile';
+
+  @override
+  String get emailLabel => 'E-posta';
+
+  @override
+  String get emailHint => 'ornek@email.com';
+
+  @override
+  String get passwordLabel => 'Şifre';
+
+  @override
+  String get passwordHint => 'Şifrenizi girin';
+
+  @override
+  String get forgotPassword => 'Şifremi unuttum';
+
+  @override
+  String get signIn => 'Giriş Yap';
+
+  @override
+  String get noAccountRegister => 'Hesabın yok mu? Kayıt ol';
+
+  @override
+  String get errorInvalidEmail => 'Geçerli bir e-posta adresi girin.';
+
+  @override
+  String get errorInvalidCredentials => 'E-posta veya şifre hatalı.';
+
+  @override
+  String get errorSignInFailed => 'Giriş yapılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get errorEmailAlreadyInUse => 'Bu e-posta adresi zaten kullanılıyor.';
+
+  @override
+  String get errorWeakPassword => 'Şifre en az 6 karakter olmalıdır.';
+
+  @override
+  String get onboardingAppTagline =>
+      'Namazlarını düzenli kıl,\nalışkanlıklarını güçlendir.';
+
+  @override
+  String get onboardingFeature1Title => 'Doğru namaz vakitleri';
+
+  @override
+  String get onboardingFeature1Sub =>
+      'Diyanet verileriyle, bulunduğun yere göre';
+
+  @override
+  String get onboardingFeature2Title => 'Seri ve rozetler';
+
+  @override
+  String get onboardingFeature2Sub =>
+      'İstikrarını takip et, başarılarını kutla';
+
+  @override
+  String get onboardingFeature3Title => 'Kıble pusulası';
+
+  @override
+  String get onboardingFeature3Sub => 'Her yerde doğru yönü bul';
+
+  @override
+  String get onboardingCreateAccount => 'Hesap Oluştur';
+
+  @override
+  String get onboardingSignIn => 'Giriş Yap';
+
+  @override
+  String onboardingTermsNote(String terms, String privacy) {
+    return 'Devam ederek $terms ve $privacy\'nı kabul etmiş olursunuz.';
+  }
+
+  @override
+  String get termsOfService => 'Kullanım Koşulları';
+
+  @override
+  String get privacyPolicy => 'Gizlilik Politikası';
+
+  @override
+  String get registerTitle => 'Hesap oluştur';
+
+  @override
+  String get registerSubtitle => 'Yolculuğuna başla';
+
+  @override
+  String get registerWithGoogle => 'Google ile kayıt ol';
+
+  @override
+  String get fullNameLabel => 'Ad Soyad';
+
+  @override
+  String get fullNameHint => 'Adınız ve soyadınız';
+
+  @override
+  String get createAccount => 'Hesap Oluştur';
+
+  @override
+  String get alreadyHaveAccount => 'Zaten hesabın var mı? Giriş yap';
+
+  @override
+  String get termsCheckboxText => '\'nı okudum ve kabul ediyorum.';
+
+  @override
+  String get passwordStrengthWeak => 'Zayıf şifre';
+
+  @override
+  String get passwordStrengthMedium => 'Orta şifre';
+
+  @override
+  String get passwordStrengthStrong => 'Güçlü şifre';
+
+  @override
+  String get forgotPasswordTitle => 'Şifremi unuttum';
+
+  @override
+  String get forgotPasswordSubtitle => 'Sıfırlama bağlantısı gönderelim';
+
+  @override
+  String get forgotPasswordHint =>
+      'Kayıtlı e-posta adresinizi girin. Şifre sıfırlama bağlantısı göndereceğiz.';
+
+  @override
+  String get emailAddressLabel => 'E-posta Adresi';
+
+  @override
+  String get sendResetLink => 'Sıfırlama Bağlantısı Gönder';
+
+  @override
+  String get forgotPasswordSuccessTitle => 'E-posta gönderildi!';
+
+  @override
+  String forgotPasswordSuccessBody(String email) {
+    return 'Şifre sıfırlama bağlantısı $email adresine gönderildi. Gelen kutunuzu kontrol edin.';
+  }
+
+  @override
+  String get backToSignIn => 'Giriş sayfasına dön';
+
+  @override
+  String get emailNotReceived => 'E-posta gelmedi mi?';
+
+  @override
+  String get resendEmail => 'Tekrar gönder';
+
+  @override
   String get signOut => 'Çıkış Yap';
 
   @override
@@ -220,13 +375,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get statsBestMonth => 'En İyi Ay';
 
   @override
-  String get qiblaTitle => 'Kıble';
+  String get qiblaTitle => 'Kıble Bul';
 
   @override
-  String get qiblaSubtitle => 'Kıble yönünü bul';
+  String get qiblaSubtitle => 'Kıble yönünü bulun ve yönünüzü kontrol edin.';
 
   @override
   String get qiblaMapButton => 'Harita';
+
+  @override
+  String get qiblaLocationAuto => 'Otomatik konum';
+
+  @override
+  String get qiblaDirectionLabel => 'Kıble Yönü';
+
+  @override
+  String get qiblaAccuracyLabel => 'Konum Doğruluğu';
 
   @override
   String qiblaDegrees(String degrees) {
@@ -243,11 +407,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get qiblaAccuracyLow => 'Düşük';
 
   @override
-  String get qiblaInstructionsTitle => 'Nasıl Kullanılır?';
+  String get qiblaInstructionsTitle => 'Nasıl kullanılır?';
 
   @override
   String get qiblaInstruction1 =>
-      'Telefonu yatay tutun ve çevrenizden uzak durun.';
+      'Telefonu düz bir zemine parallel tutun ve okun yeşil işaretle aynı hizaya gelmesini sağlayın.';
 
   @override
   String get qiblaInstruction2 => 'Kırmızı ibre kıble yönünü gösterir.';

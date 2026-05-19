@@ -23,5 +23,19 @@ abstract class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
   static const Color divider = Color(0xFFE0E0E0);
+  static const Color rowDivider = Color(0xFFEFEFEF);
   static const Color error = Color(0xFFD32F2F);
+  static const Color inactiveNav = Color(0xFFBBBBBB);
+
+  // Shadows
+  static const Color cardShadow = Color(0x0F000000);
+  static const Color shadowLight = Color(0x33000000);
+
+  // UI components
+  static const Color toggleInactive = Color(0xFFD0D0D0);
+
+  // Dark mode
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkOnSurface = Color(0xFFE8E8E8);
+  static const Color darkBackground = Color(0xFF121212);
 }
