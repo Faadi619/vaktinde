@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Application name
   ///
   /// In tr, this message translates to:
-  /// **'Vaktinde'**
+  /// **'Vaqt'**
   String get appName;
 
   /// Generic loading text
@@ -712,6 +712,60 @@ abstract class AppLocalizations {
   /// **'Kaydedildi.'**
   String get quickMarkSavedSuccess;
 
+  /// Quick mark screen header subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçmiş günlerde kıldığın veya kaza olarak kıldığın namazları işaretleyebilirsin.'**
+  String get quickMarkSubtitle;
+
+  /// Top-right info button label
+  ///
+  /// In tr, this message translates to:
+  /// **'Bilgi'**
+  String get quickMarkInfoButton;
+
+  /// Column header — on-time
+  ///
+  /// In tr, this message translates to:
+  /// **'Vaktinde Kıldım'**
+  String get quickMarkColumnOnTime;
+
+  /// Column header — kaza
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza Kıldım'**
+  String get quickMarkColumnKaza;
+
+  /// Body of the info banner under the date navigator
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu tarihe ait kılmadığın namazları işaretleyebilir veya kaza olarak kıldığını belirtebilirsin.'**
+  String get quickMarkInfoBannerBody;
+
+  /// Note card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Not eklemek ister misin?'**
+  String get quickMarkNoteTitle;
+
+  /// Note card subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu güne dair bir not ekleyebilirsin (isteğe bağlı).'**
+  String get quickMarkNoteSubtitle;
+
+  /// Recent history — see all link
+  ///
+  /// In tr, this message translates to:
+  /// **'Tüm Geçmiş'**
+  String get quickMarkRecentSeeAll;
+
+  /// Recent entry — prayers marked as kaza
+  ///
+  /// In tr, this message translates to:
+  /// **'{prayers} (Kaza olarak)'**
+  String quickMarkRecentKazaSuffix(String prayers);
+
   /// Statistics screen title
   ///
   /// In tr, this message translates to:
@@ -742,6 +796,678 @@ abstract class AppLocalizations {
   /// **'Yıllık'**
   String get statsTabYearly;
 
+  /// Stats screen header subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'İbadet yolculuğundaki ilerlemeni görüntüle.'**
+  String get statsSubtitle;
+
+  /// This week label
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu Hafta'**
+  String get statsThisWeek;
+
+  /// Hero card subtitle under streak count
+  ///
+  /// In tr, this message translates to:
+  /// **'Serin devam ediyor!'**
+  String get statsStreakSubtitle;
+
+  /// Day count with unit
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} gün'**
+  String statsDaysCount(int count);
+
+  /// Ring chart label
+  ///
+  /// In tr, this message translates to:
+  /// **'Tamamlandı'**
+  String get statsRingCompleted;
+
+  /// Weekly chart card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Haftalık Tamamlama Oranı'**
+  String get statsWeeklyCompletionRate;
+
+  /// Date range pill: last 7 days
+  ///
+  /// In tr, this message translates to:
+  /// **'Son 7 Gün'**
+  String get statsLastSevenDays;
+
+  /// Today label on bar chart
+  ///
+  /// In tr, this message translates to:
+  /// **'Bugün'**
+  String get statsToday;
+
+  /// Prayer stats grid card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Namaz İstatistikleri'**
+  String get statsPrayerStats;
+
+  /// Totals grid card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam İstatistikler'**
+  String get statsTotalStats;
+
+  /// Totals cell: total days prayed
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam Gün Namaz kıldın'**
+  String get statsTotalDaysPrayed;
+
+  /// Totals cell: longest streak days
+  ///
+  /// In tr, this message translates to:
+  /// **'En Uzun Seri Gün'**
+  String get statsLongestStreakDays;
+
+  /// Totals cell: average success rate
+  ///
+  /// In tr, this message translates to:
+  /// **'Ortalama Başarı Oranı'**
+  String get statsAverageSuccessRate;
+
+  /// Totals cell: total completion count
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam Tamamlama'**
+  String get statsTotalCompletion;
+
+  /// Placeholder for tabs not yet implemented
+  ///
+  /// In tr, this message translates to:
+  /// **'Çok yakında'**
+  String get statsComingSoon;
+
+  /// Prayer count out of 7
+  ///
+  /// In tr, this message translates to:
+  /// **'{count}/7'**
+  String statsPrayerCountFormat(int count);
+
+  /// Percent value with Turkish-style leading sign
+  ///
+  /// In tr, this message translates to:
+  /// **'%{value}'**
+  String statsPercentFormat(int value);
+
+  /// Ring center caption on Haftalık
+  ///
+  /// In tr, this message translates to:
+  /// **'Tamamlama Oranı'**
+  String get statsCompletionRatio;
+
+  /// Haftalık bar chart title
+  ///
+  /// In tr, this message translates to:
+  /// **'Günlere Göre Namaz Tamamlama Oranı'**
+  String get statsDailyCompletionRate;
+
+  /// Pill label — view details
+  ///
+  /// In tr, this message translates to:
+  /// **'Detay Görüntüle'**
+  String get statsDetailView;
+
+  /// Haftalık prayer averages card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Namaz İstatistikleri'**
+  String get statsWeeklyAverages;
+
+  /// Inline suffix after "Namaz İstatistikleri"
+  ///
+  /// In tr, this message translates to:
+  /// **'(Haftalık Ortalama)'**
+  String get statsWeeklyAveragesSuffix;
+
+  /// Haftalık summary card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Haftalık Özeti'**
+  String get statsWeeklySummary;
+
+  /// Summary row label
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam kıldığın namaz'**
+  String get statsSummaryTotalPrayers;
+
+  /// Summary row label
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza olarak kıldığın namaz'**
+  String get statsSummaryMakeupPrayers;
+
+  /// Summary row label
+  ///
+  /// In tr, this message translates to:
+  /// **'En istikrarlı olduğun vakit'**
+  String get statsSummaryMostConsistent;
+
+  /// Summary row label
+  ///
+  /// In tr, this message translates to:
+  /// **'En çok zorlandığın vakit'**
+  String get statsSummaryHardest;
+
+  /// Placeholder week range
+  ///
+  /// In tr, this message translates to:
+  /// **'12 – 18 Mayıs 2025'**
+  String get statsDateRangePlaceholder;
+
+  /// Prayer count out of 7 (decimal supported)
+  ///
+  /// In tr, this message translates to:
+  /// **'{value}/7'**
+  String statsPrayerCountDecimalFormat(String value);
+
+  /// This month label
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu Ay'**
+  String get statsThisMonth;
+
+  /// Aylık hero subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Çok güzel bir istikrar!'**
+  String get statsMonthSubtitle;
+
+  /// Aylık ring center caption
+  ///
+  /// In tr, this message translates to:
+  /// **'Tamamlandı'**
+  String get statsRingCompletedShort;
+
+  /// Placeholder month label
+  ///
+  /// In tr, this message translates to:
+  /// **'Mayıs 2025'**
+  String get statsMonthPlaceholder;
+
+  /// Calendar card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Aylık Namaz Takvimi'**
+  String get statsMonthlyCalendarTitle;
+
+  /// Kaza day count pill text
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} kaza gün'**
+  String statsKazaDaysFormat(int count);
+
+  /// No description provided for @statsDayStateFull.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tam (5/5)'**
+  String get statsDayStateFull;
+
+  /// No description provided for @statsDayStatePartial.
+  ///
+  /// In tr, this message translates to:
+  /// **'Eksik'**
+  String get statsDayStatePartial;
+
+  /// No description provided for @statsDayStateMissed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hiç kılınmadı'**
+  String get statsDayStateMissed;
+
+  /// No description provided for @statsDayStateSpecial.
+  ///
+  /// In tr, this message translates to:
+  /// **'Özel gün'**
+  String get statsDayStateSpecial;
+
+  /// No description provided for @statsDayStateFuture.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gelecek'**
+  String get statsDayStateFuture;
+
+  /// Monthly stats list card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Aylık İstatistikler'**
+  String get statsMonthlyStatsTitle;
+
+  /// No description provided for @statsMonthlyTotalPrayers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam kıldığın namaz'**
+  String get statsMonthlyTotalPrayers;
+
+  /// No description provided for @statsMonthlyMakeupPrayers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza olarak kıldığın namaz'**
+  String get statsMonthlyMakeupPrayers;
+
+  /// No description provided for @statsMonthlyAverageDaily.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ortalama günlük tamamlama'**
+  String get statsMonthlyAverageDaily;
+
+  /// No description provided for @statsMonthlyLongestStreak.
+  ///
+  /// In tr, this message translates to:
+  /// **'En uzun seri'**
+  String get statsMonthlyLongestStreak;
+
+  /// No description provided for @statsMonthlyConsistentDays.
+  ///
+  /// In tr, this message translates to:
+  /// **'İstikrarlı günler'**
+  String get statsMonthlyConsistentDays;
+
+  /// No description provided for @statsMonthlyKazaRequiredDays.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza gerektiren günler'**
+  String get statsMonthlyKazaRequiredDays;
+
+  /// No description provided for @statsMonthlyMissedDays.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hiç kılınmayan günler'**
+  String get statsMonthlyMissedDays;
+
+  /// Day count with unit
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} gün'**
+  String statsDaysCountUnit(int count);
+
+  /// Per-prayer monthly bar chart title
+  ///
+  /// In tr, this message translates to:
+  /// **'Namazlara Göre Tamamlama Oranı'**
+  String get statsPrayerCompletionTitle;
+
+  /// Insights row card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu Ayki İçgörüler'**
+  String get statsMonthlyInsightsTitle;
+
+  /// No description provided for @statsInsightLongestStreakCaption.
+  ///
+  /// In tr, this message translates to:
+  /// **'En uzun serin'**
+  String get statsInsightLongestStreakCaption;
+
+  /// No description provided for @statsInsightBestPrayerCaption.
+  ///
+  /// In tr, this message translates to:
+  /// **'En istikrarlı vakit'**
+  String get statsInsightBestPrayerCaption;
+
+  /// No description provided for @statsInsightMonthOverMonthCaption.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçen aya göre'**
+  String get statsInsightMonthOverMonthCaption;
+
+  /// Aylık note prompt subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu aya dair bir not ekleyebilirsin.'**
+  String get statsMonthlyNoteSubtitle;
+
+  /// No description provided for @statsDayOfWeekMon.
+  ///
+  /// In tr, this message translates to:
+  /// **'Pzt'**
+  String get statsDayOfWeekMon;
+
+  /// No description provided for @statsDayOfWeekTue.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sal'**
+  String get statsDayOfWeekTue;
+
+  /// No description provided for @statsDayOfWeekWed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çar'**
+  String get statsDayOfWeekWed;
+
+  /// No description provided for @statsDayOfWeekThu.
+  ///
+  /// In tr, this message translates to:
+  /// **'Per'**
+  String get statsDayOfWeekThu;
+
+  /// No description provided for @statsDayOfWeekFri.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cum'**
+  String get statsDayOfWeekFri;
+
+  /// No description provided for @statsDayOfWeekSat.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cmt'**
+  String get statsDayOfWeekSat;
+
+  /// No description provided for @statsDayOfWeekSun.
+  ///
+  /// In tr, this message translates to:
+  /// **'Paz'**
+  String get statsDayOfWeekSun;
+
+  /// This year label
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu Yıl'**
+  String get statsThisYear;
+
+  /// Yıllık hero subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Harika bir yıl geçiriyorsun!'**
+  String get statsYearSubtitle;
+
+  /// Placeholder year label
+  ///
+  /// In tr, this message translates to:
+  /// **'2025'**
+  String get statsYearPlaceholder;
+
+  /// Yıllık 5-stat row card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Yıllık İstatistikler'**
+  String get statsYearlyStatsTitle;
+
+  /// No description provided for @statsYearlyStatTotal.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam kıldığın namaz'**
+  String get statsYearlyStatTotal;
+
+  /// No description provided for @statsYearlyStatMakeup.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza olarak kılınan'**
+  String get statsYearlyStatMakeup;
+
+  /// No description provided for @statsYearlyStatAverage.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ort. günlük tamamlama'**
+  String get statsYearlyStatAverage;
+
+  /// No description provided for @statsYearlyStatLongestStreak.
+  ///
+  /// In tr, this message translates to:
+  /// **'En uzun seri'**
+  String get statsYearlyStatLongestStreak;
+
+  /// No description provided for @statsYearlyStatConsistent.
+  ///
+  /// In tr, this message translates to:
+  /// **'İstikrarlı günler'**
+  String get statsYearlyStatConsistent;
+
+  /// 12-month bar chart title
+  ///
+  /// In tr, this message translates to:
+  /// **'Aylara Göre Tamamlama Oranı'**
+  String get statsMonthlyCompletionTitle;
+
+  /// Yearly 5-prayer card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Vakitlere Göre Tamamlama Oranı'**
+  String get statsPrayerCompletionTitleYearly;
+
+  /// Inline suffix on yearly prayer card
+  ///
+  /// In tr, this message translates to:
+  /// **'(Yıllık Ortalama)'**
+  String get statsYearlyAverageSuffix;
+
+  /// Top months mini card title
+  ///
+  /// In tr, this message translates to:
+  /// **'En İstikrarlı Aylar'**
+  String get statsMostConsistentMonths;
+
+  /// Yearly achievements mini card title
+  ///
+  /// In tr, this message translates to:
+  /// **'Yıllık Başarılar'**
+  String get statsYearlyAchievements;
+
+  /// Footer link
+  ///
+  /// In tr, this message translates to:
+  /// **'Tüm ayları gör'**
+  String get statsSeeAllMonths;
+
+  /// Footer link
+  ///
+  /// In tr, this message translates to:
+  /// **'Tüm başarıları gör'**
+  String get statsSeeAllAchievements;
+
+  /// No description provided for @statsBadgeStreakMasterTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'İstikrar Ustası'**
+  String get statsBadgeStreakMasterTitle;
+
+  /// No description provided for @statsBadgeStreakMasterSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'30 gün seri'**
+  String get statsBadgeStreakMasterSubtitle;
+
+  /// No description provided for @statsBadgeDisciplinedTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Disiplinli'**
+  String get statsBadgeDisciplinedTitle;
+
+  /// No description provided for @statsBadgeDisciplinedSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'%80+ ortalama'**
+  String get statsBadgeDisciplinedSubtitle;
+
+  /// No description provided for @statsBadgeDevotedTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adanmış'**
+  String get statsBadgeDevotedTitle;
+
+  /// No description provided for @statsBadgeDevotedSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'300+ gün'**
+  String get statsBadgeDevotedSubtitle;
+
+  /// No description provided for @statsMotivationalLine1.
+  ///
+  /// In tr, this message translates to:
+  /// **'Küçük adımlar,'**
+  String get statsMotivationalLine1;
+
+  /// No description provided for @statsMotivationalLine2.
+  ///
+  /// In tr, this message translates to:
+  /// **'büyük değişimler yaratır.'**
+  String get statsMotivationalLine2;
+
+  /// No description provided for @statsMotivationalBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'İstikrarın ve çaban senin en büyük kazancın.'**
+  String get statsMotivationalBody;
+
+  /// Yıllık note prompt subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu yıla dair bir not ekleyebilirsin (isteğe bağlı).'**
+  String get statsYearlyNoteSubtitle;
+
+  /// No description provided for @statsMonthShortJan.
+  ///
+  /// In tr, this message translates to:
+  /// **'Oca'**
+  String get statsMonthShortJan;
+
+  /// No description provided for @statsMonthShortFeb.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şub'**
+  String get statsMonthShortFeb;
+
+  /// No description provided for @statsMonthShortMar.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mar'**
+  String get statsMonthShortMar;
+
+  /// No description provided for @statsMonthShortApr.
+  ///
+  /// In tr, this message translates to:
+  /// **'Nis'**
+  String get statsMonthShortApr;
+
+  /// No description provided for @statsMonthShortMay.
+  ///
+  /// In tr, this message translates to:
+  /// **'May'**
+  String get statsMonthShortMay;
+
+  /// No description provided for @statsMonthShortJun.
+  ///
+  /// In tr, this message translates to:
+  /// **'Haz'**
+  String get statsMonthShortJun;
+
+  /// No description provided for @statsMonthShortJul.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tem'**
+  String get statsMonthShortJul;
+
+  /// No description provided for @statsMonthShortAug.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ağu'**
+  String get statsMonthShortAug;
+
+  /// No description provided for @statsMonthShortSep.
+  ///
+  /// In tr, this message translates to:
+  /// **'Eyl'**
+  String get statsMonthShortSep;
+
+  /// No description provided for @statsMonthShortOct.
+  ///
+  /// In tr, this message translates to:
+  /// **'Eki'**
+  String get statsMonthShortOct;
+
+  /// No description provided for @statsMonthShortNov.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kas'**
+  String get statsMonthShortNov;
+
+  /// No description provided for @statsMonthShortDec.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ara'**
+  String get statsMonthShortDec;
+
+  /// No description provided for @statsMonthFullJan.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ocak'**
+  String get statsMonthFullJan;
+
+  /// No description provided for @statsMonthFullFeb.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şubat'**
+  String get statsMonthFullFeb;
+
+  /// No description provided for @statsMonthFullMar.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mart'**
+  String get statsMonthFullMar;
+
+  /// No description provided for @statsMonthFullApr.
+  ///
+  /// In tr, this message translates to:
+  /// **'Nisan'**
+  String get statsMonthFullApr;
+
+  /// No description provided for @statsMonthFullMay.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mayıs'**
+  String get statsMonthFullMay;
+
+  /// No description provided for @statsMonthFullJun.
+  ///
+  /// In tr, this message translates to:
+  /// **'Haziran'**
+  String get statsMonthFullJun;
+
+  /// No description provided for @statsMonthFullJul.
+  ///
+  /// In tr, this message translates to:
+  /// **'Temmuz'**
+  String get statsMonthFullJul;
+
+  /// No description provided for @statsMonthFullAug.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ağustos'**
+  String get statsMonthFullAug;
+
+  /// No description provided for @statsMonthFullSep.
+  ///
+  /// In tr, this message translates to:
+  /// **'Eylül'**
+  String get statsMonthFullSep;
+
+  /// No description provided for @statsMonthFullOct.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ekim'**
+  String get statsMonthFullOct;
+
+  /// No description provided for @statsMonthFullNov.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kasım'**
+  String get statsMonthFullNov;
+
+  /// No description provided for @statsMonthFullDec.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aralık'**
+  String get statsMonthFullDec;
+
   /// Total prayers stat label
   ///
   /// In tr, this message translates to:
@@ -759,24 +1485,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Tamamlanma Oranı'**
   String get statsCompletionRate;
-
-  /// This week label
-  ///
-  /// In tr, this message translates to:
-  /// **'Bu Hafta'**
-  String get statsThisWeek;
-
-  /// This month label
-  ///
-  /// In tr, this message translates to:
-  /// **'Bu Ay'**
-  String get statsThisMonth;
-
-  /// This year label
-  ///
-  /// In tr, this message translates to:
-  /// **'Bu Yıl'**
-  String get statsThisYear;
 
   /// Best month label
   ///
@@ -915,6 +1623,210 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'İsmi Düzenle'**
   String get profileEditName;
+
+  /// Profile screen header subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap bilgilerinizi görüntüleyin ve ayarlarınızı yönetin.'**
+  String get profileSubtitle;
+
+  /// Religion tag on profile card
+  ///
+  /// In tr, this message translates to:
+  /// **'Müslüman'**
+  String get profileTagMuslim;
+
+  /// Country tag on profile card
+  ///
+  /// In tr, this message translates to:
+  /// **'Türkiye'**
+  String get profileTagCountry;
+
+  /// No description provided for @profileStatConsistentDays.
+  ///
+  /// In tr, this message translates to:
+  /// **'İstikrarlı gün'**
+  String get profileStatConsistentDays;
+
+  /// No description provided for @profileStatLongestStreak.
+  ///
+  /// In tr, this message translates to:
+  /// **'En uzun seri'**
+  String get profileStatLongestStreak;
+
+  /// No description provided for @profileStatTotalPrayers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam namaz'**
+  String get profileStatTotalPrayers;
+
+  /// No description provided for @profileStatAverageRate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ortalama oran'**
+  String get profileStatAverageRate;
+
+  /// No description provided for @profileSectionAccount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap'**
+  String get profileSectionAccount;
+
+  /// No description provided for @profileSectionWorship.
+  ///
+  /// In tr, this message translates to:
+  /// **'İbadet Ayarları'**
+  String get profileSectionWorship;
+
+  /// No description provided for @profileSectionOther.
+  ///
+  /// In tr, this message translates to:
+  /// **'Diğer'**
+  String get profileSectionOther;
+
+  /// No description provided for @profileMenuPersonalTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kişisel Bilgilerim'**
+  String get profileMenuPersonalTitle;
+
+  /// No description provided for @profileMenuPersonalSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ad, e-posta ve konum'**
+  String get profileMenuPersonalSubtitle;
+
+  /// No description provided for @profileMenuPasswordTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifre Değiştir'**
+  String get profileMenuPasswordTitle;
+
+  /// No description provided for @profileMenuPasswordSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesap şifrenizi değiştirin'**
+  String get profileMenuPasswordSubtitle;
+
+  /// No description provided for @profileMenuNotificationsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bildirim Ayarları'**
+  String get profileMenuNotificationsTitle;
+
+  /// No description provided for @profileMenuNotificationsSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hatırlatmalar ve bildirim tercihleri'**
+  String get profileMenuNotificationsSubtitle;
+
+  /// No description provided for @profileMenuAppSettingsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Uygulama Ayarları'**
+  String get profileMenuAppSettingsTitle;
+
+  /// No description provided for @profileMenuAppSettingsSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tema, dil ve diğer tercihler'**
+  String get profileMenuAppSettingsSubtitle;
+
+  /// No description provided for @profileMenuPrayerTimesTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Namaz Vakitleri'**
+  String get profileMenuPrayerTimesTitle;
+
+  /// No description provided for @profileMenuPrayerTimesSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesaplama yöntemi ve ayarlar'**
+  String get profileMenuPrayerTimesSubtitle;
+
+  /// No description provided for @profileMenuQiblaTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kıble Ayarları'**
+  String get profileMenuQiblaTitle;
+
+  /// No description provided for @profileMenuQiblaSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kıble hesaplama ve pusula ayarları'**
+  String get profileMenuQiblaSubtitle;
+
+  /// No description provided for @profileMenuQuickMarkTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hızlı İşaretleme'**
+  String get profileMenuQuickMarkTitle;
+
+  /// No description provided for @profileMenuQuickMarkSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geriye dönük işaretleme ayarları'**
+  String get profileMenuQuickMarkSubtitle;
+
+  /// No description provided for @profileMenuKazaReminderTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza Namazı Hatırlatıcıları'**
+  String get profileMenuKazaReminderTitle;
+
+  /// No description provided for @profileMenuKazaReminderSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaza namazı hatırlatma tercihleri'**
+  String get profileMenuKazaReminderSubtitle;
+
+  /// No description provided for @profileMenuBackupTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Veri Yedekleme'**
+  String get profileMenuBackupTitle;
+
+  /// No description provided for @profileMenuBackupSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Verilerinizi yedekleyin veya geri yükleyin'**
+  String get profileMenuBackupSubtitle;
+
+  /// No description provided for @profileMenuAboutTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hakkımızda'**
+  String get profileMenuAboutTitle;
+
+  /// No description provided for @profileMenuAboutSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Uygulama hakkında bilgi'**
+  String get profileMenuAboutSubtitle;
+
+  /// No description provided for @profileMenuHelpTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yardım ve Destek'**
+  String get profileMenuHelpTitle;
+
+  /// No description provided for @profileMenuHelpSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sıkça sorulan sorular'**
+  String get profileMenuHelpSubtitle;
+
+  /// No description provided for @profileMenuPrivacyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gizlilik Politikası'**
+  String get profileMenuPrivacyTitle;
+
+  /// No description provided for @profileMenuPrivacySubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gizlilik ve veri kullanım politikamız'**
+  String get profileMenuPrivacySubtitle;
 
   /// Prayer time notification body
   ///
@@ -1155,6 +2067,60 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Yeni bir rozet kazandın!'**
   String get badgeCelebrationSubtitle;
+
+  /// City picker screen title
+  ///
+  /// In tr, this message translates to:
+  /// **'Şehir Seç'**
+  String get cityPickerTitle;
+
+  /// City picker screen subtitle
+  ///
+  /// In tr, this message translates to:
+  /// **'Konumunu manuel olarak belirle'**
+  String get cityPickerSubtitle;
+
+  /// City search input placeholder
+  ///
+  /// In tr, this message translates to:
+  /// **'Şehir ara (örn. İstanbul)'**
+  String get cityPickerHint;
+
+  /// Empty search result message
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu arama için sonuç bulunamadı.'**
+  String get cityPickerNoResults;
+
+  /// Search failure message
+  ///
+  /// In tr, this message translates to:
+  /// **'Arama yapılamadı. İnternet bağlantınızı kontrol edin.'**
+  String get cityPickerSearchFailed;
+
+  /// Qibla empty state heading when no location is available
+  ///
+  /// In tr, this message translates to:
+  /// **'Konum gerekli'**
+  String get qiblaLocationNeededTitle;
+
+  /// Qibla empty state body text
+  ///
+  /// In tr, this message translates to:
+  /// **'Kıbleyi gösterebilmemiz için konumuna ihtiyacımız var. Konum izni vermek istemiyorsan şehrini manuel olarak seçebilirsin.'**
+  String get qiblaLocationNeededBody;
+
+  /// CTA on qibla empty state — opens city picker
+  ///
+  /// In tr, this message translates to:
+  /// **'Şehir Seç'**
+  String get qiblaSelectCity;
+
+  /// Secondary CTA on qibla empty state — retries permission
+  ///
+  /// In tr, this message translates to:
+  /// **'GPS Kullan'**
+  String get qiblaUseGps;
 }
 
 class _AppLocalizationsDelegate

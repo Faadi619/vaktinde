@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:provider/provider.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'core/services/app_preferences.dart';
 import 'features/qibla/data/qibla_location_cache_model.dart';
 import 'firebase_options.dart';
 
@@ -20,11 +23,13 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter();
   Hive.registerAdapter(QiblaLocationCacheModelAdapter());
-  runApp(const VaktindeApp());
+  await AppPreferences.init();
+  await initializeDateFormatting('tr');
+  runApp(const VaqtApp());
 }
 
-class VaktindeApp extends StatelessWidget {
-  const VaktindeApp({super.key});
+class VaqtApp extends StatelessWidget {
+  const VaqtApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +71,21 @@ class _AppRootState extends State<AppRoot> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Vaktinde',
+      title: 'Vaqt',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
+      builder: (context, child) {
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+          ),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('tr'),

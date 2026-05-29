@@ -39,7 +39,7 @@ class AuthService {
     );
   }
 
-  Future<UserCredential> registerWithEmailPassword({
+  Future<User?> registerWithEmailPassword({
     required String email,
     required String password,
     required String displayName,
@@ -48,8 +48,13 @@ class AuthService {
       email: email,
       password: password,
     );
-    await credential.user?.updateDisplayName(displayName);
-    return credential;
+    final user = credential.user;
+    if (user == null) {
+      return null;
+    }
+    await user.updateDisplayName(displayName);
+    await user.reload();
+    return _firebaseAuth.currentUser;
   }
 
   Future<void> sendPasswordResetEmail(String email) {

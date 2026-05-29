@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:vaqt/core/constants/colors.dart';
 import 'package:vaqt/features/qibla/presentation/widgets/qibla_compass_section.dart';
 import 'package:vaqt/features/qibla/presentation/widgets/qibla_degree_display.dart';
+import 'package:vaqt/features/qibla/presentation/widgets/qibla_empty_state.dart';
 import 'package:vaqt/features/qibla/presentation/widgets/qibla_header.dart';
 import 'package:vaqt/features/qibla/presentation/widgets/qibla_how_to_card.dart';
 import 'package:vaqt/features/qibla/presentation/widgets/qibla_info_card.dart';
@@ -68,6 +70,10 @@ class _QiblaScreenState extends State<QiblaScreen> {
         ? l10n.qiblaAccuracyMedium
         : l10n.qiblaAccuracyLow;
 
+    final hasLocation = qibla.qiblaDirection != null;
+    final showEmptyState =
+        qibla.isInitialized && !qibla.isLoading && !hasLocation;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -94,48 +100,64 @@ class _QiblaScreenState extends State<QiblaScreen> {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: QiblaLocationCard(
-                      cityText: cityText,
-                      locationModeLabel: l10n.qiblaLocationAuto,
-                      onRefreshTap: () => context.read<QiblaProvider>().refresh(),
+                  if (showEmptyState)
+                    QiblaEmptyState(
+                      title: l10n.qiblaLocationNeededTitle,
+                      body: l10n.qiblaLocationNeededBody,
+                      selectCityLabel: l10n.qiblaSelectCity,
+                      useGpsLabel: l10n.qiblaUseGps,
+                      onSelectCity: () => context.push('/city-picker'),
+                      onUseGps: () => context
+                          .read<QiblaProvider>()
+                          .requestGpsOrOpenSettings(),
+                    )
+                  else ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: QiblaLocationCard(
+                        cityText: cityText,
+                        locationModeLabel: l10n.qiblaLocationAuto,
+                        onCityTap: () => context.push('/city-picker'),
+                        onRefreshTap: () => context
+                            .read<QiblaProvider>()
+                            .requestGpsOrOpenSettings(),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 18),
-                  QiblaCompassSection(
-                    heading: _heading ?? 0,
-                    qiblaDirection: qibla.qiblaDirection ?? 0,
-                  ),
-                  QiblaDegreeDisplay(
-                    degreeText: qiblaDegreeText,
-                    directionLabel: l10n.qiblaDirectionLabel,
-                  ),
-                  const SizedBox(height: 18),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: QiblaInfoCard(
+                    const SizedBox(height: 18),
+                    QiblaCompassSection(
+                      heading: _heading ?? 0,
+                      qiblaDirection: qibla.qiblaDirection ?? 0,
+                    ),
+                    QiblaDegreeDisplay(
+                      degreeText: qiblaDegreeText,
                       directionLabel: l10n.qiblaDirectionLabel,
-                      directionValue: qiblaDegreeText,
-                      accuracyLabel: l10n.qiblaAccuracyLabel,
-                      accuracyValue: accuracyLabel,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: QiblaHowToCard(
-                      title: l10n.qiblaInstructionsTitle,
-                      description: l10n.qiblaInstruction1,
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Nasıl kullanilir karti TODO'),
-                          ),
-                        );
-                      },
+                    const SizedBox(height: 18),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: QiblaInfoCard(
+                        directionLabel: l10n.qiblaDirectionLabel,
+                        directionValue: qiblaDegreeText,
+                        accuracyLabel: l10n.qiblaAccuracyLabel,
+                        accuracyValue: accuracyLabel,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: QiblaHowToCard(
+                        title: l10n.qiblaInstructionsTitle,
+                        description: l10n.qiblaInstruction1,
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Nasıl kullanilir karti TODO'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

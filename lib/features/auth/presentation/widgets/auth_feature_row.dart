@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class AuthFeatureRow extends StatelessWidget {
   const AuthFeatureRow({
@@ -36,20 +37,12 @@ class AuthFeatureRow extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.bodyText,
-                ),
+                style: AppTextStyles.buttonSmall,
               ),
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.mutedText,
-                ),
+                style: AppTextStyles.caption,
               ),
             ],
           ),

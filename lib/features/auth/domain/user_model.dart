@@ -9,7 +9,6 @@ class UserModel {
   final bool isPro;
   final Map<String, dynamic> notifSettings;
   final String streakMode;
-  final Map<String, dynamic>? location;
 
   const UserModel({
     required this.uid,
@@ -19,7 +18,6 @@ class UserModel {
     required this.isPro,
     required this.notifSettings,
     required this.streakMode,
-    this.location,
   });
 
   factory UserModel.fromMap(String uid, Map<String, dynamic> map) {
@@ -36,7 +34,6 @@ class UserModel {
       notifSettings:
           (map['notifSettings'] ?? <String, dynamic>{}) as Map<String, dynamic>,
       streakMode: (map['streakMode'] ?? 'any') as String,
-      location: map['location'] as Map<String, dynamic>?,
     );
   }
 
@@ -49,7 +46,6 @@ class UserModel {
       isPro: false,
       notifSettings: defaultNotifSettings,
       streakMode: 'any',
-      location: null,
     );
   }
 
@@ -61,7 +57,6 @@ class UserModel {
       'isPro': isPro,
       'notifSettings': notifSettings,
       'streakMode': streakMode,
-      'location': location,
     };
   }
 

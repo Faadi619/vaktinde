@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../widgets/app_back_button.dart';
 import '../providers/auth_provider.dart';
 import 'widgets/auth_field_label.dart';
-import 'widgets/auth_text_field.dart';
+import '../../../widgets/app_text_field.dart';
 import 'widgets/google_sign_in_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -65,19 +66,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Text(
                             localizations.loginTitle,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.bodyText,
-                            ),
+                            style: AppTextStyles.h2,
                           ),
                           const SizedBox(height: 3),
                           Text(
                             localizations.loginSubtitle,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.mutedText,
-                            ),
+                            style: AppTextStyles.bodySmall,
                           ),
                         ],
                       ),
@@ -111,9 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Text(
                               localizations.orEmailDivider,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
+                              style: AppTextStyles.size12w600.copyWith(
                                 color: AppColors.mutedText,
                               ),
                             ),
@@ -129,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       AuthFieldLabel(localizations.emailLabel),
                       const SizedBox(height: 7),
-                      AuthTextField(
+                      AppTextField(
                         controller: _emailController,
                         hint: localizations.emailHint,
                         keyboardType: TextInputType.emailAddress,
@@ -137,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       AuthFieldLabel(localizations.passwordLabel),
                       const SizedBox(height: 7),
-                      AuthTextField(
+                      AppTextField(
                         controller: _passwordController,
                         hint: localizations.passwordHint,
                         obscureText: _obscurePassword,
@@ -162,11 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () => context.push('/forgot-password'),
                           child: Text(
                             localizations.forgotPassword,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primaryGreen,
-                            ),
+                            style: AppTextStyles.label,
                           ),
                         ),
                       ),
@@ -198,10 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 )
                               : Text(
                                   localizations.signIn,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                  style: AppTextStyles.button,
                                 ),
                         ),
                       ),
@@ -209,10 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 12),
                         Text(
                           _errorMessage(localizations, authProvider.errorCode),
-                          style: const TextStyle(
+                          style: AppTextStyles.size12w600.copyWith(
                             color: AppColors.error,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -222,10 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () => context.push('/register'),
                           child: Text.rich(
                             TextSpan(
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppColors.mutedText,
-                              ),
+                              style: AppTextStyles.bodySmall,
                               children: [
                                 const TextSpan(text: 'Hesabın yok mu? '),
                                 TextSpan(

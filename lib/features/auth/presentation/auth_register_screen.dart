@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../widgets/app_back_button.dart';
 import '../providers/auth_provider.dart';
 import 'widgets/auth_field_label.dart';
-import 'widgets/auth_text_field.dart';
+import '../../../widgets/app_text_field.dart';
 import 'widgets/google_sign_in_button.dart';
 import 'widgets/password_strength_bar.dart';
 
@@ -87,19 +88,12 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                       children: [
                         Text(
                           l10n.registerTitle,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.bodyText,
-                          ),
+                          style: AppTextStyles.h2,
                         ),
                         const SizedBox(height: 3),
                         Text(
                           l10n.registerSubtitle,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: AppColors.mutedText,
-                          ),
+                          style: AppTextStyles.bodySmall,
                         ),
                       ],
                     ),
@@ -138,9 +132,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             l10n.orEmailDivider,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                            style: AppTextStyles.size12w600.copyWith(
                               color: AppColors.mutedText,
                             ),
                           ),
@@ -158,7 +150,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                     // Name field
                     AuthFieldLabel(l10n.fullNameLabel),
                     const SizedBox(height: 7),
-                    AuthTextField(
+                    AppTextField(
                       controller: _nameController,
                       hint: l10n.fullNameHint,
                       keyboardType: TextInputType.name,
@@ -169,7 +161,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                     // Email field
                     AuthFieldLabel(l10n.emailLabel),
                     const SizedBox(height: 7),
-                    AuthTextField(
+                    AppTextField(
                       controller: _emailController,
                       hint: l10n.emailHint,
                       keyboardType: TextInputType.emailAddress,
@@ -179,7 +171,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                     // Password field
                     AuthFieldLabel(l10n.passwordLabel),
                     const SizedBox(height: 7),
-                    AuthTextField(
+                    AppTextField(
                       controller: _passwordController,
                       hint: l10n.passwordHint,
                       obscureText: _obscurePassword,
@@ -235,9 +227,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                             padding: const EdgeInsets.only(top: 10),
                             child: Text.rich(
                               TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.mutedText,
+                                style: AppTextStyles.caption.copyWith(
                                   height: 1.4,
                                 ),
                                 children: [
@@ -279,8 +269,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                         ),
                         child: Text(
                           _errorMessage(l10n, authProvider.errorCode),
-                          style: const TextStyle(
-                            fontSize: 13,
+                          style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.error,
                           ),
                         ),
@@ -327,9 +316,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                               )
                             : Text(
                                 l10n.createAccount,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                                style: AppTextStyles.size16w600.copyWith(
                                   color: AppColors.white,
                                 ),
                               ),
@@ -344,10 +331,7 @@ class _AuthRegisterScreenState extends State<AuthRegisterScreen> {
                         onTap: () => context.go('/login'),
                         child: Text.rich(
                           TextSpan(
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.mutedText,
-                            ),
+                            style: AppTextStyles.bodySmall,
                             children: [
                               const TextSpan(text: 'Zaten hesabın var mı? '),
                               TextSpan(

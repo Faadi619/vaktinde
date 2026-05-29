@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vaqt/core/constants/colors.dart';
+import 'package:vaqt/core/constants/text_styles.dart';
 
 class QiblaDegreeDisplay extends StatelessWidget {
   const QiblaDegreeDisplay({
@@ -20,18 +21,14 @@ class QiblaDegreeDisplay extends StatelessWidget {
         children: [
           Text(
             degreeText,
-            style: const TextStyle(
-              fontSize: 46,
-              fontWeight: FontWeight.w800,
+            style: AppTextStyles.size46w800.copyWith(
               color: AppColors.primaryGreen,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             directionLabel,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
+            style: AppTextStyles.size15w500.copyWith(
               color: AppColors.mutedText,
             ),
           ),

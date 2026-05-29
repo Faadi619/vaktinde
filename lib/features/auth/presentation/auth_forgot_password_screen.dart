@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../widgets/app_back_button.dart';
 import '../providers/auth_provider.dart';
@@ -69,19 +69,12 @@ class _AuthForgotPasswordScreenState extends State<AuthForgotPasswordScreen> {
                       children: [
                         Text(
                           l10n.forgotPasswordTitle,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.bodyText,
-                          ),
+                          style: AppTextStyles.h2,
                         ),
                         const SizedBox(height: 3),
                         Text(
                           l10n.forgotPasswordSubtitle,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: AppColors.mutedText,
-                          ),
+                          style: AppTextStyles.bodySmall,
                         ),
                       ],
                     ),

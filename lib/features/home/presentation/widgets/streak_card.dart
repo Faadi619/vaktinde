@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class StreakCard extends StatelessWidget {
   const StreakCard({super.key});
@@ -26,22 +27,18 @@ class StreakCard extends StatelessWidget {
           const SizedBox(width: 20),
           Image.asset(AppAssets.streakIcon, width: 52, height: 52),
           const SizedBox(width: 16),
-          const Column(
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 '6. gün',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.bodyText,
-                ),
+                style: AppTextStyles.size22w800,
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 'Serin devam ediyor',
-                style: TextStyle(fontSize: 13, color: AppColors.mutedText),
+                style: AppTextStyles.bodySmall,
               ),
             ],
           ),

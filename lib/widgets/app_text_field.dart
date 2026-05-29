@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/colors.dart';
+import '../core/constants/colors.dart';
+import '../core/constants/text_styles.dart';
 
-class AuthTextField extends StatelessWidget {
-  const AuthTextField({
+/// Shared text field used across auth + form screens.
+///
+/// All styling lives here — change once, propagate everywhere.
+class AppTextField extends StatelessWidget {
+  const AppTextField({
     super.key,
     required this.controller,
     required this.hint,
@@ -30,9 +34,12 @@ class AuthTextField extends StatelessWidget {
       obscureText: obscureText,
       textCapitalization: textCapitalization,
       onChanged: onChanged,
-      style: const TextStyle(fontSize: 14),
+      style: AppTextStyles.bodyMedium,
       decoration: InputDecoration(
         hintText: hint,
+        hintStyle: AppTextStyles.bodyMedium.copyWith(
+          color: AppColors.mutedText,
+        ),
         suffixIcon: suffix,
         filled: true,
         fillColor: AppColors.cardBackground,

@@ -1,104 +1,37 @@
 import 'package:flutter/material.dart';
+
 import 'colors.dart';
+import 'text_styles.dart';
 
 abstract class AppTheme {
   static const double cardBorderRadius = 18.0;
   static const double bottomNavHeight = 83.0;
   static const String fontFamily = 'PlusJakartaSans';
 
+  /// Maps Material's TextTheme slots to the project's [AppTextStyles] catalog.
+  ///
+  /// Material widgets (AppBar titles, ListTile, etc.) read from this TextTheme,
+  /// so we delegate to AppTextStyles so the catalog is the single source of
+  /// truth for typography.
   static TextTheme get _textTheme => TextTheme(
-    displayLarge: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 57,
-      fontWeight: FontWeight.bold,
-      color: AppColors.bodyText,
-    ),
-    displayMedium: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 45,
-      fontWeight: FontWeight.bold,
-      color: AppColors.bodyText,
-    ),
-    displaySmall: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 36,
-      fontWeight: FontWeight.bold,
-      color: AppColors.bodyText,
-    ),
-    headlineLarge: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 32,
+    displayLarge: AppTextStyles.size57w700,
+    displayMedium: AppTextStyles.size45w700,
+    displaySmall: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w700),
+    headlineLarge: AppTextStyles.size32w700.copyWith(color: AppColors.darkGreen),
+    headlineMedium: AppTextStyles.displayMedium.copyWith(
       fontWeight: FontWeight.w700,
       color: AppColors.darkGreen,
     ),
-    headlineMedium: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 28,
-      fontWeight: FontWeight.w700,
-      color: AppColors.darkGreen,
-    ),
-    headlineSmall: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 24,
-      fontWeight: FontWeight.w600,
-      color: AppColors.bodyText,
-    ),
-    titleLarge: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 22,
-      fontWeight: FontWeight.w600,
-      color: AppColors.bodyText,
-    ),
-    titleMedium: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      color: AppColors.bodyText,
-    ),
-    titleSmall: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: AppColors.bodyText,
-    ),
-    bodyLarge: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 16,
-      fontWeight: FontWeight.w400,
-      color: AppColors.bodyText,
-      height: 1.5,
-    ),
-    bodyMedium: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 14,
-      fontWeight: FontWeight.w400,
-      color: AppColors.bodyText,
-      height: 1.4,
-    ),
-    bodySmall: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 12,
-      fontWeight: FontWeight.w400,
-      color: AppColors.mutedText,
-    ),
-    labelLarge: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: AppColors.bodyText,
-    ),
-    labelMedium: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 12,
-      fontWeight: FontWeight.w500,
-      color: AppColors.bodyText,
-    ),
-    labelSmall: const TextStyle(
-      fontFamily: fontFamily,
-      fontSize: 11,
-      fontWeight: FontWeight.w500,
-      color: AppColors.mutedText,
-    ),
+    headlineSmall: AppTextStyles.size24w600,
+    titleLarge: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600),
+    titleMedium: AppTextStyles.size16w600,
+    titleSmall: AppTextStyles.buttonSmall,
+    bodyLarge: AppTextStyles.size16w400,
+    bodyMedium: AppTextStyles.bodyMedium,
+    bodySmall: AppTextStyles.caption,
+    labelLarge: AppTextStyles.buttonSmall,
+    labelMedium: AppTextStyles.size12w500,
+    labelSmall: AppTextStyles.overline.copyWith(color: AppColors.mutedText),
   );
 
   static ThemeData get light => ThemeData(
@@ -129,11 +62,7 @@ abstract class AppTheme {
         backgroundColor: AppColors.primaryGreen,
         foregroundColor: AppColors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: const TextStyle(
-          fontFamily: fontFamily,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
+        textStyle: AppTextStyles.buttonSmall,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -146,6 +75,8 @@ abstract class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.lightGreen,
+      hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.mutedText),
+      labelStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.mutedText),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: AppColors.midGreen),
@@ -168,12 +99,7 @@ abstract class AppTheme {
       backgroundColor: AppColors.background,
       foregroundColor: AppColors.bodyText,
       elevation: 0,
-      titleTextStyle: const TextStyle(
-        fontFamily: fontFamily,
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: AppColors.bodyText,
-      ),
+      titleTextStyle: AppTextStyles.h3,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.cardBackground,
@@ -218,12 +144,7 @@ abstract class AppTheme {
       backgroundColor: AppColors.darkBackground,
       foregroundColor: AppColors.darkOnSurface,
       elevation: 0,
-      titleTextStyle: const TextStyle(
-        fontFamily: fontFamily,
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: AppColors.darkOnSurface,
-      ),
+      titleTextStyle: AppTextStyles.h3.copyWith(color: AppColors.darkOnSurface),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.darkSurface,

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -63,7 +57,26 @@ class DefaultFirebaseOptions {
     messagingSenderId: '590571823887',
     projectId: 'vaqt-b3158',
     storageBucket: 'vaqt-b3158.firebasestorage.app',
-    authDomain: 'vaqt-b3158.firebaseapp.com',
     iosBundleId: 'com.example.vaqt',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBCDeCBc7jcGGoT0mturmk1wz-yLZ49hJs',
+    appId: '1:590571823887:web:333a2ae56af5d7dde4147a',
+    messagingSenderId: '590571823887',
+    projectId: 'vaqt-b3158',
+    authDomain: 'vaqt-b3158.firebaseapp.com',
+    storageBucket: 'vaqt-b3158.firebasestorage.app',
+    measurementId: 'G-6Z602102K5',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyB2CGP5fm0Hh4OVY0532QtB3QyySisfv8M',
+    appId: '1:590571823887:ios:0c54ecc9da3e8431e4147a',
+    messagingSenderId: '590571823887',
+    projectId: 'vaqt-b3158',
+    storageBucket: 'vaqt-b3158.firebasestorage.app',
+    iosBundleId: 'com.example.vaqt',
+  );
+
 }

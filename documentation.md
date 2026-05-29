@@ -1,4 +1,4 @@
-# Vaktinde Project Documentation
+# Vaqt Project Documentation
 
 ## Quick Start (Developer)
 - Requirements: Flutter SDK (stable), Dart SDK, Android Studio/Xcode, and a connected simulator or device.
@@ -21,7 +21,7 @@
 - `test/`: widget and unit tests.
 
 ## Purpose
-Vaktinde is a mobile application for Turkish-speaking users to support daily prayer consistency.
+Vaqt is a mobile application for Turkish-speaking users to support daily prayer consistency.
 
 The app is being built with Flutter and Firebase, with a clear focus on:
 - Simple daily use
@@ -66,11 +66,16 @@ The following work is completed so far.
 ### 6. Build Health
 - Static analysis currently passes with no issues.
 
+## Location Permission Policy
+Location permission is **never** requested on app launch or right after sign-in. The OS prompt only appears the first time the user opens the Qibla screen. Reasoning: prompting on install feels like tracking and erodes trust before the user has seen any value. The splash screen silently uses the cached location only when permission was already granted in a previous session.
+
+If the user denies permission on the Qibla screen, the app falls back to **manual city selection** — a search screen that resolves city names to coordinates via geocoding. The user can also edit the location anytime by tapping the location card on the Qibla screen. If the user previously selected "Never" / "Don't allow", tapping the GPS button opens the OS app settings page so they can re-enable manually.
+
+## Location Storage Policy
+Location (`{ lat, lng, cityLabel, accuracy }`) is stored **only locally** in a Hive box (`QiblaLocationRepository`). It is **never** written to Firestore. Reasoning: privacy — user coordinates should not leave the device. Per-device re-selection on new installs is acceptable since location is inherently per-device anyway.
+
 ## Next Planned Work
-The next implementation step is to complete post-login onboarding for location:
-- request location permission
-- store location data for prayer times
-- provide manual city selection fallback when permission is denied
+- Phase 2: Diyanet + Aladhan prayer-times integration, Hive caching layer
 
 ## Documentation Update Rule
 This file will be updated throughout development so project progress remains visible and easy to follow for client review.

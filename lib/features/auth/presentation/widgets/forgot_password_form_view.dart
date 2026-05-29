@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 
@@ -46,8 +47,7 @@ class ForgotPasswordFormView extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.forgotPasswordHint,
-                    style: const TextStyle(
-                      fontSize: 12,
+                    style: AppTextStyles.caption.copyWith(
                       color: AppColors.primaryGreen,
                       height: 1.5,
                     ),
@@ -61,9 +61,7 @@ class ForgotPasswordFormView extends StatelessWidget {
           // Email field
           Text(
             l10n.emailAddressLabel,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.size12w700.copyWith(
               color: AppColors.mutedText,
             ),
           ),
@@ -71,7 +69,7 @@ class ForgotPasswordFormView extends StatelessWidget {
           TextField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            style: const TextStyle(fontSize: 14),
+            style: AppTextStyles.bodyMedium,
             decoration: InputDecoration(
               hintText: l10n.emailHint,
               filled: true,
@@ -115,7 +113,7 @@ class ForgotPasswordFormView extends StatelessWidget {
               ),
               child: Text(
                 errorMessage!,
-                style: const TextStyle(fontSize: 13, color: AppColors.error),
+                style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
               ),
             ),
           ],
@@ -148,9 +146,7 @@ class ForgotPasswordFormView extends StatelessWidget {
                     )
                   : Text(
                       l10n.sendResetLink,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.size16w600.copyWith(
                         color: AppColors.white,
                       ),
                     ),

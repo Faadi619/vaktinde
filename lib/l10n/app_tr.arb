@@ -1,7 +1,7 @@
 {
   "@@locale": "tr",
 
-  "appName": "Vaktinde",
+  "appName": "Vaqt",
   "@appName": { "description": "Application name" },
 
   "loading": "Yükleniyor...",
@@ -333,6 +333,36 @@
   "quickMarkSavedSuccess": "Kaydedildi.",
   "@quickMarkSavedSuccess": { "description": "Quick mark save success message" },
 
+  "quickMarkSubtitle": "Geçmiş günlerde kıldığın veya kaza olarak kıldığın namazları işaretleyebilirsin.",
+  "@quickMarkSubtitle": { "description": "Quick mark screen header subtitle" },
+
+  "quickMarkInfoButton": "Bilgi",
+  "@quickMarkInfoButton": { "description": "Top-right info button label" },
+
+  "quickMarkColumnOnTime": "Vaktinde Kıldım",
+  "@quickMarkColumnOnTime": { "description": "Column header — on-time" },
+
+  "quickMarkColumnKaza": "Kaza Kıldım",
+  "@quickMarkColumnKaza": { "description": "Column header — kaza" },
+
+  "quickMarkInfoBannerBody": "Bu tarihe ait kılmadığın namazları işaretleyebilir veya kaza olarak kıldığını belirtebilirsin.",
+  "@quickMarkInfoBannerBody": { "description": "Body of the info banner under the date navigator" },
+
+  "quickMarkNoteTitle": "Not eklemek ister misin?",
+  "@quickMarkNoteTitle": { "description": "Note card title" },
+
+  "quickMarkNoteSubtitle": "Bu güne dair bir not ekleyebilirsin (isteğe bağlı).",
+  "@quickMarkNoteSubtitle": { "description": "Note card subtitle" },
+
+  "quickMarkRecentSeeAll": "Tüm Geçmiş",
+  "@quickMarkRecentSeeAll": { "description": "Recent history — see all link" },
+
+  "quickMarkRecentKazaSuffix": "{prayers} (Kaza olarak)",
+  "@quickMarkRecentKazaSuffix": {
+    "description": "Recent entry — prayers marked as kaza",
+    "placeholders": { "prayers": { "type": "String" } }
+  },
+
   "statsTitle": "İstatistikler",
   "@statsTitle": { "description": "Statistics screen title" },
 
@@ -347,6 +377,249 @@
 
   "statsTabYearly": "Yıllık",
   "@statsTabYearly": { "description": "Yearly stats tab" },
+
+  "statsSubtitle": "İbadet yolculuğundaki ilerlemeni görüntüle.",
+  "@statsSubtitle": { "description": "Stats screen header subtitle" },
+
+  "statsThisWeek": "Bu Hafta",
+  "@statsThisWeek": { "description": "Hero kicker label / pill label" },
+
+  "statsStreakSubtitle": "Serin devam ediyor!",
+  "@statsStreakSubtitle": { "description": "Hero card subtitle under streak count" },
+
+  "statsDaysCount": "{count} gün",
+  "@statsDaysCount": {
+    "description": "Day count with unit",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "statsRingCompleted": "Tamamlandı",
+  "@statsRingCompleted": { "description": "Ring chart label" },
+
+  "statsWeeklyCompletionRate": "Haftalık Tamamlama Oranı",
+  "@statsWeeklyCompletionRate": { "description": "Weekly chart card title" },
+
+  "statsLastSevenDays": "Son 7 Gün",
+  "@statsLastSevenDays": { "description": "Date range pill: last 7 days" },
+
+  "statsToday": "Bugün",
+  "@statsToday": { "description": "Today label on bar chart" },
+
+  "statsPrayerStats": "Namaz İstatistikleri",
+  "@statsPrayerStats": { "description": "Prayer stats grid card title" },
+
+  "statsTotalStats": "Toplam İstatistikler",
+  "@statsTotalStats": { "description": "Totals grid card title" },
+
+  "statsTotalDaysPrayed": "Toplam Gün Namaz kıldın",
+  "@statsTotalDaysPrayed": { "description": "Totals cell: total days prayed" },
+
+  "statsLongestStreakDays": "En Uzun Seri Gün",
+  "@statsLongestStreakDays": { "description": "Totals cell: longest streak days" },
+
+  "statsAverageSuccessRate": "Ortalama Başarı Oranı",
+  "@statsAverageSuccessRate": { "description": "Totals cell: average success rate" },
+
+  "statsTotalCompletion": "Toplam Tamamlama",
+  "@statsTotalCompletion": { "description": "Totals cell: total completion count" },
+
+  "statsComingSoon": "Çok yakında",
+  "@statsComingSoon": { "description": "Placeholder for tabs not yet implemented" },
+
+  "statsPrayerCountFormat": "{count}/7",
+  "@statsPrayerCountFormat": {
+    "description": "Prayer count out of 7",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "statsPercentFormat": "%{value}",
+  "@statsPercentFormat": {
+    "description": "Percent value with Turkish-style leading sign",
+    "placeholders": { "value": { "type": "int" } }
+  },
+
+  "statsCompletionRatio": "Tamamlama Oranı",
+  "@statsCompletionRatio": { "description": "Ring center caption on Haftalık" },
+
+  "statsDailyCompletionRate": "Günlere Göre Namaz Tamamlama Oranı",
+  "@statsDailyCompletionRate": { "description": "Haftalık bar chart title" },
+
+  "statsDetailView": "Detay Görüntüle",
+  "@statsDetailView": { "description": "Pill label — view details" },
+
+  "statsWeeklyAverages": "Namaz İstatistikleri",
+  "@statsWeeklyAverages": { "description": "Haftalık prayer averages card title" },
+
+  "statsWeeklyAveragesSuffix": "(Haftalık Ortalama)",
+  "@statsWeeklyAveragesSuffix": { "description": "Inline suffix after \"Namaz İstatistikleri\"" },
+
+  "statsWeeklySummary": "Haftalık Özeti",
+  "@statsWeeklySummary": { "description": "Haftalık summary card title" },
+
+  "statsSummaryTotalPrayers": "Toplam kıldığın namaz",
+  "@statsSummaryTotalPrayers": { "description": "Summary row label" },
+
+  "statsSummaryMakeupPrayers": "Kaza olarak kıldığın namaz",
+  "@statsSummaryMakeupPrayers": { "description": "Summary row label" },
+
+  "statsSummaryMostConsistent": "En istikrarlı olduğun vakit",
+  "@statsSummaryMostConsistent": { "description": "Summary row label" },
+
+  "statsSummaryHardest": "En çok zorlandığın vakit",
+  "@statsSummaryHardest": { "description": "Summary row label" },
+
+  "statsDateRangePlaceholder": "12 – 18 Mayıs 2025",
+  "@statsDateRangePlaceholder": { "description": "Placeholder week range" },
+
+  "statsPrayerCountDecimalFormat": "{value}/7",
+  "@statsPrayerCountDecimalFormat": {
+    "description": "Prayer count out of 7 (decimal supported)",
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "statsThisMonth": "Bu Ay",
+  "@statsThisMonth": { "description": "Aylık hero kicker" },
+
+  "statsMonthSubtitle": "Çok güzel bir istikrar!",
+  "@statsMonthSubtitle": { "description": "Aylık hero subtitle" },
+
+  "statsRingCompletedShort": "Tamamlandı",
+  "@statsRingCompletedShort": { "description": "Aylık ring center caption" },
+
+  "statsMonthPlaceholder": "Mayıs 2025",
+  "@statsMonthPlaceholder": { "description": "Placeholder month label" },
+
+  "statsMonthlyCalendarTitle": "Aylık Namaz Takvimi",
+  "@statsMonthlyCalendarTitle": { "description": "Calendar card title" },
+
+  "statsKazaDaysFormat": "{count} kaza gün",
+  "@statsKazaDaysFormat": {
+    "description": "Kaza day count pill text",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "statsDayStateFull": "Tam (5/5)",
+  "statsDayStatePartial": "Eksik",
+  "statsDayStateMissed": "Hiç kılınmadı",
+  "statsDayStateSpecial": "Özel gün",
+  "statsDayStateFuture": "Gelecek",
+
+  "statsMonthlyStatsTitle": "Aylık İstatistikler",
+  "@statsMonthlyStatsTitle": { "description": "Monthly stats list card title" },
+
+  "statsMonthlyTotalPrayers": "Toplam kıldığın namaz",
+  "statsMonthlyMakeupPrayers": "Kaza olarak kıldığın namaz",
+  "statsMonthlyAverageDaily": "Ortalama günlük tamamlama",
+  "statsMonthlyLongestStreak": "En uzun seri",
+  "statsMonthlyConsistentDays": "İstikrarlı günler",
+  "statsMonthlyKazaRequiredDays": "Kaza gerektiren günler",
+  "statsMonthlyMissedDays": "Hiç kılınmayan günler",
+
+  "statsDaysCountUnit": "{count} gün",
+  "@statsDaysCountUnit": {
+    "description": "Day count with unit",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "statsPrayerCompletionTitle": "Namazlara Göre Tamamlama Oranı",
+  "@statsPrayerCompletionTitle": { "description": "Per-prayer monthly bar chart title" },
+
+  "statsMonthlyInsightsTitle": "Bu Ayki İçgörüler",
+  "@statsMonthlyInsightsTitle": { "description": "Insights row card title" },
+
+  "statsInsightLongestStreakCaption": "En uzun serin",
+  "statsInsightBestPrayerCaption": "En istikrarlı vakit",
+  "statsInsightMonthOverMonthCaption": "Geçen aya göre",
+
+  "statsMonthlyNoteSubtitle": "Bu aya dair bir not ekleyebilirsin.",
+  "@statsMonthlyNoteSubtitle": { "description": "Aylık note prompt subtitle" },
+
+  "statsDayOfWeekMon": "Pzt",
+  "statsDayOfWeekTue": "Sal",
+  "statsDayOfWeekWed": "Çar",
+  "statsDayOfWeekThu": "Per",
+  "statsDayOfWeekFri": "Cum",
+  "statsDayOfWeekSat": "Cmt",
+  "statsDayOfWeekSun": "Paz",
+
+  "statsThisYear": "Bu Yıl",
+  "@statsThisYear": { "description": "Yıllık hero kicker" },
+
+  "statsYearSubtitle": "Harika bir yıl geçiriyorsun!",
+  "@statsYearSubtitle": { "description": "Yıllık hero subtitle" },
+
+  "statsYearPlaceholder": "2025",
+  "@statsYearPlaceholder": { "description": "Placeholder year label" },
+
+  "statsYearlyStatsTitle": "Yıllık İstatistikler",
+  "@statsYearlyStatsTitle": { "description": "Yıllık 5-stat row card title" },
+
+  "statsYearlyStatTotal": "Toplam kıldığın namaz",
+  "statsYearlyStatMakeup": "Kaza olarak kılınan",
+  "statsYearlyStatAverage": "Ort. günlük tamamlama",
+  "statsYearlyStatLongestStreak": "En uzun seri",
+  "statsYearlyStatConsistent": "İstikrarlı günler",
+
+  "statsMonthlyCompletionTitle": "Aylara Göre Tamamlama Oranı",
+  "@statsMonthlyCompletionTitle": { "description": "12-month bar chart title" },
+
+  "statsPrayerCompletionTitleYearly": "Vakitlere Göre Tamamlama Oranı",
+  "@statsPrayerCompletionTitleYearly": { "description": "Yearly 5-prayer card title" },
+
+  "statsYearlyAverageSuffix": "(Yıllık Ortalama)",
+  "@statsYearlyAverageSuffix": { "description": "Inline suffix on yearly prayer card" },
+
+  "statsMostConsistentMonths": "En İstikrarlı Aylar",
+  "@statsMostConsistentMonths": { "description": "Top months mini card title" },
+
+  "statsYearlyAchievements": "Yıllık Başarılar",
+  "@statsYearlyAchievements": { "description": "Yearly achievements mini card title" },
+
+  "statsSeeAllMonths": "Tüm ayları gör",
+  "@statsSeeAllMonths": { "description": "Footer link" },
+
+  "statsSeeAllAchievements": "Tüm başarıları gör",
+  "@statsSeeAllAchievements": { "description": "Footer link" },
+
+  "statsBadgeStreakMasterTitle": "İstikrar Ustası",
+  "statsBadgeStreakMasterSubtitle": "30 gün seri",
+  "statsBadgeDisciplinedTitle": "Disiplinli",
+  "statsBadgeDisciplinedSubtitle": "%80+ ortalama",
+  "statsBadgeDevotedTitle": "Adanmış",
+  "statsBadgeDevotedSubtitle": "300+ gün",
+
+  "statsMotivationalLine1": "Küçük adımlar,",
+  "statsMotivationalLine2": "büyük değişimler yaratır.",
+  "statsMotivationalBody": "İstikrarın ve çaban senin en büyük kazancın.",
+
+  "statsYearlyNoteSubtitle": "Bu yıla dair bir not ekleyebilirsin (isteğe bağlı).",
+  "@statsYearlyNoteSubtitle": { "description": "Yıllık note prompt subtitle" },
+
+  "statsMonthShortJan": "Oca",
+  "statsMonthShortFeb": "Şub",
+  "statsMonthShortMar": "Mar",
+  "statsMonthShortApr": "Nis",
+  "statsMonthShortMay": "May",
+  "statsMonthShortJun": "Haz",
+  "statsMonthShortJul": "Tem",
+  "statsMonthShortAug": "Ağu",
+  "statsMonthShortSep": "Eyl",
+  "statsMonthShortOct": "Eki",
+  "statsMonthShortNov": "Kas",
+  "statsMonthShortDec": "Ara",
+
+  "statsMonthFullJan": "Ocak",
+  "statsMonthFullFeb": "Şubat",
+  "statsMonthFullMar": "Mart",
+  "statsMonthFullApr": "Nisan",
+  "statsMonthFullMay": "Mayıs",
+  "statsMonthFullJun": "Haziran",
+  "statsMonthFullJul": "Temmuz",
+  "statsMonthFullAug": "Ağustos",
+  "statsMonthFullSep": "Eylül",
+  "statsMonthFullOct": "Ekim",
+  "statsMonthFullNov": "Kasım",
+  "statsMonthFullDec": "Aralık",
 
   "statsTotalPrayers": "Toplam Namaz",
   "@statsTotalPrayers": { "description": "Total prayers stat label" },
@@ -438,6 +711,51 @@
   "profileEditName": "İsmi Düzenle",
   "@profileEditName": { "description": "Edit display name option" },
 
+  "profileSubtitle": "Hesap bilgilerinizi görüntüleyin ve ayarlarınızı yönetin.",
+  "@profileSubtitle": { "description": "Profile screen header subtitle" },
+
+  "profileTagMuslim": "Müslüman",
+  "@profileTagMuslim": { "description": "Religion tag on profile card" },
+
+  "profileTagCountry": "Türkiye",
+  "@profileTagCountry": { "description": "Country tag on profile card" },
+
+  "profileStatConsistentDays": "İstikrarlı gün",
+  "profileStatLongestStreak": "En uzun seri",
+  "profileStatTotalPrayers": "Toplam namaz",
+  "profileStatAverageRate": "Ortalama oran",
+
+  "profileSectionAccount": "Hesap",
+  "profileSectionWorship": "İbadet Ayarları",
+  "profileSectionOther": "Diğer",
+
+  "profileMenuPersonalTitle": "Kişisel Bilgilerim",
+  "profileMenuPersonalSubtitle": "Ad, e-posta ve konum",
+  "profileMenuPasswordTitle": "Şifre Değiştir",
+  "profileMenuPasswordSubtitle": "Hesap şifrenizi değiştirin",
+  "profileMenuNotificationsTitle": "Bildirim Ayarları",
+  "profileMenuNotificationsSubtitle": "Hatırlatmalar ve bildirim tercihleri",
+  "profileMenuAppSettingsTitle": "Uygulama Ayarları",
+  "profileMenuAppSettingsSubtitle": "Tema, dil ve diğer tercihler",
+
+  "profileMenuPrayerTimesTitle": "Namaz Vakitleri",
+  "profileMenuPrayerTimesSubtitle": "Hesaplama yöntemi ve ayarlar",
+  "profileMenuQiblaTitle": "Kıble Ayarları",
+  "profileMenuQiblaSubtitle": "Kıble hesaplama ve pusula ayarları",
+  "profileMenuQuickMarkTitle": "Hızlı İşaretleme",
+  "profileMenuQuickMarkSubtitle": "Geriye dönük işaretleme ayarları",
+  "profileMenuKazaReminderTitle": "Kaza Namazı Hatırlatıcıları",
+  "profileMenuKazaReminderSubtitle": "Kaza namazı hatırlatma tercihleri",
+
+  "profileMenuBackupTitle": "Veri Yedekleme",
+  "profileMenuBackupSubtitle": "Verilerinizi yedekleyin veya geri yükleyin",
+  "profileMenuAboutTitle": "Hakkımızda",
+  "profileMenuAboutSubtitle": "Uygulama hakkında bilgi",
+  "profileMenuHelpTitle": "Yardım ve Destek",
+  "profileMenuHelpSubtitle": "Sıkça sorulan sorular",
+  "profileMenuPrivacyTitle": "Gizlilik Politikası",
+  "profileMenuPrivacySubtitle": "Gizlilik ve veri kullanım politikamız",
+
   "notifPrayerTime": "{prayer} vakti geldi.",
   "@notifPrayerTime": {
     "description": "Prayer time notification body",
@@ -514,5 +832,32 @@
   "@badgeLocked": { "description": "Locked badge label" },
 
   "badgeCelebrationSubtitle": "Yeni bir rozet kazandın!",
-  "@badgeCelebrationSubtitle": { "description": "Badge celebration sheet subtitle" }
+  "@badgeCelebrationSubtitle": { "description": "Badge celebration sheet subtitle" },
+
+  "cityPickerTitle": "Şehir Seç",
+  "@cityPickerTitle": { "description": "City picker screen title" },
+
+  "cityPickerSubtitle": "Konumunu manuel olarak belirle",
+  "@cityPickerSubtitle": { "description": "City picker screen subtitle" },
+
+  "cityPickerHint": "Şehir ara (örn. İstanbul)",
+  "@cityPickerHint": { "description": "City search input placeholder" },
+
+  "cityPickerNoResults": "Bu arama için sonuç bulunamadı.",
+  "@cityPickerNoResults": { "description": "Empty search result message" },
+
+  "cityPickerSearchFailed": "Arama yapılamadı. İnternet bağlantınızı kontrol edin.",
+  "@cityPickerSearchFailed": { "description": "Search failure message" },
+
+  "qiblaLocationNeededTitle": "Konum gerekli",
+  "@qiblaLocationNeededTitle": { "description": "Qibla empty state heading when no location is available" },
+
+  "qiblaLocationNeededBody": "Kıbleyi gösterebilmemiz için konumuna ihtiyacımız var. Konum izni vermek istemiyorsan şehrini manuel olarak seçebilirsin.",
+  "@qiblaLocationNeededBody": { "description": "Qibla empty state body text" },
+
+  "qiblaSelectCity": "Şehir Seç",
+  "@qiblaSelectCity": { "description": "CTA on qibla empty state — opens city picker" },
+
+  "qiblaUseGps": "GPS Kullan",
+  "@qiblaUseGps": { "description": "Secondary CTA on qibla empty state — retries permission" }
 }

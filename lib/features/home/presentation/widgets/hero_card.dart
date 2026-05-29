@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class HeroCard extends StatelessWidget {
   const HeroCard({super.key});
@@ -47,11 +48,9 @@ class HeroCard extends StatelessWidget {
                       height: 20,
                     ),
                     const SizedBox(width: 6),
-                    const Text(
+                    Text(
                       'Sonraki Vakit',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
+                      style: AppTextStyles.size13w500.copyWith(
                         color: AppColors.mutedText,
                       ),
                     ),
@@ -59,13 +58,12 @@ class HeroCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontSize: 24,
+                  text: TextSpan(
+                    style: AppTextStyles.size24w700.copyWith(
                       fontWeight: FontWeight.w800,
                       height: 1.3,
                     ),
-                    children: [
+                    children: const [
                       TextSpan(
                         text: 'İkindiye\n',
                         style: TextStyle(color: AppColors.bodyText),
@@ -84,19 +82,15 @@ class HeroCard extends StatelessWidget {
                 const Spacer(),
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       'Vakit: ',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                      style: AppTextStyles.size14w500.copyWith(
                         color: AppColors.mutedText,
                       ),
                     ),
-                    const Text(
+                    Text(
                       '16:29',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                      style: AppTextStyles.titleSmall.copyWith(
                         color: AppColors.primaryGreen,
                       ),
                     ),

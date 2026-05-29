@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class ForgotPasswordSuccessView extends StatelessWidget {
@@ -47,19 +48,14 @@ class ForgotPasswordSuccessView extends StatelessWidget {
           Text(
             l10n.forgotPasswordSuccessTitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: AppColors.bodyText,
-            ),
+            style: AppTextStyles.size22w800,
           ),
           const SizedBox(height: 12),
 
           // Body with email highlighted
           Text.rich(
             TextSpan(
-              style: const TextStyle(
-                fontSize: 14,
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.mutedText,
                 height: 1.6,
               ),
@@ -93,9 +89,7 @@ class ForgotPasswordSuccessView extends StatelessWidget {
               ),
               label: Text(
                 l10n.backToSignIn,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                style: AppTextStyles.size16w600.copyWith(
                   color: AppColors.white,
                 ),
               ),
@@ -116,10 +110,7 @@ class ForgotPasswordSuccessView extends StatelessWidget {
               onTap: onResend,
               child: Text.rich(
                 TextSpan(
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.mutedText,
-                  ),
+                  style: AppTextStyles.bodySmall,
                   children: [
                     TextSpan(text: '${l10n.emailNotReceived} '),
                     TextSpan(

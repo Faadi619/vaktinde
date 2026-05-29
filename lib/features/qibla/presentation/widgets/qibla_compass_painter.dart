@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'package:vaqt/core/constants/colors.dart';
+import 'package:vaqt/core/constants/text_styles.dart';
 
 class QiblaCompassPainter extends CustomPainter {
   const QiblaCompassPainter({required this.heading, required this.qibla});
@@ -51,9 +52,8 @@ class QiblaCompassPainter extends CustomPainter {
   }
 
   void _drawDegreeLabels(Canvas canvas, Offset center, double radius) {
-    const labelStyle = TextStyle(
+    final labelStyle = AppTextStyles.size9w400.copyWith(
       color: AppColors.inactiveNav,
-      fontSize: 9,
       fontWeight: FontWeight.w600,
     );
 
@@ -103,16 +103,12 @@ class QiblaCompassPainter extends CustomPainter {
   }
 
   void _drawCardinals(Canvas canvas, Offset center, double radius) {
-    const labelStyle = TextStyle(
-      color: AppColors.bodyText,
-      fontSize: 15,
-      fontWeight: FontWeight.w700,
-    );
+    final labelStyle = AppTextStyles.titleMedium;
 
     void drawLabel(String label, Offset offset) {
       final textPainter =
           TextPainter(
-              text: const TextSpan(style: labelStyle, text: ''),
+              text: TextSpan(style: labelStyle, text: ''),
               textDirection: TextDirection.ltr,
             )
             ..text = TextSpan(style: labelStyle, text: label)

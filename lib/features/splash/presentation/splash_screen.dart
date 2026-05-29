@@ -40,8 +40,10 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _fadeController.forward();
 
-    // On app launch, refresh Qibla location cache
-    _refreshQiblaLocationCache();
+    // On app launch, refresh Qibla location cache silently — only if the user
+    // has already granted location permission. We never prompt from splash:
+    // permission is requested only when the user opens the Qibla screen.
+    _refreshQiblaLocationCacheIfPermitted();
 
     // Minimum display time so the splash doesn't flash away instantly
     Future.delayed(const Duration(milliseconds: 1600), () {
@@ -51,15 +53,12 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
-  Future<void> _refreshQiblaLocationCache() async {
+  Future<void> _refreshQiblaLocationCacheIfPermitted() async {
     final repo = QiblaLocationRepository();
     try {
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
+      final permission = await Geolocator.checkPermission();
+      if (permission != LocationPermission.always &&
+          permission != LocationPermission.whileInUse) {
         return;
       }
 
@@ -125,7 +124,11 @@ class _SplashScreenState extends State<SplashScreen>
         WidgetsBinding.instance.addPostFrameCallback((_) => _tryNavigate(auth));
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+          ),
           child: Scaffold(
             backgroundColor: AppColors.background,
             body: Center(

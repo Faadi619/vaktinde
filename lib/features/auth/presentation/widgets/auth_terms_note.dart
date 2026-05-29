@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class AuthTermsNote extends StatelessWidget {
@@ -12,8 +13,8 @@ class AuthTermsNote extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text.rich(
       TextSpan(
-        style: const TextStyle(
-          fontSize: 11,
+        style: AppTextStyles.size11w500.copyWith(
+          fontWeight: FontWeight.w400,
           color: AppColors.mutedText,
           height: 1.5,
         ),

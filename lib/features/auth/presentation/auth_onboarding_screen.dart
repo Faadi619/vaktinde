@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
+import '../../../core/services/app_preferences.dart';
 import '../../../l10n/app_localizations.dart';
 import 'widgets/auth_feature_row.dart';
 import 'widgets/auth_terms_note.dart';
 
 class AuthOnboardingScreen extends StatelessWidget {
   const AuthOnboardingScreen({super.key});
+
+  Future<void> _exitTo(BuildContext context, String route) async {
+    await AppPreferences.setHasSeenOnboarding(true);
+    if (!context.mounted) return;
+    context.go(route);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +62,8 @@ class AuthOnboardingScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Vaktinde',
-                      style: const TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.w800,
+                      'Vaqt',
+                      style: AppTextStyles.displayLarge.copyWith(
                         color: AppColors.white,
                         letterSpacing: -0.5,
                       ),
@@ -66,11 +72,8 @@ class AuthOnboardingScreen extends StatelessWidget {
                     Text(
                       l10n.onboardingAppTagline,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
+                      style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.white.withValues(alpha: 0.80),
-                        height: 1.5,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -111,7 +114,7 @@ class AuthOnboardingScreen extends StatelessWidget {
                   SizedBox(
                     height: 52,
                     child: ElevatedButton.icon(
-                      onPressed: () => context.push('/register'),
+                      onPressed: () => _exitTo(context, '/register'),
                       icon: const Icon(
                         Icons.person_add_rounded,
                         size: 20,
@@ -119,9 +122,7 @@ class AuthOnboardingScreen extends StatelessWidget {
                       ),
                       label: Text(
                         l10n.onboardingCreateAccount,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        style: AppTextStyles.size16w600.copyWith(
                           color: AppColors.white,
                         ),
                       ),
@@ -139,7 +140,7 @@ class AuthOnboardingScreen extends StatelessWidget {
                   SizedBox(
                     height: 52,
                     child: OutlinedButton(
-                      onPressed: () => context.push('/login'),
+                      onPressed: () => _exitTo(context, '/login'),
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
                           color: AppColors.divider,
@@ -151,11 +152,7 @@ class AuthOnboardingScreen extends StatelessWidget {
                       ),
                       child: Text(
                         l10n.onboardingSignIn,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.bodyText,
-                        ),
+                        style: AppTextStyles.size16w600,
                       ),
                     ),
                   ),

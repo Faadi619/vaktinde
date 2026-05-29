@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/constants/colors.dart';
+import '../core/constants/text_styles.dart';
 import '../core/constants/themes.dart';
 import '../core/constants/assets.dart';
 
@@ -28,7 +29,7 @@ class MainShell extends StatelessWidget {
       icon: Icons.add,
       activeIcon: Icons.add,
       label: 'Hızlı İşaretle',
-      path: '/quick_mark',
+      path: '/quick-mark',
       isFab: true,
     ),
     _NavItem(
@@ -193,11 +194,7 @@ class _RegularNavItem extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           item.label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: color,
-          ),
+          style: AppTextStyles.overline.copyWith(color: color),
         ),
       ],
     );
@@ -220,11 +217,7 @@ class _FabSlot extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: AppColors.inactiveNav,
-          ),
+          style: AppTextStyles.overline.copyWith(color: AppColors.inactiveNav),
         ),
         const SizedBox(height: 18),
       ],

@@ -90,11 +90,14 @@ class AuthProvider extends ChangeNotifier {
     _setErrorCode(null);
 
     try {
-      await _authService.registerWithEmailPassword(
+      final refreshedUser = await _authService.registerWithEmailPassword(
         email: email.trim(),
         password: password,
         displayName: displayName.trim(),
       );
+      if (refreshedUser != null) {
+        _user = await _userRepository.getOrCreateUser(refreshedUser);
+      }
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'email-already-in-use':
@@ -166,7 +169,8 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       _user = await _userRepository.getOrCreateUser(firebaseUser);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      debugPrint('getOrCreateUser failed: $error\n$stackTrace');
       _setErrorCode('profile_load_failed');
     } finally {
       _setLoading(false);

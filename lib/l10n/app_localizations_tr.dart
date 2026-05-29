@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appName => 'Vaktinde';
+  String get appName => 'Vaqt';
 
   @override
   String get loading => 'Yükleniyor...';
@@ -339,6 +339,38 @@ class AppLocalizationsTr extends AppLocalizations {
   String get quickMarkSavedSuccess => 'Kaydedildi.';
 
   @override
+  String get quickMarkSubtitle =>
+      'Geçmiş günlerde kıldığın veya kaza olarak kıldığın namazları işaretleyebilirsin.';
+
+  @override
+  String get quickMarkInfoButton => 'Bilgi';
+
+  @override
+  String get quickMarkColumnOnTime => 'Vaktinde Kıldım';
+
+  @override
+  String get quickMarkColumnKaza => 'Kaza Kıldım';
+
+  @override
+  String get quickMarkInfoBannerBody =>
+      'Bu tarihe ait kılmadığın namazları işaretleyebilir veya kaza olarak kıldığını belirtebilirsin.';
+
+  @override
+  String get quickMarkNoteTitle => 'Not eklemek ister misin?';
+
+  @override
+  String get quickMarkNoteSubtitle =>
+      'Bu güne dair bir not ekleyebilirsin (isteğe bağlı).';
+
+  @override
+  String get quickMarkRecentSeeAll => 'Tüm Geçmiş';
+
+  @override
+  String quickMarkRecentKazaSuffix(String prayers) {
+    return '$prayers (Kaza olarak)';
+  }
+
+  @override
   String get statsTitle => 'İstatistikler';
 
   @override
@@ -354,6 +386,357 @@ class AppLocalizationsTr extends AppLocalizations {
   String get statsTabYearly => 'Yıllık';
 
   @override
+  String get statsSubtitle => 'İbadet yolculuğundaki ilerlemeni görüntüle.';
+
+  @override
+  String get statsThisWeek => 'Bu Hafta';
+
+  @override
+  String get statsStreakSubtitle => 'Serin devam ediyor!';
+
+  @override
+  String statsDaysCount(int count) {
+    return '$count gün';
+  }
+
+  @override
+  String get statsRingCompleted => 'Tamamlandı';
+
+  @override
+  String get statsWeeklyCompletionRate => 'Haftalık Tamamlama Oranı';
+
+  @override
+  String get statsLastSevenDays => 'Son 7 Gün';
+
+  @override
+  String get statsToday => 'Bugün';
+
+  @override
+  String get statsPrayerStats => 'Namaz İstatistikleri';
+
+  @override
+  String get statsTotalStats => 'Toplam İstatistikler';
+
+  @override
+  String get statsTotalDaysPrayed => 'Toplam Gün Namaz kıldın';
+
+  @override
+  String get statsLongestStreakDays => 'En Uzun Seri Gün';
+
+  @override
+  String get statsAverageSuccessRate => 'Ortalama Başarı Oranı';
+
+  @override
+  String get statsTotalCompletion => 'Toplam Tamamlama';
+
+  @override
+  String get statsComingSoon => 'Çok yakında';
+
+  @override
+  String statsPrayerCountFormat(int count) {
+    return '$count/7';
+  }
+
+  @override
+  String statsPercentFormat(int value) {
+    return '%$value';
+  }
+
+  @override
+  String get statsCompletionRatio => 'Tamamlama Oranı';
+
+  @override
+  String get statsDailyCompletionRate => 'Günlere Göre Namaz Tamamlama Oranı';
+
+  @override
+  String get statsDetailView => 'Detay Görüntüle';
+
+  @override
+  String get statsWeeklyAverages => 'Namaz İstatistikleri';
+
+  @override
+  String get statsWeeklyAveragesSuffix => '(Haftalık Ortalama)';
+
+  @override
+  String get statsWeeklySummary => 'Haftalık Özeti';
+
+  @override
+  String get statsSummaryTotalPrayers => 'Toplam kıldığın namaz';
+
+  @override
+  String get statsSummaryMakeupPrayers => 'Kaza olarak kıldığın namaz';
+
+  @override
+  String get statsSummaryMostConsistent => 'En istikrarlı olduğun vakit';
+
+  @override
+  String get statsSummaryHardest => 'En çok zorlandığın vakit';
+
+  @override
+  String get statsDateRangePlaceholder => '12 – 18 Mayıs 2025';
+
+  @override
+  String statsPrayerCountDecimalFormat(String value) {
+    return '$value/7';
+  }
+
+  @override
+  String get statsThisMonth => 'Bu Ay';
+
+  @override
+  String get statsMonthSubtitle => 'Çok güzel bir istikrar!';
+
+  @override
+  String get statsRingCompletedShort => 'Tamamlandı';
+
+  @override
+  String get statsMonthPlaceholder => 'Mayıs 2025';
+
+  @override
+  String get statsMonthlyCalendarTitle => 'Aylık Namaz Takvimi';
+
+  @override
+  String statsKazaDaysFormat(int count) {
+    return '$count kaza gün';
+  }
+
+  @override
+  String get statsDayStateFull => 'Tam (5/5)';
+
+  @override
+  String get statsDayStatePartial => 'Eksik';
+
+  @override
+  String get statsDayStateMissed => 'Hiç kılınmadı';
+
+  @override
+  String get statsDayStateSpecial => 'Özel gün';
+
+  @override
+  String get statsDayStateFuture => 'Gelecek';
+
+  @override
+  String get statsMonthlyStatsTitle => 'Aylık İstatistikler';
+
+  @override
+  String get statsMonthlyTotalPrayers => 'Toplam kıldığın namaz';
+
+  @override
+  String get statsMonthlyMakeupPrayers => 'Kaza olarak kıldığın namaz';
+
+  @override
+  String get statsMonthlyAverageDaily => 'Ortalama günlük tamamlama';
+
+  @override
+  String get statsMonthlyLongestStreak => 'En uzun seri';
+
+  @override
+  String get statsMonthlyConsistentDays => 'İstikrarlı günler';
+
+  @override
+  String get statsMonthlyKazaRequiredDays => 'Kaza gerektiren günler';
+
+  @override
+  String get statsMonthlyMissedDays => 'Hiç kılınmayan günler';
+
+  @override
+  String statsDaysCountUnit(int count) {
+    return '$count gün';
+  }
+
+  @override
+  String get statsPrayerCompletionTitle => 'Namazlara Göre Tamamlama Oranı';
+
+  @override
+  String get statsMonthlyInsightsTitle => 'Bu Ayki İçgörüler';
+
+  @override
+  String get statsInsightLongestStreakCaption => 'En uzun serin';
+
+  @override
+  String get statsInsightBestPrayerCaption => 'En istikrarlı vakit';
+
+  @override
+  String get statsInsightMonthOverMonthCaption => 'Geçen aya göre';
+
+  @override
+  String get statsMonthlyNoteSubtitle => 'Bu aya dair bir not ekleyebilirsin.';
+
+  @override
+  String get statsDayOfWeekMon => 'Pzt';
+
+  @override
+  String get statsDayOfWeekTue => 'Sal';
+
+  @override
+  String get statsDayOfWeekWed => 'Çar';
+
+  @override
+  String get statsDayOfWeekThu => 'Per';
+
+  @override
+  String get statsDayOfWeekFri => 'Cum';
+
+  @override
+  String get statsDayOfWeekSat => 'Cmt';
+
+  @override
+  String get statsDayOfWeekSun => 'Paz';
+
+  @override
+  String get statsThisYear => 'Bu Yıl';
+
+  @override
+  String get statsYearSubtitle => 'Harika bir yıl geçiriyorsun!';
+
+  @override
+  String get statsYearPlaceholder => '2025';
+
+  @override
+  String get statsYearlyStatsTitle => 'Yıllık İstatistikler';
+
+  @override
+  String get statsYearlyStatTotal => 'Toplam kıldığın namaz';
+
+  @override
+  String get statsYearlyStatMakeup => 'Kaza olarak kılınan';
+
+  @override
+  String get statsYearlyStatAverage => 'Ort. günlük tamamlama';
+
+  @override
+  String get statsYearlyStatLongestStreak => 'En uzun seri';
+
+  @override
+  String get statsYearlyStatConsistent => 'İstikrarlı günler';
+
+  @override
+  String get statsMonthlyCompletionTitle => 'Aylara Göre Tamamlama Oranı';
+
+  @override
+  String get statsPrayerCompletionTitleYearly =>
+      'Vakitlere Göre Tamamlama Oranı';
+
+  @override
+  String get statsYearlyAverageSuffix => '(Yıllık Ortalama)';
+
+  @override
+  String get statsMostConsistentMonths => 'En İstikrarlı Aylar';
+
+  @override
+  String get statsYearlyAchievements => 'Yıllık Başarılar';
+
+  @override
+  String get statsSeeAllMonths => 'Tüm ayları gör';
+
+  @override
+  String get statsSeeAllAchievements => 'Tüm başarıları gör';
+
+  @override
+  String get statsBadgeStreakMasterTitle => 'İstikrar Ustası';
+
+  @override
+  String get statsBadgeStreakMasterSubtitle => '30 gün seri';
+
+  @override
+  String get statsBadgeDisciplinedTitle => 'Disiplinli';
+
+  @override
+  String get statsBadgeDisciplinedSubtitle => '%80+ ortalama';
+
+  @override
+  String get statsBadgeDevotedTitle => 'Adanmış';
+
+  @override
+  String get statsBadgeDevotedSubtitle => '300+ gün';
+
+  @override
+  String get statsMotivationalLine1 => 'Küçük adımlar,';
+
+  @override
+  String get statsMotivationalLine2 => 'büyük değişimler yaratır.';
+
+  @override
+  String get statsMotivationalBody =>
+      'İstikrarın ve çaban senin en büyük kazancın.';
+
+  @override
+  String get statsYearlyNoteSubtitle =>
+      'Bu yıla dair bir not ekleyebilirsin (isteğe bağlı).';
+
+  @override
+  String get statsMonthShortJan => 'Oca';
+
+  @override
+  String get statsMonthShortFeb => 'Şub';
+
+  @override
+  String get statsMonthShortMar => 'Mar';
+
+  @override
+  String get statsMonthShortApr => 'Nis';
+
+  @override
+  String get statsMonthShortMay => 'May';
+
+  @override
+  String get statsMonthShortJun => 'Haz';
+
+  @override
+  String get statsMonthShortJul => 'Tem';
+
+  @override
+  String get statsMonthShortAug => 'Ağu';
+
+  @override
+  String get statsMonthShortSep => 'Eyl';
+
+  @override
+  String get statsMonthShortOct => 'Eki';
+
+  @override
+  String get statsMonthShortNov => 'Kas';
+
+  @override
+  String get statsMonthShortDec => 'Ara';
+
+  @override
+  String get statsMonthFullJan => 'Ocak';
+
+  @override
+  String get statsMonthFullFeb => 'Şubat';
+
+  @override
+  String get statsMonthFullMar => 'Mart';
+
+  @override
+  String get statsMonthFullApr => 'Nisan';
+
+  @override
+  String get statsMonthFullMay => 'Mayıs';
+
+  @override
+  String get statsMonthFullJun => 'Haziran';
+
+  @override
+  String get statsMonthFullJul => 'Temmuz';
+
+  @override
+  String get statsMonthFullAug => 'Ağustos';
+
+  @override
+  String get statsMonthFullSep => 'Eylül';
+
+  @override
+  String get statsMonthFullOct => 'Ekim';
+
+  @override
+  String get statsMonthFullNov => 'Kasım';
+
+  @override
+  String get statsMonthFullDec => 'Aralık';
+
+  @override
   String get statsTotalPrayers => 'Toplam Namaz';
 
   @override
@@ -361,15 +744,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get statsCompletionRate => 'Tamamlanma Oranı';
-
-  @override
-  String get statsThisWeek => 'Bu Hafta';
-
-  @override
-  String get statsThisMonth => 'Bu Ay';
-
-  @override
-  String get statsThisYear => 'Bu Yıl';
 
   @override
   String get statsBestMonth => 'En İyi Ay';
@@ -443,6 +817,113 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profileEditName => 'İsmi Düzenle';
+
+  @override
+  String get profileSubtitle =>
+      'Hesap bilgilerinizi görüntüleyin ve ayarlarınızı yönetin.';
+
+  @override
+  String get profileTagMuslim => 'Müslüman';
+
+  @override
+  String get profileTagCountry => 'Türkiye';
+
+  @override
+  String get profileStatConsistentDays => 'İstikrarlı gün';
+
+  @override
+  String get profileStatLongestStreak => 'En uzun seri';
+
+  @override
+  String get profileStatTotalPrayers => 'Toplam namaz';
+
+  @override
+  String get profileStatAverageRate => 'Ortalama oran';
+
+  @override
+  String get profileSectionAccount => 'Hesap';
+
+  @override
+  String get profileSectionWorship => 'İbadet Ayarları';
+
+  @override
+  String get profileSectionOther => 'Diğer';
+
+  @override
+  String get profileMenuPersonalTitle => 'Kişisel Bilgilerim';
+
+  @override
+  String get profileMenuPersonalSubtitle => 'Ad, e-posta ve konum';
+
+  @override
+  String get profileMenuPasswordTitle => 'Şifre Değiştir';
+
+  @override
+  String get profileMenuPasswordSubtitle => 'Hesap şifrenizi değiştirin';
+
+  @override
+  String get profileMenuNotificationsTitle => 'Bildirim Ayarları';
+
+  @override
+  String get profileMenuNotificationsSubtitle =>
+      'Hatırlatmalar ve bildirim tercihleri';
+
+  @override
+  String get profileMenuAppSettingsTitle => 'Uygulama Ayarları';
+
+  @override
+  String get profileMenuAppSettingsSubtitle => 'Tema, dil ve diğer tercihler';
+
+  @override
+  String get profileMenuPrayerTimesTitle => 'Namaz Vakitleri';
+
+  @override
+  String get profileMenuPrayerTimesSubtitle => 'Hesaplama yöntemi ve ayarlar';
+
+  @override
+  String get profileMenuQiblaTitle => 'Kıble Ayarları';
+
+  @override
+  String get profileMenuQiblaSubtitle => 'Kıble hesaplama ve pusula ayarları';
+
+  @override
+  String get profileMenuQuickMarkTitle => 'Hızlı İşaretleme';
+
+  @override
+  String get profileMenuQuickMarkSubtitle => 'Geriye dönük işaretleme ayarları';
+
+  @override
+  String get profileMenuKazaReminderTitle => 'Kaza Namazı Hatırlatıcıları';
+
+  @override
+  String get profileMenuKazaReminderSubtitle =>
+      'Kaza namazı hatırlatma tercihleri';
+
+  @override
+  String get profileMenuBackupTitle => 'Veri Yedekleme';
+
+  @override
+  String get profileMenuBackupSubtitle =>
+      'Verilerinizi yedekleyin veya geri yükleyin';
+
+  @override
+  String get profileMenuAboutTitle => 'Hakkımızda';
+
+  @override
+  String get profileMenuAboutSubtitle => 'Uygulama hakkında bilgi';
+
+  @override
+  String get profileMenuHelpTitle => 'Yardım ve Destek';
+
+  @override
+  String get profileMenuHelpSubtitle => 'Sıkça sorulan sorular';
+
+  @override
+  String get profileMenuPrivacyTitle => 'Gizlilik Politikası';
+
+  @override
+  String get profileMenuPrivacySubtitle =>
+      'Gizlilik ve veri kullanım politikamız';
 
   @override
   String notifPrayerTime(String prayer) {
@@ -569,4 +1050,33 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get badgeCelebrationSubtitle => 'Yeni bir rozet kazandın!';
+
+  @override
+  String get cityPickerTitle => 'Şehir Seç';
+
+  @override
+  String get cityPickerSubtitle => 'Konumunu manuel olarak belirle';
+
+  @override
+  String get cityPickerHint => 'Şehir ara (örn. İstanbul)';
+
+  @override
+  String get cityPickerNoResults => 'Bu arama için sonuç bulunamadı.';
+
+  @override
+  String get cityPickerSearchFailed =>
+      'Arama yapılamadı. İnternet bağlantınızı kontrol edin.';
+
+  @override
+  String get qiblaLocationNeededTitle => 'Konum gerekli';
+
+  @override
+  String get qiblaLocationNeededBody =>
+      'Kıbleyi gösterebilmemiz için konumuna ihtiyacımız var. Konum izni vermek istemiyorsan şehrini manuel olarak seçebilirsin.';
+
+  @override
+  String get qiblaSelectCity => 'Şehir Seç';
+
+  @override
+  String get qiblaUseGps => 'GPS Kullan';
 }

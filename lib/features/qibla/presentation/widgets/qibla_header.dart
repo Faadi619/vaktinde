@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vaqt/core/constants/colors.dart';
+import 'package:vaqt/core/constants/text_styles.dart';
 
 class QiblaHeader extends StatelessWidget {
   const QiblaHeader({
@@ -26,19 +27,12 @@ class QiblaHeader extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.bodyText,
-                ),
+                style: AppTextStyles.h1,
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: AppColors.mutedText,
-                ),
+                style: AppTextStyles.bodySmall,
               ),
             ],
           ),
@@ -70,9 +64,7 @@ class QiblaHeader extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   mapButtonLabel,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                  style: AppTextStyles.size11w600.copyWith(
                     color: AppColors.primaryGreen,
                   ),
                 ),

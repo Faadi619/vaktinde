@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class PrayerCard extends StatefulWidget {
   const PrayerCard({super.key});
@@ -118,85 +119,102 @@ class PrayerRow extends StatelessWidget {
             height: time == null ? 72 : 71,
             child: Row(
               children: [
-                Image.asset(iconAsset, width: 40, height: 40),
-                const SizedBox(width: 12),
-                SizedBox(
-                  width: 70,
-                  child: Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.bodyText,
+                Container(
+                  width: 40,
+                  height: 40,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.lightGreen,
+                      width: 1.5,
                     ),
+                  ),
+                  child: Image.asset(iconAsset, fit: BoxFit.contain),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.size16w700,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (subLabel1 != null)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  AppAssets.imsakClockIcon,
+                                  width: 13,
+                                  height: 13,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  subLabel1!,
+                                  style: AppTextStyles.overline.copyWith(
+                                    color: AppColors.primaryGreen,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  subTime1!,
+                                  style: AppTextStyles.overline.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.mutedText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  AppAssets.sunIcon,
+                                  width: 13,
+                                  height: 13,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  subLabel2!,
+                                  style: AppTextStyles.overline.copyWith(
+                                    color: AppColors.primaryGreen,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  subTime2!,
+                                  style: AppTextStyles.overline.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.mutedText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      else if (time != null)
+                        Text(
+                          time!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.size15w500.copyWith(
+                            color: AppColors.mutedText,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-                const Spacer(),
-                if (subLabel1 != null)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            AppAssets.imsakClockIcon,
-                            width: 13,
-                            height: 13,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            subLabel1!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGreen,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            subTime1!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.mutedText,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Image.asset(AppAssets.sunIcon, width: 13, height: 13),
-                          const SizedBox(width: 4),
-                          Text(
-                            subLabel2!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGreen,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            subTime2!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.mutedText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
-                else if (time != null)
-                  Text(
-                    time!,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.mutedText,
-                    ),
-                  ),
                 const SizedBox(width: 12),
                 MarkButton(isDone: isDone, onTap: onTap),
               ],
@@ -229,34 +247,30 @@ class MarkButton extends StatelessWidget {
       child: isDone
           ? Container(
               height: 41,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: BoxDecoration(
                 color: AppColors.lightGreen,
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 '✓ Kılındı',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
+                style: AppTextStyles.titleSmall.copyWith(
                   color: AppColors.primaryGreen,
                 ),
               ),
             )
           : Container(
               height: 38,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.primaryGreen, width: 2),
               ),
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 'Kıldım',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
+                style: AppTextStyles.titleSmall.copyWith(
                   color: AppColors.primaryGreen,
                 ),
               ),

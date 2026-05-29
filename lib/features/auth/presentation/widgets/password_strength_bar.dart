@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class PasswordStrengthBar extends StatelessWidget {
   const PasswordStrengthBar({
@@ -41,11 +42,7 @@ class PasswordStrengthBar extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: barColor,
-          ),
+          style: AppTextStyles.size11w600.copyWith(color: barColor),
         ),
       ],
     );

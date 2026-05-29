@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vaqt/core/constants/colors.dart';
+import 'package:vaqt/core/constants/text_styles.dart';
 import 'package:vaqt/widgets/app_surface_card.dart';
 
 class QiblaInfoCard extends StatelessWidget {
@@ -47,9 +48,7 @@ class QiblaInfoCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         directionLabel,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                        style: AppTextStyles.size12w500.copyWith(
                           color: AppColors.mutedText,
                         ),
                       ),
@@ -58,9 +57,7 @@ class QiblaInfoCard extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     directionValue,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 22,
+                    style: AppTextStyles.size22w800.copyWith(
                       color: AppColors.primaryGreen,
                     ),
                   ),
@@ -94,9 +91,7 @@ class QiblaInfoCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           accuracyLabel,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                          style: AppTextStyles.size12w500.copyWith(
                             color: AppColors.mutedText,
                           ),
                         ),
@@ -106,9 +101,7 @@ class QiblaInfoCard extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     accuracyValue,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 22,
+                    style: AppTextStyles.size22w800.copyWith(
                       color: AppColors.primaryGreen,
                     ),
                   ),

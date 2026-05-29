@@ -22,6 +22,7 @@ class QiblaProvider extends ChangeNotifier {
   String? get locationLabel => _locationLabel;
   bool get isLoading => _isLoading;
   bool get isInitialized => _isInitialized;
+
   /// Last compass heading received from the screen — persists across tab switches.
   double? get lastHeading => _lastHeading;
 
@@ -40,6 +41,55 @@ class QiblaProvider extends ChangeNotifier {
   Future<void> refresh() async {
     if (_isLoading) return;
     await _fetchAndCache();
+  }
+
+  /// Try to use GPS. Handles all permission states:
+  /// - granted → fetch fresh coords
+  /// - denied → request, then fetch if granted
+  /// - deniedForever → open the OS app settings (can't reprompt programmatically)
+  ///
+  /// Returns true if the OS settings page was opened (caller may want to wait
+  /// for resume to re-check), false otherwise.
+  Future<bool> requestGpsOrOpenSettings() async {
+    if (_isLoading) return false;
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      await Geolocator.openAppSettings();
+      return true;
+    }
+    if (permission == LocationPermission.denied) {
+      return false;
+    }
+    await _fetchAndCache();
+    return false;
+  }
+
+  /// Apply a manually-picked location (from the city picker). Skips GPS
+  /// entirely — used when the user denies the OS prompt or wants to override.
+  Future<void> setManualLocation({
+    required double lat,
+    required double lng,
+    required String cityLabel,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final model = QiblaLocationCacheModel(
+      lat: lat,
+      lng: lng,
+      cityLabel: cityLabel,
+      accuracy: 0,
+      cachedAt: DateTime.now(),
+    );
+    await _repo.saveLocation(model);
+    _applyCache(model);
+
+    _isLoading = false;
+    _isInitialized = true;
+    notifyListeners();
   }
 
   Future<void> _loadFromCacheOrFetch() async {
@@ -92,16 +142,19 @@ class QiblaProvider extends ChangeNotifier {
 
       String cityLabel = '';
       try {
-        final placemarks =
-            await placemarkFromCoordinates(position.latitude, position.longitude);
+        final placemarks = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
         if (placemarks.isNotEmpty) {
           final placemark = placemarks.first;
           final city =
               placemark.locality ?? placemark.subAdministrativeArea ?? '';
           final country = placemark.country ?? '';
-          cityLabel = [city, country]
-              .where((part) => part.trim().isNotEmpty)
-              .join(', ');
+          cityLabel = [
+            city,
+            country,
+          ].where((part) => part.trim().isNotEmpty).join(', ');
         }
       } catch (_) {}
 
@@ -134,7 +187,8 @@ class QiblaProvider extends ChangeNotifier {
     final latitudeRad = latitude * (math.pi / 180.0);
     final kaabaLatRad = kaabaLat * (math.pi / 180.0);
     final y = math.sin(deltaLongitude);
-    final x = math.cos(latitudeRad) * math.tan(kaabaLatRad) -
+    final x =
+        math.cos(latitudeRad) * math.tan(kaabaLatRad) -
         math.sin(latitudeRad) * math.cos(deltaLongitude);
     final bearing = math.atan2(y, x) * (180.0 / math.pi);
     return (bearing + 360) % 360;

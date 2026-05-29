@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vaqt/core/constants/colors.dart';
+import 'package:vaqt/core/constants/text_styles.dart';
 import 'package:vaqt/widgets/app_surface_card.dart';
 
 class QiblaHowToCard extends StatelessWidget {
@@ -35,19 +36,12 @@ class QiblaHowToCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                      color: AppColors.bodyText,
-                    ),
+                    style: AppTextStyles.titleMedium,
                   ),
                   const SizedBox(height: 2),
                   Text(
                     description,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: AppColors.mutedText,
-                    ),
+                    style: AppTextStyles.bodySmall,
                   ),
                 ],
               ),

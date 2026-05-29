@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/assets.dart';
-import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -19,24 +19,17 @@ class HomeHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'İstanbul',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.bodyText,
-                  ),
+                  style: AppTextStyles.size16w700.copyWith(fontSize: 17),
                 ),
                 Text(
                   _todayLabel(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.mutedText,
-                  ),
+                  style: AppTextStyles.caption,
                 ),
               ],
             ),

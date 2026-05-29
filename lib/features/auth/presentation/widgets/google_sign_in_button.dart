@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -44,11 +45,7 @@ class GoogleSignInButton extends StatelessWidget {
                   const SizedBox(width: 12),
                   Text(
                     text,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.bodyText,
-                    ),
+                    style: AppTextStyles.size15w600,
                   ),
                 ],
               ),
