@@ -48,6 +48,39 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Project docs policy
+# Project docs policy — only README + the dev progress log are versioned.
+# Everything else (PROJECT.md spec, PLAN.md phases, rules.md, etc.) is
+# AI-working / planning material kept locally.
 *.md
+!README.md
 !documentation.md
+
+# ─── Sensitive ───────────────────────────────────────────────────────────
+# Firebase config — generated per-developer via `flutterfire configure`.
+# Firebase API keys aren't true secrets (Firebase security comes from
+# Firestore Rules + Auth, not key secrecy — see
+# https://firebase.google.com/docs/projects/api-keys), but we keep them
+# untracked so each developer points the app at their own Firebase project
+# during development and to silence repo secret-scanners.
+lib/firebase_options.dart
+firebase.json
+firestore.rules
+firestore.indexes.json
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+ios/firebase_app_id_file.json
+macos/firebase_app_id_file.json
+
+# Generic secret patterns
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+**/credentials.json
+
+# Claude / AI tooling local state
+.claude/
+.aider*
